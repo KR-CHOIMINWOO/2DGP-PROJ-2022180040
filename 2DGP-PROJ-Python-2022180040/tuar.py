@@ -49,6 +49,8 @@ class Idle:
 class Run:
     def __init__(self, tuar):
         self.tuar = tuar
+        self.images = []
+        self.frame_time = 0
 
     def enter(self, e):
         if right_down(e) or left_up(e):
@@ -56,16 +58,27 @@ class Run:
         elif left_down(e) or right_up(e):
             self.tuar.dir = self.tuar.face_dir = -1
 
+        self.frame_time = 0
+
+        if not self.images:
+            for i in range(1, 4):
+                filename =  f'image_file/char/tuar01/tuar_{i:02d}.png'
+                self.images.append(load_image(filename))
+
+
     def exit(self, e):
         if space_down(e):
-            self.tuar.fire_ball()
+            pass
+        pass
 
     def do(self):
-        self.tuar.frame = 0
-        self.tuar.x += self.tuar.dir * 5
+        self.tuar.frame = (self.tuar.frame + 1) % len(self.images)
+        self.tuar.x += self.tuar.dir * 1
 
     def draw(self):
-        self.tuar.image.draw(self.tuar.x, self.tuar.y, 150, 150)
+        image = self.images[self.tuar.frame]
+        image.draw(self.tuar.x, self.tuar.y, 150, 150)
+
 
 class Tuar:
     def __init__(self):
@@ -73,7 +86,15 @@ class Tuar:
         self.frame = 0
         self.face_dir = 1
         self.dir = 0
-        self.image = None
+        self.images = [
+            load_image('image_file/char/tuar01/tuar_01.png'),
+            load_image('image_file/char/tuar01/tuar_02.png'),
+            load_image('image_file/char/tuar01/tuar_03.png'),
+            load_image('image_file/char/tuar01/tuar_04.png'),
+            load_image('image_file/char/tuar01/tuar_05.png'),
+            load_image('image_file/char/tuar01/tuar_06.png'),
+            load_image('image_file/char/tuar01/tuar_07.png'),
+        ]
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
