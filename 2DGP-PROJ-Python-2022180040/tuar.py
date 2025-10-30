@@ -61,7 +61,7 @@ class Run:
         self.frame_time = 0
 
         if not self.images:
-            for i in range(1, 4):
+            for i in range(1, 3):
                 filename =  f'image_file/char/tuar01/tuar_{i:02d}.png'
                 self.images.append(load_image(filename))
 
@@ -72,7 +72,12 @@ class Run:
         pass
 
     def do(self):
-        self.tuar.frame = (self.tuar.frame + 1) % len(self.images)
+        self.frame_time += get_time()
+
+        if self.frame_time > 0.3:
+            self.tuar.frame = (self.tuar.frame + 1) % len(self.images)
+            self.frame_time = 0
+
         self.tuar.x += self.tuar.dir * 1
 
     def draw(self):
