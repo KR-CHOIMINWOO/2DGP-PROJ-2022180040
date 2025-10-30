@@ -58,10 +58,10 @@ class Run:
         elif left_down(e) or right_up(e):
             self.tuar.dir = self.tuar.face_dir = -1
 
-        self.frame_time = 0
+        self.frame_time = get_time()
 
         if not self.images:
-            for i in range(1, 3):
+            for i in range(1, 4):
                 filename =  f'image_file/char/tuar01/tuar_{i:02d}.png'
                 self.images.append(load_image(filename))
 
@@ -72,11 +72,12 @@ class Run:
         pass
 
     def do(self):
-        self.frame_time += get_time()
+        current_time = get_time()
+        elapsed = current_time - self.frame_time
 
-        if self.frame_time > 0.3:
+        if elapsed > 0.1:
             self.tuar.frame = (self.tuar.frame + 1) % len(self.images)
-            self.frame_time = 0
+            self.frame_time = current_time
 
         self.tuar.x += self.tuar.dir * 1
 
