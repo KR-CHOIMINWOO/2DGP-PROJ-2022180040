@@ -1,0 +1,97 @@
+from pico2d import load_image, get_time
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT
+
+import game_world
+from state_machine import StateMachine
+
+
+def space_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
+
+time_out = lambda e: e[0] == 'TIMEOUT'
+
+def right_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
+
+
+def right_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
+
+
+def left_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
+
+
+def left_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
+
+class Idle:
+
+    def __init__(self, tuar):
+        self.tuar = tuar
+
+    def enter(self, e):
+        self.tuar.wait_time = get_time()
+        self.tuar.dir = 0
+        # 이미지 하나만 로드
+        self.tuar.image = load_image('image_file/char/tuar01/tuar_01.png')
+
+    def exit(self, e):
+        pass
+
+    def do(self):
+        pass
+
+    def draw(self):
+        self.tuar.image.draw(self.tuar.x, self.tuar.y, 150, 150)
+
+
+class Run:
+    def __init__(self, tuar):
+        self.tuar = tuar
+
+    def enter(self, e):
+        if right_down(e) or left_up(e):
+            self.tuar.dir = self.tuar.face_dir = 1
+        elif left_down(e) or right_up(e):
+            self.tuar.dir = self.tuar.face_dir = -1
+
+    def exit(self, e):
+        if space_down(e):
+            self.tuar.fire_ball()
+
+    def do(self):
+        self.tuar.frame = 0
+        self.tuar.x += self.tuar.dir * 5
+
+    def draw(self):
+        self.tuar.image.draw(self.tuar.x, self.tuar.y, 150, 150)
+
+class Tuar:
+    def __init__(self):
+        self.x, self.y = 50, 150
+        self.frame = 0
+        self.face_dir = 1
+        self.dir = 0
+        self.image = None
+
+        self.IDLE = Idle(self)
+        self.RUN = Run(self)
+        self.state_machine = StateMachine(
+            self.IDLE,
+            {
+                self.IDLE : {space_down: self.IDLE, right_down: self.RUN, left_down: self.RUN, right_up: self.RUN, left_up: self.RUN},
+                self.RUN : {space_down: self.RUN, right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE, left_down: self.IDLE}
+            }
+        )
+        self.item = None
+
+    def update(self):
+        self.state_machine.update()
+
+    def handle_event(self, event):
+        self.state_machine.handle_state_event(('INPUT', event))
+        pass
+
+    def draw(self):
+        self.state_machine.draw()
