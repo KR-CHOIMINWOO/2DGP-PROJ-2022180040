@@ -1,6 +1,7 @@
 from pico2d import load_image, get_time
 from sdl2 import SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_RIGHT, SDLK_LEFT, SDLK_UP, SDLK_DOWN
 
+import game_framework
 import game_world
 from state_machine import StateMachine
 
@@ -92,7 +93,8 @@ class Run:
             self.tuar.frame = (self.tuar.frame + 1) % len(self.images)
             self.frame_time = current_time
 
-        self.tuar.x += self.tuar.dir * 1
+        self.tuar.frame = (self.tuar.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        self.tuar.x += self.tuar.dir * RUN_SPEED_PPS * game_framework.frame_time
 
     def draw(self):
         image = self.images[self.tuar.frame]
