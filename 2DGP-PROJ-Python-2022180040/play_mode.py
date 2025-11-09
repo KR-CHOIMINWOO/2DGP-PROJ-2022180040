@@ -1,5 +1,5 @@
 from pico2d import *
-from tuar import Tuar
+from tuar2 import Tuar
 from grass import Grass
 import title_mode
 import game_world
@@ -18,9 +18,6 @@ def handle_events():
 
 def init():
     global tuar
-
-    grass = Grass()
-    game_world.add_object(grass, 0)
 
     tuar = Tuar()
     game_world.add_object(tuar, 1)

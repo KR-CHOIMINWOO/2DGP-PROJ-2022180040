@@ -83,7 +83,6 @@ class Run:
 
     def draw(self):
         image = self.images[self.tuar.frame]
-
         flip = 'h' if self.tuar.face_dir == -1 else ''
         image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 150, 150)
 
