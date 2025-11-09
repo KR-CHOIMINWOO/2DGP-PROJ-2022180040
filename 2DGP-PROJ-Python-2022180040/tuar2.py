@@ -256,4 +256,5 @@ class Tuar:
         self.roll_t = 0.0
 
     def try_attack(self):
-        pass
+        if self.attack_active or self.attack_cd > 0.0:
+            return
