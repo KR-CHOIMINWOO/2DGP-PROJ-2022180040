@@ -23,6 +23,8 @@ def up_up(e):       return e[0] == 'INPUT' and e[1].type == SDL_KEYUP   and e[1]
 def down_down(e):   return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_DOWN
 def down_up(e):     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP   and e[1].key == SDLK_DOWN
 
+def no_input(e): return e[0] == 'NO_INPUT'
+
 # 용사의 Run Speed 계산
 
 # 용사 Run Speed
@@ -58,7 +60,7 @@ class Idle:
         pass
 
     def draw(self):
-        self.tuar.image.draw(self.tuar.x, self.tuar.y, 150, 150)
+        self.tuar.image.draw(self.tuar.x, self.tuar.y, 100, 100)
 
 
 class Run:
@@ -106,12 +108,15 @@ class Run:
         self.tuar.x += dx * RUN_SPEED_PPS * game_framework.frame_time
         self.tuar.y += dy * RUN_SPEED_PPS * game_framework.frame_time
 
+        if self.tuar.dir_x == 0 and self.tuar.dir_y == 0:
+            self.tuar.state_machine.handle_state_event(('NO_INPUT', None))
+            return
 
     def draw(self):
         idx = int(self.tuar.frame) % len(self.run_images)
         image = self.run_images[idx]
         flip = 'h' if self.tuar.face_dir == -1 else ''
-        image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 150, 150)
+        image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
 
 
 class Tuar:
@@ -149,6 +154,8 @@ class Tuar:
                     up_down: self.RUN, down_down: self.RUN,
                     right_up: self.RUN, left_up: self.RUN,
                     up_up: self.RUN, down_up: self.RUN,
+
+                    no_input: self.IDLE,
                 }
             }
         )
