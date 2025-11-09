@@ -243,4 +243,5 @@ class Tuar:
         self.state_machine.draw()
 
     def try_roll(self):
-        pass
+        if self.roll_active or self.roll_cd > 0.0:
+            return
