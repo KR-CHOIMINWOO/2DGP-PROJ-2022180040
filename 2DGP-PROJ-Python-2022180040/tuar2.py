@@ -121,6 +121,61 @@ class Run:
         flip = 'h' if self.tuar.face_dir == -1 else ''
         image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
 
+class Roll:
+    def __init__(self, tuar):
+        self.tuar = tuar
+        self.images = []
+        self.frame_time = 0
+        self.run_images = []
+
+    def enter(self, e):
+        if right_down(e) or left_up(e):
+            self.tuar.dir_x += 1
+        elif left_down(e) or right_up(e):
+            self.tuar.dir_x += -1
+
+        if up_down(e) or down_up(e):
+            self.tuar.dir_y += 1
+        elif down_down(e) or up_up(e):
+            self.tuar.dir_y += -1
+
+        if right_down(e): self.tuar.face_dir = 1
+        if left_down(e):  self.tuar.face_dir = -1
+        self.frame_time = get_time()
+
+        if not self.run_images:
+            for i in range(1, 5):
+                self.run_images.append(load_image(f'image_file/char/tuar01/tuar_{i:02d}.png'))
+
+
+    def exit(self, e):
+        if space_down(e):
+            pass
+        pass
+
+    def do(self):
+        self.tuar.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
+
+        dx, dy = self.tuar.dir_x, self.tuar.dir_y
+
+        if dx > 0:
+            self.tuar.face_dir = 1
+        elif dx < 0:
+            self.tuar.face_dir = -1
+
+        self.tuar.x += dx * RUN_SPEED_PPS * game_framework.frame_time
+        self.tuar.y += dy * RUN_SPEED_PPS * game_framework.frame_time
+
+        if self.tuar.dir_x == 0 and self.tuar.dir_y == 0:
+            self.tuar.state_machine.handle_state_event(('NO_INPUT', None))
+            return
+
+    def draw(self):
+        idx = int(self.tuar.frame) % len(self.run_images)
+        image = self.run_images[idx]
+        flip = 'h' if self.tuar.face_dir == -1 else ''
+        image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
+
 
 class Tuar:
     def __init__(self):
