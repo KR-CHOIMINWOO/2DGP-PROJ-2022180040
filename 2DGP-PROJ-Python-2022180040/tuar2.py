@@ -47,6 +47,7 @@ class Idle:
     def enter(self, e):
         self.tuar.wait_time = get_time()
         self.tuar.dir_x = 0
+        self.tuar.dir_y = 0
         # 이미지 하나만 로드
         self.tuar.image = load_image('image_file/char/tuar01/tuar_01.png')
 
@@ -91,12 +92,21 @@ class Run:
         pass
 
     def do(self):
-        self.tuar.frame = (self.tuar.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-        self.tuar.x += self.tuar.dir_x * RUN_SPEED_PPS * game_framework.frame_time
-        self.tuar.y += self.tuar.dir_y * RUN_SPEED_PPS * game_framework.frame_time
+        self.tuar.frame = (self.tuar.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+
+        dx, dy = float(self.tuar.dir_x), float(self.tuar.dir_y)
+
+        if dx > 0: self.tuar.face_dir = 1
+        if dx < 0: self.tuar.face_dir = -1
+
+        mag = (dx * dx + dy * dy) ** 0.5
+        if mag > 0.0:
+            nx, ny = dx / mag, dy / mag
+            self.tuar.x += nx * RUN_SPEED_PPS * game_framework.frame_time
+            self.tuar.y += ny * RUN_SPEED_PPS * game_framework.frame_time
 
     def draw(self):
-        image = self.images[self.tuar.frame]
+        image = self.images[int(self.tuar.frame)]
         flip = 'h' if self.tuar.face_dir == -1 else ''
         image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 150, 150)
 
@@ -123,8 +133,14 @@ class Tuar:
         self.state_machine = StateMachine(
             self.IDLE,
             {
-                self.IDLE : {space_down: self.IDLE, right_down: self.RUN, left_down: self.RUN, right_up: self.RUN, left_up: self.RUN},
-                self.RUN : {space_down: self.RUN, right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE, left_down: self.IDLE}
+                self.IDLE: {space_down: self.IDLE,
+                            right_down: self.RUN, left_down: self.RUN,
+                            up_down: self.RUN, down_down: self.RUN},
+                self.RUN: {space_down: self.RUN,
+                           right_down: self.RUN, left_down: self.RUN,
+                           up_down: self.RUN, down_down: self.RUN,
+                           right_up: self.RUN, left_up: self.RUN,
+                           up_up: self.RUN, down_up: self.RUN}
             }
         )
         self.item = None
