@@ -45,6 +45,7 @@ PI = 3.141592
 ROLL_TIME = 0.40
 ROLL_SPEED_SCALE = 2.5
 ROLL_COOLDOWN = 0.20
+ROLL_DISTANCE = 80.0
 
 class Idle:
 
@@ -110,6 +111,10 @@ class Run:
         pass
 
     def do(self):
+        if self.tuar.roll_active:
+            self.tuar.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
+            return
+
         self.tuar.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
 
         dx, dy = self.tuar.dir_x, self.tuar.dir_y
@@ -140,51 +145,6 @@ class Run:
             flip = 'h' if self.tuar.face_dir == -1 else ''
             image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
 
-# class Roll:
-#     def __init__(self, tuar):
-#         self.tuar = tuar
-#         self.elapsed = 0.0
-#         self.vx = 0.0
-#         self.vy = 0.0
-#
-#     def enter(self, e):
-#         dx, dy = float(self.tuar.dir_x), float(self.tuar.dir_y)
-#         if dx == 0.0 and dy == 0.0:
-#             dx, dy = (1.0 if self.tuar.face_dir > 0 else -1.0), 0.0
-#
-#         mag = (dx*dx + dy*dy) ** 0.5
-#         if mag > 0.0:
-#             self.vx, self.vy = dx/mag, dy/mag
-#         else:
-#             self.vx, self.vy = 1.0, 0.0
-#
-#         self.elapsed = 0.0
-#         if not hasattr(self.tuar, 'roll_image'):
-#             self.tuar.roll_image = load_image('image_file/char/tuar01/tuar_01.png')
-#
-#     def exit(self, e):
-#         pass
-#
-#     def do(self):
-#         dt = game_framework.frame_time
-#         self.elapsed += dt
-#
-#         self.tuar.x += self.vx * RUN_SPEED_PPS * ROLL_SPEED_SCALE * dt
-#         self.tuar.y += self.vy * RUN_SPEED_PPS * ROLL_SPEED_SCALE * dt
-#
-#         if self.elapsed >= ROLL_TIME:
-#             self.tuar.state_machine.handle_state_event(('TIMEOUT', None))
-#
-#     def draw(self):
-#         t = max(0.0, min(1.0, self.elapsed / ROLL_TIME))
-#         direction = 1.0 if self.tuar.face_dir > 0 else -1.0
-#         angle = -t * 2.0 * PI * direction
-#
-#         w, h = self.tuar.roll_image.w, self.tuar.roll_image.h
-#         self.tuar.roll_image.clip_composite_draw(0, 0, w, h, angle, '',
-#                                                  self.tuar.x, self.tuar.y, 100, 100)
-
-
 class Tuar:
     def __init__(self):
         self.x, self.y = 50, 150
@@ -204,7 +164,6 @@ class Tuar:
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
-        # self.Roll = Roll(self)
         self.state_machine = StateMachine(
             self.IDLE,
             {
@@ -215,7 +174,6 @@ class Tuar:
                     right_up: self.IDLE, left_up: self.IDLE,
                     up_up: self.IDLE, down_up: self.IDLE,
 
-                    # shift_down: self.Roll,
                 },
                 self.RUN: {
                     space_down: self.RUN,
@@ -225,18 +183,7 @@ class Tuar:
                     up_up: self.RUN, down_up: self.RUN,
 
                     no_input: self.IDLE,
-                    # shift_down: self.Roll,
-                },
-
-                # self.Roll: {
-                #     space_down: self.Roll,
-                #     right_down: self.Roll, left_down: self.Roll,
-                #     up_down: self.Roll, down_down: self.Roll,
-                #     right_up: self.Roll, left_up: self.Roll,
-                #     up_up: self.Roll, down_up: self.Roll,
-                #
-                #     time_out: self.IDLE,
-                # }
+                }
             }
         )
         self.roll_active = False
@@ -253,9 +200,9 @@ class Tuar:
 
         if self.roll_active:
             dt = game_framework.frame_time
-            self.roll_t += dt
-            self.x += self.roll_vx * RUN_SPEED_PPS * ROLL_SPEED_SCALE * dt
-            self.y += self.roll_vy * RUN_SPEED_PPS * ROLL_SPEED_SCALE * dt
+            v = ROLL_DISTANCE / ROLL_TIME
+            self.x += self.roll_vx * v * dt
+            self.y += self.roll_vy * v * dt
             if self.roll_t >= ROLL_TIME:
                 self.roll_active = False
                 self.roll_cd = ROLL_COOLDOWN
