@@ -49,6 +49,9 @@ ROLL_SPEED_SCALE = 2.5
 ROLL_COOLDOWN = 0.20
 ROLL_DISTANCE = 150.0
 
+ATTACK_TIME = 0.30
+ATTACK_COOLDOWN = 0.20
+
 class Idle:
 
     def __init__(self, tuar):
@@ -193,6 +196,16 @@ class Tuar:
         self.roll_vx, self.roll_vy = 0.0, 0.0
         self.roll_cd = 0.0
         self.roll_image = load_image('image_file/char/tuar01/tuar_01.png')  # 1번 이미지
+
+        self.attack_active = False
+        self.attack_t = 0.0
+        self.attack_cd = 0.0
+
+        self.attack_images = [
+            load_image('image_file/char/tuar01/tuar_05.png'),
+            load_image('image_file/char/tuar01/tuar_06.png'),
+            load_image('image_file/char/tuar01/tuar_07.png'),
+        ]
 
         self.item = None
 
