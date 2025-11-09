@@ -222,6 +222,11 @@ class Tuar:
                 # }
             }
         )
+        self.roll_active = False
+        self.roll_t = 0.0
+        self.roll_vx, self.roll_vy = 0.0, 0.0
+        self.roll_cd = 0.0
+        self.roll_image = load_image('image_file/char/tuar01/tuar_01.png')  # 1번 이미지
 
         self.item = None
 
@@ -229,8 +234,13 @@ class Tuar:
         self.state_machine.update()
 
     def handle_event(self, event):
+        if shift_down(('INPUT', event)):
+            self.try_roll()
         self.state_machine.handle_state_event(('INPUT', event))
         pass
 
     def draw(self):
         self.state_machine.draw()
+
+    def try_roll(self):
+        pass
