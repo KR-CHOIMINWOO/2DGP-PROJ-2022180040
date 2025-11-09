@@ -44,6 +44,7 @@ FRAMES_PER_ACTION = 8
 PI = 3.141592
 ROLL_TIME = 0.40
 ROLL_SPEED_SCALE = 2.5
+ROLL_COOLDOWN = 0.20
 
 class Idle:
 
@@ -231,6 +232,17 @@ class Tuar:
         self.item = None
 
     def update(self):
+        if self.roll_cd > 0.0:
+            self.roll_cd = max(0.0, self.roll_cd - game_framework.frame_time)
+
+        if self.roll_active:
+            dt = game_framework.frame_time
+            self.roll_t += dt
+            self.x += self.roll_vx * RUN_SPEED_PPS * ROLL_SPEED_SCALE * dt
+            self.y += self.roll_vy * RUN_SPEED_PPS * ROLL_SPEED_SCALE * dt
+            if self.roll_t >= ROLL_TIME:
+                self.roll_active = False
+                self.roll_cd = ROLL_COOLDOWN
         self.state_machine.update()
 
     def handle_event(self, event):
@@ -245,3 +257,19 @@ class Tuar:
     def try_roll(self):
         if self.roll_active or self.roll_cd > 0.0:
             return
+
+        dx, dy = float(self.dir_x), float(self.dir_y)
+
+        if dy == 0.0:
+            dy = 0.0
+
+        if dx == 0.0 and dy == 0.0:
+            dx, dy = (1.0 if self.face_dir > 0 else -1.0), 0.0
+
+        mag = (dx * dx + dy * dy) ** 0.5
+        if mag == 0.0:
+            return
+        self.roll_vx, self.roll_vy = dx / mag, dy / mag
+
+        self.roll_active = True
+        self.roll_t = 0.0
