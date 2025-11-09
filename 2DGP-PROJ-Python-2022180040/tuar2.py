@@ -85,7 +85,7 @@ class Idle:
             angle = -t * 2.0 * PI * direction
             w, h = self.tuar.roll_image.w, self.tuar.roll_image.h
             self.tuar.roll_image.clip_composite_draw(0, 0, w, h, angle, '',
-                                                     self.tuar.x, self.tuar.y, 100, 100)
+                                                     self.tuar.x, self.tuar.y - 20, 100, 100)
         else:
             flip = 'h' if self.tuar.face_dir == -1 else ''
             self.tuar.image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
@@ -159,7 +159,7 @@ class Run:
             angle = -t * 2.0 * PI * direction
             w, h = self.tuar.roll_image.w, self.tuar.roll_image.h
             self.tuar.roll_image.clip_composite_draw(0, 0, w, h, angle, '',
-                                                     self.tuar.x, self.tuar.y, 100, 100)
+                                                     self.tuar.x, self.tuar.y - 20, 100, 100)
         else:
             idx = int(self.tuar.frame) % len(self.run_images)
             image = self.run_images[idx]
