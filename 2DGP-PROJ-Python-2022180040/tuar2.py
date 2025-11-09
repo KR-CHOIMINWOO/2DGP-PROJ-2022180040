@@ -70,14 +70,16 @@ class Run:
 
     def enter(self, e):
         if right_down(e) or left_up(e):
-            self.tuar.dir_x = self.tuar.face_dir = 1
+            self.tuar.dir_x += 1
+            self.tuar.face_dir += 1
         elif left_down(e) or right_up(e):
-            self.tuar.dir_x = self.tuar.face_dir = -1
+            self.tuar.dir_x += -1
+            self.tuar.face_dir += -1
 
         if up_down(e) or down_up(e):
-            self.tuar.dir_y = 1
+            self.tuar.dir_y += 1
         elif down_down(e) or up_up(e):
-            self.tuar.dir_y = -1
+            self.tuar.dir_y += -1
 
         self.frame_time = get_time()
 
@@ -94,16 +96,15 @@ class Run:
     def do(self):
         self.tuar.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
 
-        dx, dy = float(self.tuar.dir_x), float(self.tuar.dir_y)
+        dx, dy = self.tuar.dir_x, self.tuar.dir_y
 
-        if dx > 0: self.tuar.face_dir = 1
-        if dx < 0: self.tuar.face_dir = -1
+        if dx > 0:
+            self.tuar.face_dir = 1
+        elif dx < 0:
+            self.tuar.face_dir = -1
 
-        mag = (dx * dx + dy * dy) ** 0.5
-        if mag > 0.0:
-            nx, ny = dx / mag, dy / mag
-            self.tuar.x += nx * RUN_SPEED_PPS * game_framework.frame_time
-            self.tuar.y += ny * RUN_SPEED_PPS * game_framework.frame_time
+        self.tuar.x += dx * RUN_SPEED_PPS * game_framework.frame_time
+        self.tuar.y += dy * RUN_SPEED_PPS * game_framework.frame_time
 
     def draw(self):
         idx = int(self.tuar.frame) % len(self.run_images)
