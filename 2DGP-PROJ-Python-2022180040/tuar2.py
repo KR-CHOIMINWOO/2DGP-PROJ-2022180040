@@ -66,6 +66,7 @@ class Run:
         self.tuar = tuar
         self.images = []
         self.frame_time = 0
+        self.run_images = []
 
     def enter(self, e):
         if right_down(e) or left_up(e):
@@ -80,10 +81,9 @@ class Run:
 
         self.frame_time = get_time()
 
-        if not self.images:
-            for i in range(1, 4):
-                filename =  f'image_file/char/tuar01/tuar_{i:02d}.png'
-                self.images.append(load_image(filename))
+        if not self.run_images:
+            for i in range(1, 5):
+                self.run_images.append(load_image(f'image_file/char/tuar01/tuar_{i:02d}.png'))
 
 
     def exit(self, e):
@@ -92,7 +92,7 @@ class Run:
         pass
 
     def do(self):
-        self.tuar.frame = (self.tuar.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+        self.tuar.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
 
         dx, dy = float(self.tuar.dir_x), float(self.tuar.dir_y)
 
@@ -106,7 +106,8 @@ class Run:
             self.tuar.y += ny * RUN_SPEED_PPS * game_framework.frame_time
 
     def draw(self):
-        image = self.images[int(self.tuar.frame)]
+        idx = int(self.tuar.frame) % len(self.run_images)
+        image = self.run_images[idx]
         flip = 'h' if self.tuar.face_dir == -1 else ''
         image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 150, 150)
 
