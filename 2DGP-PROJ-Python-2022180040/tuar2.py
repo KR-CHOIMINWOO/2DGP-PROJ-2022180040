@@ -224,6 +224,9 @@ class Tuar:
         self.state_machine.update()
 
     def handle_event(self, event):
+        if attack_down(('INPUT', event)):
+            self.try_attack()
+            
         if shift_down(('INPUT', event)):
             self.try_roll()
         self.state_machine.handle_state_event(('INPUT', event))
@@ -251,3 +254,6 @@ class Tuar:
 
         self.roll_active = True
         self.roll_t = 0.0
+
+    def try_attack(self):
+        pass
