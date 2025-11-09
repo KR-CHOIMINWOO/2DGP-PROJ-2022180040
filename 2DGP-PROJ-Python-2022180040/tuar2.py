@@ -69,23 +69,17 @@ class Run:
         self.run_images = []
 
     def enter(self, e):
-        if right_down(e):  self.tuar.dir_x += 1
-        if right_up(e):    self.tuar.dir_x -= 1
-        if left_down(e):   self.tuar.dir_x -= 1
-        if left_up(e):     self.tuar.dir_x += 1
+        if right_down(e) or left_up(e):
+            self.tuar.dir_x += 1
+            self.tuar.face_dir += 1
+        elif left_down(e) or right_up(e):
+            self.tuar.dir_x += -1
+            self.tuar.face_dir += -1
 
-        if up_down(e):     self.tuar.dir_y += 1
-        if up_up(e):       self.tuar.dir_y -= 1
-        if down_down(e):   self.tuar.dir_y -= 1
-        if down_up(e):     self.tuar.dir_y += 1
-
-        if self.tuar.dir_x > 1:  self.tuar.dir_x = 1
-        if self.tuar.dir_x < -1: self.tuar.dir_x = -1
-        if self.tuar.dir_y > 1:  self.tuar.dir_y = 1
-        if self.tuar.dir_y < -1: self.tuar.dir_y = -1
-
-        if right_down(e): self.tuar.face_dir = 1
-        if left_down(e):  self.tuar.face_dir = -1
+        if up_down(e) or down_up(e):
+            self.tuar.dir_y += 1
+        elif down_down(e) or up_up(e):
+            self.tuar.dir_y += -1
 
         self.frame_time = get_time()
 
