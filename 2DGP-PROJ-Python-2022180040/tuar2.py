@@ -145,6 +145,14 @@ class Run:
             return
 
     def draw(self):
+        if self.tuar.attack_active:
+            t = max(0.0, min(1.0, self.tuar.attack_t / ATTACK_TIME))
+            idx = int(t * len(self.tuar.attack_images))
+            if idx >= len(self.tuar.attack_images): idx = len(self.tuar.attack_images) - 1
+            img = self.tuar.attack_images[idx]
+            flip = 'h' if self.tuar.face_dir == -1 else ''
+            img.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
+            return
         if self.tuar.roll_active:
             t = max(0.0, min(1.0, self.tuar.roll_t / ROLL_TIME))
             direction = (1.0 if self.tuar.face_dir > 0 else -1.0)
