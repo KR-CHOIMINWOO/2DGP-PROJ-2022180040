@@ -65,8 +65,16 @@ class Idle:
         pass
 
     def draw(self):
-        flip = 'h' if self.tuar.face_dir == -1 else ''
-        self.tuar.image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
+        if self.tuar.roll_active:
+            t = max(0.0, min(1.0, self.tuar.roll_t / ROLL_TIME))
+            direction = (1.0 if self.tuar.face_dir > 0 else -1.0)
+            angle = -t * 2.0 * PI * direction
+            w, h = self.tuar.roll_image.w, self.tuar.roll_image.h
+            self.tuar.roll_image.clip_composite_draw(0, 0, w, h, angle, '',
+                                                     self.tuar.x, self.tuar.y, 75, 75)
+        else:
+            flip = 'h' if self.tuar.face_dir == -1 else ''
+            self.tuar.image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
 
 
 class Run:
