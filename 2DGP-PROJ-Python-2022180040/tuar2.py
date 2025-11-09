@@ -46,7 +46,7 @@ class Idle:
 
     def enter(self, e):
         self.tuar.wait_time = get_time()
-        self.tuar.dir = 0
+        self.tuar.dir_x = 0
         # 이미지 하나만 로드
         self.tuar.image = load_image('image_file/char/tuar01/tuar_01.png')
 
@@ -68,9 +68,14 @@ class Run:
 
     def enter(self, e):
         if right_down(e) or left_up(e):
-            self.tuar.dir = self.tuar.face_dir = 1
+            self.tuar.dir_x = self.tuar.face_dir = 1
         elif left_down(e) or right_up(e):
-            self.tuar.dir = self.tuar.face_dir = -1
+            self.tuar.dir_x = self.tuar.face_dir = -1
+
+        if up_down(e) or down_up(e):
+            self.tuar.dir_y = 1
+        elif down_down(e) or up_up(e):
+            self.tuar.dir_y = -1
 
         self.frame_time = get_time()
 
@@ -86,15 +91,9 @@ class Run:
         pass
 
     def do(self):
-        current_time = get_time()
-        elapsed = current_time - self.frame_time
-
-        if elapsed > 0.1:
-            self.tuar.frame = (self.tuar.frame + 1) % len(self.images)
-            self.frame_time = current_time
-
         self.tuar.frame = (self.tuar.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-        self.tuar.x += self.tuar.dir * RUN_SPEED_PPS * game_framework.frame_time
+        self.tuar.x += self.tuar.dir_x * RUN_SPEED_PPS * game_framework.frame_time
+        self.tuar.y += self.tuar.dir_y * RUN_SPEED_PPS * game_framework.frame_time
 
     def draw(self):
         image = self.images[self.tuar.frame]
@@ -107,7 +106,8 @@ class Tuar:
         self.x, self.y = 50, 150
         self.frame = 0
         self.face_dir = 1
-        self.dir = 0
+        self.dir_x = 0
+        self.dir_y = 0
         self.images = [
             load_image('image_file/char/tuar01/tuar_01.png'),
             load_image('image_file/char/tuar01/tuar_02.png'),
