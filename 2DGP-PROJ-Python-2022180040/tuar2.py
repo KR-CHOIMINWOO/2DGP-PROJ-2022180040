@@ -161,11 +161,11 @@ class Roll:
     def draw(self):
         t = max(0.0, min(1.0, self.elapsed / ROLL_TIME))
         direction = 1.0 if self.tuar.face_dir > 0 else -1.0
-        angle = t * 2.0 * PI * direction
+        angle = -t * 2.0 * PI * direction
 
         w, h = self.tuar.roll_image.w, self.tuar.roll_image.h
         self.tuar.roll_image.clip_composite_draw(0, 0, w, h, angle, '',
-                                                 self.tuar.x, self.tuar.y, 150, 150)
+                                                 self.tuar.x, self.tuar.y, 100, 100)
 
 
 class Tuar:
