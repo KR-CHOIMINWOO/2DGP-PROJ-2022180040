@@ -124,33 +124,26 @@ class Run:
 class Roll:
     def __init__(self, tuar):
         self.tuar = tuar
-        self.images = []
-        self.frame_time = 0
-        self.run_images = []
+        self.elapsed = 0.0
+        self.vx = 0.0
+        self.vy = 0.0
 
     def enter(self, e):
-        if right_down(e) or left_up(e):
-            self.tuar.dir_x += 1
-        elif left_down(e) or right_up(e):
-            self.tuar.dir_x += -1
+        dx, dy = float(self.tuar.dir_x), float(self.tuar.dir_y)
+        if dx == 0.0 and dy == 0.0:
+            dx, dy = (1.0 if self.tuar.face_dir > 0 else -1.0), 0.0
 
-        if up_down(e) or down_up(e):
-            self.tuar.dir_y += 1
-        elif down_down(e) or up_up(e):
-            self.tuar.dir_y += -1
+        mag = (dx*dx + dy*dy) ** 0.5
+        if mag > 0.0:
+            self.vx, self.vy = dx/mag, dy/mag
+        else:
+            self.vx, self.vy = 1.0, 0.0
 
-        if right_down(e): self.tuar.face_dir = 1
-        if left_down(e):  self.tuar.face_dir = -1
-        self.frame_time = get_time()
-
-        if not self.run_images:
-            for i in range(1, 5):
-                self.run_images.append(load_image(f'image_file/char/tuar01/tuar_{i:02d}.png'))
-
+        self.elapsed = 0.0
+        if not hasattr(self.tuar, 'roll_image'):
+            self.tuar.roll_image = load_image('image_file/char/tuar01/tuar_01.png')
 
     def exit(self, e):
-        if space_down(e):
-            pass
         pass
 
     def do(self):
