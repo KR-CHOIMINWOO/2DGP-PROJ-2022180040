@@ -201,8 +201,8 @@ class Tuar:
         if self.roll_active:
             dt = game_framework.frame_time
             self.roll_t += dt
-            self.x += self.roll_vx * RUN_SPEED_PPS * ROLL_SPEED_SCALE * dt
-            self.y += self.roll_vy * RUN_SPEED_PPS * ROLL_SPEED_SCALE * dt
+            self.x += self.roll_vx * ROLL_DISTANCE * ROLL_SPEED_SCALE * dt
+            self.y += self.roll_vy * ROLL_DISTANCE * ROLL_SPEED_SCALE * dt
             if self.roll_t >= ROLL_TIME:
                 self.roll_active = False
                 self.roll_cd = ROLL_COOLDOWN
