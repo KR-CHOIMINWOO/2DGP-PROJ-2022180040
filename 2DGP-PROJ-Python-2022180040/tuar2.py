@@ -143,9 +143,9 @@ class Tuar:
             self.IDLE,
             {
                 self.IDLE: {space_down: self.IDLE, right_down: self.RUN, left_down: self.RUN,
-                            right_up: self.RUN, left_up: self.RUN},
+                            right_up: self.RUN, left_up: self.RUN, up_down: self.RUN, up_up: self.RUN, down_down: self.RUN, down_up: self.RUN},
                 self.RUN: {space_down: self.RUN, right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE,
-                           left_down: self.IDLE}
+                           left_down: self.IDLE, up_up: self.IDLE, up_down: self.IDLE, down_up: self.IDLE, down_down: self.IDLE}
             }
         )
         self.item = None
