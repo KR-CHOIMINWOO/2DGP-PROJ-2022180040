@@ -1,5 +1,5 @@
 from pico2d import load_image, get_time
-from sdl2 import SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_RIGHT, SDLK_LEFT, SDLK_UP, SDLK_DOWN
+from sdl2 import SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_RIGHT, SDLK_LEFT, SDLK_UP, SDLK_DOWN, SDLK_LSHIFT
 
 import game_framework
 import game_world
@@ -24,6 +24,8 @@ def down_down(e):   return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1]
 def down_up(e):     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP   and e[1].key == SDLK_DOWN
 
 def no_input(e): return e[0] == 'NO_INPUT'
+
+def shift_down(e): return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LSHIFT
 
 # 용사의 Run Speed 계산
 
