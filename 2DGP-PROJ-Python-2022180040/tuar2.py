@@ -60,7 +60,8 @@ class Idle:
         pass
 
     def draw(self):
-        self.tuar.image.draw(self.tuar.x, self.tuar.y, 100, 100)
+        flip = 'h' if self.tuar.face_dir == -1 else ''
+        self.tuar.image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
 
 
 class Run:
@@ -73,16 +74,16 @@ class Run:
     def enter(self, e):
         if right_down(e) or left_up(e):
             self.tuar.dir_x += 1
-            self.tuar.face_dir += 1
         elif left_down(e) or right_up(e):
             self.tuar.dir_x += -1
-            self.tuar.face_dir += -1
 
         if up_down(e) or down_up(e):
             self.tuar.dir_y += 1
         elif down_down(e) or up_up(e):
             self.tuar.dir_y += -1
 
+        if right_down(e): self.tuar.face_dir = 1
+        if left_down(e):  self.tuar.face_dir = -1
         self.frame_time = get_time()
 
         if not self.run_images:
