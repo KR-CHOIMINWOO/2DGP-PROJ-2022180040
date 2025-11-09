@@ -70,14 +70,16 @@ class Run:
 
     def enter(self, e):
         if right_down(e) or left_up(e):
-            self.tuar.dir_x = self.tuar.face_dir = 1
+            self.tuar.dir_x += 1
+            self.tuar.face_dir += 1
         elif left_down(e) or right_up(e):
-            self.tuar.dir_x = self.tuar.face_dir = -1
+            self.tuar.dir_x += -1
+            self.tuar.face_dir += -1
 
         if up_down(e) or down_up(e):
-            self.tuar.dir_y = 1
+            self.tuar.dir_y += 1
         elif down_down(e) or up_up(e):
-            self.tuar.dir_y = -1
+            self.tuar.dir_y += -1
 
         self.frame_time = get_time()
 
@@ -94,16 +96,15 @@ class Run:
     def do(self):
         self.tuar.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
 
-        dx, dy = float(self.tuar.dir_x), float(self.tuar.dir_y)
+        dx, dy = self.tuar.dir_x, self.tuar.dir_y
 
-        if dx > 0: self.tuar.face_dir = 1
-        if dx < 0: self.tuar.face_dir = -1
+        if dx > 0:
+            self.tuar.face_dir = 1
+        elif dx < 0:
+            self.tuar.face_dir = -1
 
-        mag = (dx * dx + dy * dy) ** 0.5
-        if mag > 0.0:
-            nx, ny = dx / mag, dy / mag
-            self.tuar.x += nx * RUN_SPEED_PPS * game_framework.frame_time
-            self.tuar.y += ny * RUN_SPEED_PPS * game_framework.frame_time
+        self.tuar.x += dx * RUN_SPEED_PPS * game_framework.frame_time
+        self.tuar.y += dy * RUN_SPEED_PPS * game_framework.frame_time
 
 
     def draw(self):
@@ -135,12 +136,23 @@ class Tuar:
         self.state_machine = StateMachine(
             self.IDLE,
             {
-                self.IDLE: {space_down: self.IDLE, right_down: self.RUN, left_down: self.RUN,
-                            right_up: self.RUN, left_up: self.RUN, up_down: self.RUN, up_up: self.RUN, down_down: self.RUN, down_up: self.RUN},
-                self.RUN: {space_down: self.RUN, right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE,
-                           left_down: self.IDLE, up_up: self.IDLE, up_down: self.IDLE, down_up: self.IDLE, down_down: self.IDLE}
+                self.IDLE: {
+                    space_down: self.IDLE,
+                    right_down: self.RUN, left_down: self.RUN,
+                    up_down: self.RUN, down_down: self.RUN,
+                    right_up: self.IDLE, left_up: self.IDLE,
+                    up_up: self.IDLE, down_up: self.IDLE,
+                },
+                self.RUN: {
+                    space_down: self.RUN,
+                    right_down: self.RUN, left_down: self.RUN,
+                    up_down: self.RUN, down_down: self.RUN,
+                    right_up: self.RUN, left_up: self.RUN,
+                    up_up: self.RUN, down_up: self.RUN,
+                }
             }
         )
+
         self.item = None
 
     def update(self):
