@@ -41,7 +41,9 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
-
+PI = 3.141592
+ROLL_TIME = 0.40
+ROLL_SPEED_SCALE = 2.5
 
 class Idle:
 
@@ -147,27 +149,23 @@ class Roll:
         pass
 
     def do(self):
-        self.tuar.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
+        dt = game_framework.frame_time
+        self.elapsed += dt
 
-        dx, dy = self.tuar.dir_x, self.tuar.dir_y
+        self.tuar.x += self.vx * RUN_SPEED_PPS * ROLL_SPEED_SCALE * dt
+        self.tuar.y += self.vy * RUN_SPEED_PPS * ROLL_SPEED_SCALE * dt
 
-        if dx > 0:
-            self.tuar.face_dir = 1
-        elif dx < 0:
-            self.tuar.face_dir = -1
-
-        self.tuar.x += dx * RUN_SPEED_PPS * game_framework.frame_time
-        self.tuar.y += dy * RUN_SPEED_PPS * game_framework.frame_time
-
-        if self.tuar.dir_x == 0 and self.tuar.dir_y == 0:
-            self.tuar.state_machine.handle_state_event(('NO_INPUT', None))
-            return
+        if self.elapsed >= ROLL_TIME:
+            self.tuar.state_machine.handle_state_event(('TIMEOUT', None))
 
     def draw(self):
-        idx = int(self.tuar.frame) % len(self.run_images)
-        image = self.run_images[idx]
-        flip = 'h' if self.tuar.face_dir == -1 else ''
-        image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
+        t = max(0.0, min(1.0, self.elapsed / ROLL_TIME))
+        direction = 1.0 if self.tuar.face_dir > 0 else -1.0
+        angle = t * 2.0 * PI * direction
+
+        w, h = self.tuar.roll_image.w, self.tuar.roll_image.h
+        self.tuar.roll_image.clip_composite_draw(0, 0, w, h, angle, '',
+                                                 self.tuar.x, self.tuar.y, 150, 150)
 
 
 class Tuar:
