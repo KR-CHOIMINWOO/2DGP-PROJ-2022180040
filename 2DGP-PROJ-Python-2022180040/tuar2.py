@@ -260,4 +260,5 @@ class Tuar:
             return
         if self.roll_active or self.roll_cd > 0.0:
             return
-
+        self.attack_active = True
+        self.attack_t = 0.0
