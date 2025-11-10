@@ -266,6 +266,11 @@ class Tuar:
         self.base_atk = [load_image(f'image_file/char/tuar01/tuar_{i:02d}.png') for i in range(5, 8)]
         self.tf_atk = [load_image(f'image_file/char/tuar04/tuar04_{i:02d}.png') for i in range(5, 8)]
 
+        self.cur_idle_img = self.base_idle
+        self.cur_run_images = self.base_run
+        self.cur_attack_imgs = self.base_atk
+        self.roll_image = self.base_idle
+
         self.item = None
 
     def update(self):
