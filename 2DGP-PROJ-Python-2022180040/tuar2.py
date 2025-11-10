@@ -73,6 +73,12 @@ class Idle:
         pass
 
     def draw(self):
+        if self.tuar.attack_active:
+            self.tuar.draw_attack()
+            return
+        if self.tuar.roll_active:
+            self.tuar.draw_roll()
+            return
         flip = 'h' if self.tuar.face_dir == -1 else ''
         self.tuar.cur_idle_img.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
 
@@ -127,6 +133,12 @@ class Run:
             return
 
     def draw(self):
+        if self.tuar.attack_active:
+            self.tuar.draw_attack()
+            return
+        if self.tuar.roll_active:
+            self.tuar.draw_roll()
+            return
         if not self.tuar.roll_active and not self.tuar.attack_active:
             idx = int(self.tuar.frame) % len(self.tuar.cur_run_images)
             img = self.tuar.cur_run_images[idx]
@@ -302,12 +314,6 @@ class Tuar:
         sw, sh = img.w, img.h
         W, H = 100, 100
 
-        pivot_fx, pivot_fy = 0.5, 0.07
-        px, py = sw * pivot_fx, sh * pivot_fy
-        sx, sy = W / sw, H / sh
-        off_x = (sw * 0.5 - px) * sx
-        off_y = (sh * 0.5 - py) * sy
-
         feet_x = self.x
         feet_y = self.y - (H * 0.38)
 
@@ -315,4 +321,4 @@ class Tuar:
         direction = 1.0 if self.face_dir > 0 else -1.0
         angle = -t * 2.0 * PI * direction
 
-        img.clip_composite_draw(0, 0, sw, sh, angle, '', feet_x + off_x, feet_y + off_y, W, H)
+        img.clip_composite_draw(0, 0, sw, sh, angle, '', self.x, self.y - 20, W, H)
