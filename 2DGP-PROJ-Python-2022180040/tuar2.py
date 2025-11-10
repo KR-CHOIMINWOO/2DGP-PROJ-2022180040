@@ -66,7 +66,10 @@ class Idle:
         self.tuar.dir_x = 0
         self.tuar.dir_y = 0
         # 이미지 하나만 로드
-        self.tuar.image = load_image('image_file/char/tuar01/tuar_01.png')
+        if self.tuar.special_active:
+            self.tuar.image = load_image('image_file/char/tuar04/tuar04_01.png')
+        else:
+            self.tuar.image = load_image('image_file/char/tuar01/tuar_01.png')
 
     def exit(self, e):
         pass
@@ -119,7 +122,10 @@ class Run:
 
         if not self.run_images:
             for i in range(1, 5):
-                self.run_images.append(load_image(f'image_file/char/tuar01/tuar_{i:02d}.png'))
+                if self.tuar.special_active:
+                    self.run_images.append(load_image(f'image_file/char/tuar04/tuar04_{i:02d}.png'))
+                else:
+                    self.run_images.append(load_image(f'image_file/char/tuar01/tuar_{i:02d}.png'))
 
 
     def exit(self, e):
@@ -187,6 +193,10 @@ class Tuar:
             load_image('image_file/char/tuar01/tuar_07.png'),
         ]
 
+        self.special_active = False
+        self.special_t = 0.0
+        self.special_cd = 0.0
+
         self.IDLE = Idle(self)
         self.RUN = Run(self)
         self.state_machine = StateMachine(
@@ -215,30 +225,36 @@ class Tuar:
         self.roll_t = 0.0
         self.roll_vx, self.roll_vy = 0.0, 0.0
         self.roll_cd = 0.0
-        self.roll_image = load_image('image_file/char/tuar01/tuar_01.png')  # 1번 이미지
+        if self.special_active:
+            self.roll_image = load_image('image_file/char/tuar04/tuar04_01.png')
+        else:
+            self.roll_image = load_image('image_file/char/tuar01/tuar_01.png')  # 1번 이미지
 
         self.attack_active = False
         self.attack_t = 0.0
         self.attack_cd = 0.0
 
-        self.attack_images = [
-            load_image('image_file/char/tuar01/tuar_05.png'),
-            load_image('image_file/char/tuar01/tuar_06.png'),
-            load_image('image_file/char/tuar01/tuar_07.png'),
-        ]
-
-        self.special_active = False
-        self.special_t = 0.0
-        self.special_cd = 0.0
+        if self.special_active:
+            self.attack_images = [
+                load_image('image_file/char/tuar04/tuar04_05.png'),
+                load_image('image_file/char/tuar04/tuar04_06.png'),
+                load_image('image_file/char/tuar04/tuar04_07.png'),
+            ]
+        else:
+            self.attack_images = [
+                load_image('image_file/char/tuar01/tuar_05.png'),
+                load_image('image_file/char/tuar01/tuar_06.png'),
+                load_image('image_file/char/tuar01/tuar_07.png'),
+            ]
 
         self.image_transformed = [
-            load_image('image_file/char/tuar04/tuar_04_01.png'),
-            load_image('image_file/char/tuar04/tuar_04_02.png'),
-            load_image('image_file/char/tuar04/tuar_04_03.png'),
-            load_image('image_file/char/tuar04/tuar_04_04.png'),
-            load_image('image_file/char/tuar04/tuar_04_05.png'),
-            load_image('image_file/char/tuar04/tuar_04_06.png'),
-            load_image('image_file/char/tuar04/tuar_04_07.png'),
+            load_image('image_file/char/tuar04/tuar04_01.png'),
+            load_image('image_file/char/tuar04/tuar04_02.png'),
+            load_image('image_file/char/tuar04/tuar04_03.png'),
+            load_image('image_file/char/tuar04/tuar04_04.png'),
+            load_image('image_file/char/tuar04/tuar04_05.png'),
+            load_image('image_file/char/tuar04/tuar04_06.png'),
+            load_image('image_file/char/tuar04/tuar04_07.png'),
         ]
 
         self.item = None
@@ -309,3 +325,10 @@ class Tuar:
             return
         self.attack_active = True
         self.attack_t = 0.0
+
+    def try_special(self):
+        if self.special_active or self.special_cd > 0.0:
+            return
+
+        self.special_active = True
+        self.special_t = 0.0
