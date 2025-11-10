@@ -287,3 +287,32 @@ class Tuar:
             self.cur_run_images = self.base_run
             self.cur_attack_imgs = self.base_atk
             self.roll_image = self.base_idle
+
+    def draw_attack(self):
+        t = max(0.0, min(1.0, self.attack_t / ATTACK_TIME))
+        idx = int(t * len(self.cur_attack_imgs))
+        if idx >= len(self.cur_attack_imgs):
+            idx = len(self.cur_attack_imgs) - 1
+        img = self.cur_attack_imgs[idx]
+        flip = 'h' if self.face_dir == -1 else ''
+        img.composite_draw(0, flip, self.x, self.y, 100, 100)
+
+    def draw_roll(self):
+        img = self.roll_image
+        sw, sh = img.w, img.h
+        W, H = 100, 100
+
+        pivot_fx, pivot_fy = 0.5, 0.07
+        px, py = sw * pivot_fx, sh * pivot_fy
+        sx, sy = W / sw, H / sh
+        off_x = (sw * 0.5 - px) * sx
+        off_y = (sh * 0.5 - py) * sy
+
+        feet_x = self.x
+        feet_y = self.y - (H * 0.38)
+
+        t = max(0.0, min(1.0, self.roll_t / ROLL_TIME))
+        direction = 1.0 if self.face_dir > 0 else -1.0
+        angle = -t * 2.0 * PI * direction
+
+        img.clip_composite_draw(0, 0, sw, sh, angle, '', feet_x + off_x, feet_y + off_y, W, H)
