@@ -55,8 +55,8 @@ def draw_hp_bar():
 
     clip_w = int(fw * ratio)
     if clip_w > 0:
-        img_hp_fill.clip_draw(0, 0, clip_w, fh, frame_x - frame_w/2 + frame_w*ratio/2, frame_y, frame_w * ratio, frame_h)
-    img_hp_frame.draw(frame_x, frame_y, frame_w, frame_h)
+        img_hp_fill.clip_draw(0, 0, clip_w, fh, frame_x - frame_w/2 + frame_w*ratio/2 + 40, frame_y - 30, frame_w * ratio, frame_h)
+    img_hp_frame.draw(frame_x + 40, frame_y - 30, frame_w, frame_h)
 
 
 def draw_skill_icon():
