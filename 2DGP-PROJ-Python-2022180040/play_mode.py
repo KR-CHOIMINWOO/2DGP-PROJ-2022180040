@@ -1,7 +1,7 @@
 from pico2d import *
 
 import draw_ui
-from tuar2 import Tuar
+from tuar2 import Tuar, ROLL_COOLDOWN
 from grass import Grass
 import title_mode
 import game_world
@@ -33,6 +33,7 @@ def finish():
 
 def update():
     game_world.update()
+    draw_ui.update(hp=tuar.hp, hp_max=tuar.max_hp, _roll_cooltime=tuar.roll_cd, _roll_max_cooltime=ROLL_COOLDOWN, _special_cooltime=tuar.special_cd, _special_cooltime_max=15.0, _special_active=tuar.special_active)
 
 
 def draw():
