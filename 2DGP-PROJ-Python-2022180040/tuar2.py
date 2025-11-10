@@ -154,7 +154,7 @@ class Tuar:
         self.dir_x = 0
         self.dir_y = 0
         self.hp = 100
-        self.hp_max = 100
+        self.max_hp = 100
 
         self.special_active = False
         self.special_t = 0.0

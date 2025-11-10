@@ -26,13 +26,13 @@ def update(_hp:int, _hp_max:int, _roll_cooltime:float, _roll_cooltime_max:float,
            _special_cooltime:float, _special_cooltime_max:float, _special_active:bool):
     global hp, hp_max, roll_cooltime, roll_cooltime_max
     global special_cooltime, special_cooltime_max, special_active
-    hp = max(0, hp)
-    hp_max = max(1, hp_max)
-    roll_cooltime = max(0.0, roll_cooltime)
-    roll_cooltime_max = max(0.001, roll_cooltime_max)
-    special_cooltime = max(0.0, special_cooltime)
-    special_cooltime_max = max(0.001, special_cooltime_max)
-    special_active = special_active
+    hp = max(0, _hp)
+    hp_max = max(1, _hp_max)
+    roll_cooltime = max(0.0, _roll_cooltime)
+    roll_cooltime_max = max(0.001, _roll_cooltime_max)
+    special_cooltime = max(0.0, _special_cooltime)
+    special_cooltime_max = max(0.001, _special_cooltime_max)
+    special_active = _special_active
 
 
 def draw_hp_bar():
@@ -53,6 +53,6 @@ def draw_hp_bar():
 def draw_skill_icon():
     pass
 
-def main():
+def draw():
     pass
 

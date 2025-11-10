@@ -33,7 +33,7 @@ def finish():
 
 def update():
     game_world.update()
-    draw_ui.update(hp=tuar.hp, hp_max=tuar.max_hp, _roll_cooltime=tuar.roll_cd, _roll_max_cooltime=ROLL_COOLDOWN, _special_cooltime=tuar.special_cd, _special_cooltime_max=15.0, _special_active=tuar.special_active)
+    draw_ui.update(_hp=tuar.hp, _hp_max=tuar.max_hp, _roll_cooltime=tuar.roll_cd, _roll_cooltime_max=ROLL_COOLDOWN, _special_cooltime=tuar.special_cd, _special_cooltime_max=15.0, _special_active=tuar.special_active)
 
 
 def draw():
