@@ -1,5 +1,5 @@
 from pico2d import load_image, get_time
-from sdl2 import SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_RIGHT, SDLK_LEFT, SDLK_UP, SDLK_DOWN, SDLK_LSHIFT, SDLK_d
+from sdl2 import SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_w, SDLK_a, SDLK_s, SDLK_d, SDLK_LSHIFT, SDLK_j, SDLK_k
 
 import game_framework
 import game_world
@@ -11,24 +11,24 @@ def space_down(e):
 
 time_out = lambda e: e[0] == 'TIMEOUT'
 
-def right_down(e):  return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
-def right_up(e):    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP   and e[1].key == SDLK_RIGHT
+def right_down(e):  return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_d
+def right_up(e):    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP   and e[1].key == SDLK_d
 
-def left_down(e):   return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
-def left_up(e):     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP   and e[1].key == SDLK_LEFT
+def left_down(e):   return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
+def left_up(e):     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP   and e[1].key == SDLK_a
 
-def up_down(e):     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
-def up_up(e):       return e[0] == 'INPUT' and e[1].type == SDL_KEYUP   and e[1].key == SDLK_UP
+def up_down(e):     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_w
+def up_up(e):       return e[0] == 'INPUT' and e[1].type == SDL_KEYUP   and e[1].key == SDLK_w
 
-def down_down(e):   return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_DOWN
-def down_up(e):     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP   and e[1].key == SDLK_DOWN
+def down_down(e):   return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_s
+def down_up(e):     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP   and e[1].key == SDLK_s
 
 def no_input(e): return e[0] == 'NO_INPUT'
 
 def shift_down(e): return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LSHIFT
 
 def attack_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_d
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_j
 # 용사의 Run Speed 계산
 
 # 용사 Run Speed
@@ -85,7 +85,7 @@ class Idle:
             angle = -t * 2.0 * PI * direction
             w, h = self.tuar.roll_image.w, self.tuar.roll_image.h
             self.tuar.roll_image.clip_composite_draw(0, 0, w, h, angle, '',
-                                                     self.tuar.x, self.tuar.y - 20, 100, 100)
+                                                     self.tuar.x, self.tuar.y - 30, 100, 100)
         else:
             flip = 'h' if self.tuar.face_dir == -1 else ''
             self.tuar.image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
@@ -159,7 +159,7 @@ class Run:
             angle = -t * 2.0 * PI * direction
             w, h = self.tuar.roll_image.w, self.tuar.roll_image.h
             self.tuar.roll_image.clip_composite_draw(0, 0, w, h, angle, '',
-                                                     self.tuar.x, self.tuar.y - 20, 100, 100)
+                                                     self.tuar.x, self.tuar.y - 30, 100, 100)
         else:
             idx = int(self.tuar.frame) % len(self.run_images)
             image = self.run_images[idx]
