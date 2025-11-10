@@ -65,11 +65,7 @@ class Idle:
         self.tuar.wait_time = get_time()
         self.tuar.dir_x = 0
         self.tuar.dir_y = 0
-        # 이미지 하나만 로드
-        if self.tuar.special_active:
-            self.tuar.image = load_image('image_file/char/tuar04/tuar04_01.png')
-        else:
-            self.tuar.image = load_image('image_file/char/tuar01/tuar_01.png')
+        self.tuar.image = self.tuar.cur_idle_img
 
     def exit(self, e):
         pass
@@ -78,24 +74,8 @@ class Idle:
         pass
 
     def draw(self):
-        if self.tuar.attack_active:
-            t = max(0.0, min(1.0, self.tuar.attack_t / ATTACK_TIME))
-            idx = int(t * len(self.tuar.attack_images))
-            if idx >= len(self.tuar.attack_images): idx = len(self.tuar.attack_images) - 1
-            img = self.tuar.attack_images[idx]
-            flip = 'h' if self.tuar.face_dir == -1 else ''
-            img.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
-            return
-        if self.tuar.roll_active:
-            t = max(0.0, min(1.0, self.tuar.roll_t / ROLL_TIME))
-            direction = (1.0 if self.tuar.face_dir > 0 else -1.0)
-            angle = -t * 2.0 * PI * direction
-            w, h = self.tuar.roll_image.w, self.tuar.roll_image.h
-            self.tuar.roll_image.clip_composite_draw(0, 0, w, h, angle, '',
-                                                     self.tuar.x, self.tuar.y - 30, 100, 100)
-        else:
-            flip = 'h' if self.tuar.face_dir == -1 else ''
-            self.tuar.image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
+        flip = 'h' if self.tuar.face_dir == -1 else ''
+        self.tuar.cur_idle_img.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
 
 
 class Run:
@@ -119,13 +99,6 @@ class Run:
         if right_down(e): self.tuar.face_dir = 1
         if left_down(e):  self.tuar.face_dir = -1
         self.frame_time = get_time()
-
-        if not self.run_images:
-            for i in range(1, 5):
-                if self.tuar.special_active:
-                    self.run_images.append(load_image(f'image_file/char/tuar04/tuar04_{i:02d}.png'))
-                else:
-                    self.run_images.append(load_image(f'image_file/char/tuar01/tuar_{i:02d}.png'))
 
 
     def exit(self, e):
@@ -155,26 +128,12 @@ class Run:
             return
 
     def draw(self):
-        if self.tuar.attack_active:
-            t = max(0.0, min(1.0, self.tuar.attack_t / ATTACK_TIME))
-            idx = int(t * len(self.tuar.attack_images))
-            if idx >= len(self.tuar.attack_images): idx = len(self.tuar.attack_images) - 1
-            img = self.tuar.attack_images[idx]
+        if not self.tuar.roll_active and not self.tuar.attack_active:
+            idx = int(self.tuar.frame) % len(self.tuar.cur_run_images)
+            img = self.tuar.cur_run_images[idx]
             flip = 'h' if self.tuar.face_dir == -1 else ''
             img.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
-            return
-        if self.tuar.roll_active:
-            t = max(0.0, min(1.0, self.tuar.roll_t / ROLL_TIME))
-            direction = (1.0 if self.tuar.face_dir > 0 else -1.0)
-            angle = -t * 2.0 * PI * direction
-            w, h = self.tuar.roll_image.w, self.tuar.roll_image.h
-            self.tuar.roll_image.clip_composite_draw(0, 0, w, h, angle, '',
-                                                     self.tuar.x, self.tuar.y - 30, 100, 100)
-        else:
-            idx = int(self.tuar.frame) % len(self.run_images)
-            image = self.run_images[idx]
-            flip = 'h' if self.tuar.face_dir == -1 else ''
-            image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
+
 
 class Tuar:
     def __init__(self):
@@ -274,6 +233,11 @@ class Tuar:
         self.item = None
 
     def update(self):
+        if self.special_active:
+            self.special_t += game_framework.frame_time
+            if self.special_t >= 15.0:
+                self.apply_skin(False)
+
         if self.attack_cd > 0.0:
             self.attack_cd = max(0.0, self.attack_cd - game_framework.frame_time)
 
@@ -345,6 +309,8 @@ class Tuar:
             return
 
         self.special_active = True
+        self.special_t = 0.0
+        self.apply_skin(True)
         self.special_t = 0.0
 
     def apply_skin(self, special: bool):
