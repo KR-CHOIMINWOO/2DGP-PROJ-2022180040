@@ -25,3 +25,12 @@ def init():
 def update():
     pass
 
+def draw_hp_bar():
+    pass
+
+def draw_skill_icon():
+    pass
+
+def main():
+    pass
+
