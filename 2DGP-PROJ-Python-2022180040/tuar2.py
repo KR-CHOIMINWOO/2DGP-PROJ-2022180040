@@ -257,6 +257,15 @@ class Tuar:
             load_image('image_file/char/tuar04/tuar04_07.png'),
         ]
 
+        self.base_idle = load_image('image_file/char/tuar01/tuar_01.png')
+        self.tf_idle = load_image('image_file/char/tuar04/tuar04_01.png')
+
+        self.base_run = [load_image(f'image_file/char/tuar01/tuar_{i:02d}.png') for i in range(1, 5)]
+        self.tf_run = [load_image(f'image_file/char/tuar04/tuar04_{i:02d}.png') for i in range(1, 5)]
+
+        self.base_atk = [load_image(f'image_file/char/tuar01/tuar_{i:02d}.png') for i in range(5, 8)]
+        self.tf_atk = [load_image(f'image_file/char/tuar04/tuar04_{i:02d}.png') for i in range(5, 8)]
+
         self.item = None
 
     def update(self):
