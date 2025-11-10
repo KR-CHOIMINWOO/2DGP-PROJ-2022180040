@@ -29,6 +29,10 @@ def shift_down(e): return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].
 
 def attack_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_j
+
+def special_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_k
+
 # 용사의 Run Speed 계산
 
 # 용사 Run Speed
@@ -223,6 +227,20 @@ class Tuar:
             load_image('image_file/char/tuar01/tuar_07.png'),
         ]
 
+        self.special_active = False
+        self.special_t = 0.0
+        self.special_cd = 0.0
+
+        self.image_transformed = [
+            load_image('image_file/char/tuar04/tuar_04_01.png'),
+            load_image('image_file/char/tuar04/tuar_04_02.png'),
+            load_image('image_file/char/tuar04/tuar_04_03.png'),
+            load_image('image_file/char/tuar04/tuar_04_04.png'),
+            load_image('image_file/char/tuar04/tuar_04_05.png'),
+            load_image('image_file/char/tuar04/tuar_04_06.png'),
+            load_image('image_file/char/tuar04/tuar_04_07.png'),
+        ]
+
         self.item = None
 
     def update(self):
@@ -250,6 +268,9 @@ class Tuar:
         self.state_machine.update()
 
     def handle_event(self, event):
+        if special_down(('INPUT', event)):
+            self.try_special()
+
         if attack_down(('INPUT', event)):
             self.try_attack()
             
