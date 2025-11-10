@@ -154,13 +154,6 @@ class Tuar:
         self.dir_x = 0
         self.dir_y = 0
 
-        self.key_left  = False
-        self.key_right = False
-        self.key_up    = False
-        self.key_down  = False
-
-        self.last_horz = 1
-
         self.special_active = False
         self.special_t = 0.0
         self.special_cd = 0.0
