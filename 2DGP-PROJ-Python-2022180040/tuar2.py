@@ -346,3 +346,16 @@ class Tuar:
 
         self.special_active = True
         self.special_t = 0.0
+
+    def apply_skin(self, special: bool):
+        self.special_active = special
+        if special:
+            self.cur_idle_img = self.tf_idle
+            self.cur_run_images = self.tf_run
+            self.cur_attack_imgs = self.tf_atk
+            self.roll_image = self.tf_idle
+        else:
+            self.cur_idle_img = self.base_idle
+            self.cur_run_images = self.base_run
+            self.cur_attack_imgs = self.base_atk
+            self.roll_image = self.base_idle
