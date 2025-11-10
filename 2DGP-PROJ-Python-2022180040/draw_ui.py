@@ -1,4 +1,4 @@
-from pico2d import load_image, load_font, draw_rectangle
+from pico2d import load_image, load_font, draw_rectangle, get_canvas_width, get_canvas_height
 import game_framework
 import math
 
@@ -26,7 +26,19 @@ def update():
     pass
 
 def draw_hp_bar():
-    pass
+    cw , ch = get_canvas_width(), get_canvas_height()
+    x0 = 20
+    y0 = ch - 20
+
+    icon_size = 64
+    img_icon_tuar.draw(x0 + icon_size // 2, y0 - icon_size // 2, icon_size, icon_size)
+
+    img_hp_text.draw(x0 + icon_size + 10 + 30, y0 - 12, 60, 26)
+
+    frame_w, frame_h = 220, 24
+    frame_x = x0 + icon_size + 80
+    frame_y = y0 - 12
+
 
 def draw_skill_icon():
     pass

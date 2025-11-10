@@ -1,4 +1,6 @@
 from pico2d import *
+
+import draw_ui
 from tuar2 import Tuar
 from grass import Grass
 import title_mode
@@ -19,8 +21,10 @@ def handle_events():
 def init():
     global tuar
 
+    draw_ui.init()
     tuar = Tuar()
     game_world.add_object(tuar, 1)
+
 
 def finish():
     game_world.clear()
@@ -35,6 +39,7 @@ def draw():
     clear_canvas()
     game_world.render()
     update_canvas()
+    draw_ui.draw()
 
 def pause():
     pass
