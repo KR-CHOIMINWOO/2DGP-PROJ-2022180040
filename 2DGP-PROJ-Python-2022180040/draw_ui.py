@@ -23,7 +23,8 @@ def init():
     img_awaken    = load_image(IMG_AWAKEN)
 
 def update():
-    pass
+    global hp, hp_max, roll_cooltime, roll_cooltime_max, special_ready
+    global special_cooltime, special_cooltime_max, special_active
 
 def draw_hp_bar():
     cw , ch = get_canvas_width(), get_canvas_height()
