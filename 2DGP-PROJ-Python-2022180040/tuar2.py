@@ -142,79 +142,10 @@ class Tuar:
         self.face_dir = 1
         self.dir_x = 0
         self.dir_y = 0
-        self.images = [
-            load_image('image_file/char/tuar01/tuar_01.png'),
-            load_image('image_file/char/tuar01/tuar_02.png'),
-            load_image('image_file/char/tuar01/tuar_03.png'),
-            load_image('image_file/char/tuar01/tuar_04.png'),
-            load_image('image_file/char/tuar01/tuar_05.png'),
-            load_image('image_file/char/tuar01/tuar_06.png'),
-            load_image('image_file/char/tuar01/tuar_07.png'),
-        ]
 
         self.special_active = False
         self.special_t = 0.0
         self.special_cd = 0.0
-
-        self.IDLE = Idle(self)
-        self.RUN = Run(self)
-        self.state_machine = StateMachine(
-            self.IDLE,
-            {
-                self.IDLE: {
-                    space_down: self.IDLE,
-                    right_down: self.RUN, left_down: self.RUN,
-                    up_down: self.RUN, down_down: self.RUN,
-                    right_up: self.IDLE, left_up: self.IDLE,
-                    up_up: self.IDLE, down_up: self.IDLE,
-
-                },
-                self.RUN: {
-                    space_down: self.RUN,
-                    right_down: self.RUN, left_down: self.RUN,
-                    up_down: self.RUN, down_down: self.RUN,
-                    right_up: self.RUN, left_up: self.RUN,
-                    up_up: self.RUN, down_up: self.RUN,
-
-                    no_input: self.IDLE,
-                }
-            }
-        )
-        self.roll_active = False
-        self.roll_t = 0.0
-        self.roll_vx, self.roll_vy = 0.0, 0.0
-        self.roll_cd = 0.0
-        if self.special_active:
-            self.roll_image = load_image('image_file/char/tuar04/tuar04_01.png')
-        else:
-            self.roll_image = load_image('image_file/char/tuar01/tuar_01.png')  # 1번 이미지
-
-        self.attack_active = False
-        self.attack_t = 0.0
-        self.attack_cd = 0.0
-
-        if self.special_active:
-            self.attack_images = [
-                load_image('image_file/char/tuar04/tuar04_05.png'),
-                load_image('image_file/char/tuar04/tuar04_06.png'),
-                load_image('image_file/char/tuar04/tuar04_07.png'),
-            ]
-        else:
-            self.attack_images = [
-                load_image('image_file/char/tuar01/tuar_05.png'),
-                load_image('image_file/char/tuar01/tuar_06.png'),
-                load_image('image_file/char/tuar01/tuar_07.png'),
-            ]
-
-        self.image_transformed = [
-            load_image('image_file/char/tuar04/tuar04_01.png'),
-            load_image('image_file/char/tuar04/tuar04_02.png'),
-            load_image('image_file/char/tuar04/tuar04_03.png'),
-            load_image('image_file/char/tuar04/tuar04_04.png'),
-            load_image('image_file/char/tuar04/tuar04_05.png'),
-            load_image('image_file/char/tuar04/tuar04_06.png'),
-            load_image('image_file/char/tuar04/tuar04_07.png'),
-        ]
 
         self.base_idle = load_image('image_file/char/tuar01/tuar_01.png')
         self.tf_idle = load_image('image_file/char/tuar04/tuar04_01.png')
@@ -230,7 +161,39 @@ class Tuar:
         self.cur_attack_imgs = self.base_atk
         self.roll_image = self.base_idle
 
+        self.roll_active = False
+        self.roll_t = 0.0
+        self.roll_vx, self.roll_vy = 0.0, 0.0
+        self.roll_cd = 0.0
+
+        self.attack_active = False
+        self.attack_t = 0.0
+        self.attack_cd = 0.0
+
         self.item = None
+
+        self.IDLE = Idle(self)
+        self.RUN = Run(self)
+        self.state_machine = StateMachine(
+            self.IDLE,
+            {
+                self.IDLE: {
+                    space_down: self.IDLE,
+                    right_down: self.RUN, left_down: self.RUN,
+                    up_down: self.RUN, down_down: self.RUN,
+                    right_up: self.IDLE, left_up: self.IDLE,
+                    up_up: self.IDLE, down_up: self.IDLE,
+                },
+                self.RUN: {
+                    space_down: self.RUN,
+                    right_down: self.RUN, left_down: self.RUN,
+                    up_down: self.RUN, down_down: self.RUN,
+                    right_up: self.RUN, left_up: self.RUN,
+                    up_up: self.RUN, down_up: self.RUN,
+                    no_input: self.IDLE,
+                }
+            }
+        )
 
     def update(self):
         if self.special_active:
