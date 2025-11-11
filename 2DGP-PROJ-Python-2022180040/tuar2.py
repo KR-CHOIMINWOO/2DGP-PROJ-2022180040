@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time
+from pico2d import load_image, get_time, draw_rectangle
 from sdl2 import SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_w, SDLK_a, SDLK_s, SDLK_d, SDLK_LSHIFT, SDLK_j, SDLK_k
 
 import game_framework
@@ -259,12 +259,13 @@ class Tuar:
             self.try_roll()
         self.state_machine.handle_state_event(('INPUT', event))
         pass
-    
+
     def get_bb(self):
-        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+        return self.x - 30, self.y - 50, self.x + 10, self.y + 10
 
     def draw(self):
         self.state_machine.draw()
+        draw_rectangle(*self.get_bb())
 
     def try_roll(self):
         if self.roll_active or self.roll_cd > 0.0:
