@@ -281,6 +281,8 @@ class Tuar:
                     self.y -= (ta - bb)
                 else:
                     self.y += (tb - ba)
+        elif group == 'tuar:door':
+            pass
 
     def draw(self):
         self.state_machine.draw()
