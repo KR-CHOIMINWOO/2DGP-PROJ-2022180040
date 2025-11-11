@@ -11,6 +11,16 @@ class Wall:
         return (self.l, self.b, self.r, self.t)
     def handle_collision(self, group, other):
         pass
+class Door:
+    def __init__(self, l, b, r, t):
+        self.l, self.b, self.r, self.t = l, b, r, t
+    def update(self): pass
+    def draw(self):
+        draw_rectangle(self.l, self.b, self.r, self.t)
+    def get_bb(self):
+        return (self.l, self.b, self.r, self.t)
+    def handle_collision(self, group, other):
+        pass
 
 class Dungeon:
     def __init__(self):
