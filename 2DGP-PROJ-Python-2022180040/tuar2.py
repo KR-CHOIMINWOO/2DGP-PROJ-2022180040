@@ -160,6 +160,8 @@ class Tuar:
         self.hp = 100
         self.max_hp = 100
 
+        self.bb = 100
+
         self.special_active = False
         self.special_t = 0.0
         self.special_cd = 0.0
@@ -257,6 +259,9 @@ class Tuar:
             self.try_roll()
         self.state_machine.handle_state_event(('INPUT', event))
         pass
+    
+    def get_bb(self):
+        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
 
     def draw(self):
         self.state_machine.draw()
