@@ -27,9 +27,10 @@ def init():
     tuar = Tuar()
 
     game_world.add_object(dungeon, 0)
+    for w in dungeon.walls:
+        game_world.add_object(w, 0)
+        game_world.add_collision_pair('tuar:wall', tuar, w)
     game_world.add_object(tuar, 1)
-
-    game_world.add_collision_pair('tuar:dungeon', tuar, dungeon)
 
 
 def finish():

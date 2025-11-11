@@ -264,19 +264,23 @@ class Tuar:
         return self.x - 30, self.y - 50, self.x + 10, self.y + 10
 
     def handle_collision(self, group, other):
-        if group == 'tuar:dungeon':
-            left_a, bottom_a, right_a, top_a = self.get_bb()
-            left_b, bottom_b, right_b, top_b = other.get_bb()
+        if group == 'tuar:wall':
+            la, ba, ra, ta = self.get_bb()
+            lb, bb, rb, tb = other.get_bb()
 
-            if left_a < left_b:
-                self.x = right_b + (30)
-            elif right_a > right_b:
-                self.x = left_b - (10)
+            pen_x = min(ra - lb, rb - la)
+            pen_y = min(ta - bb, tb - ba)
 
-            if bottom_a < bottom_b:
-                self.y = top_b + (50)
-            elif top_a > top_b:
-                self.y = bottom_b - (10)
+            if pen_x < pen_y:
+                if ra - lb < rb - la:
+                    self.x -= (ra - lb)
+                else:
+                    self.x += (rb - la)
+            else:
+                if ta - bb < tb - ba:
+                    self.y -= (ta - bb)
+                else:
+                    self.y += (tb - ba)
 
     def draw(self):
         self.state_machine.draw()
