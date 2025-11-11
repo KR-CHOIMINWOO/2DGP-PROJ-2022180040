@@ -55,6 +55,10 @@ ROLL_DISTANCE = 150.0
 ATTACK_TIME = 0.30
 ATTACK_COOLDOWN = 0.20
 
+SPECIAL_DURATION = 15.0
+SPECIAL_COOLDOWN = 20.0
+
+
 class Idle:
 
     def __init__(self, tuar):
@@ -209,10 +213,15 @@ class Tuar:
         )
 
     def update(self):
+        dt = game_framework.frame_time
+        if self.special_cd > 0.0:
+            self.special_cd = max(0.0, self.special_cd - dt)
         if self.special_active:
-            self.special_t += game_framework.frame_time
-            if self.special_t >= 15.0:
+            self.special_t += dt
+            if self.special_t >= SPECIAL_DURATION:
+                self.special_active = False
                 self.apply_skin(False)
+                self.special_cd = SPECIAL_COOLDOWN
 
         if self.attack_cd > 0.0:
             self.attack_cd = max(0.0, self.attack_cd - game_framework.frame_time)
