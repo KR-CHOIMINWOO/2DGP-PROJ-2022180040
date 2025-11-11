@@ -47,13 +47,13 @@ class Dungeon:
             Wall(*right),
         ]
 
-        self.door_thick = 24  # 감지 폭
+        self.door_thick = 20  # 감지 폭
         self.door_lines = [
             # name, (ax, ay) ~ (bx, by)
             ('top',    450, 120, 580, 120),
-            ('right',  880, 300, 880, 400),
+            ('right',  880, 320, 880, 420),
             ('bottom', 450, 580, 580, 580),
-            ('left',   150, 300, 150, 400),
+            ('left',   150, 320, 150, 420),
         ]
         self.doors = []
         self._build_doors()
