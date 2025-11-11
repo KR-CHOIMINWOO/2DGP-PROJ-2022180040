@@ -2,8 +2,8 @@ from pico2d import *
 
 import draw_ui
 from tuar2 import Tuar, ROLL_COOLDOWN, SPECIAL_COOLDOWN
-from grass import Grass
 import title_mode
+from make_dungeon import Dungeon
 import game_world
 import game_framework
 
@@ -20,9 +20,13 @@ def handle_events():
 
 def init():
     global tuar
+    global dungeon
 
+    dungeon = Dungeon()
     draw_ui.init()
     tuar = Tuar()
+
+    game_world.add_object(dungeon, 0)
     game_world.add_object(tuar, 1)
 
 

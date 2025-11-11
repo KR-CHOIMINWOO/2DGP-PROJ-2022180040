@@ -1,13 +1,13 @@
 from pico2d import *
 
-class Grass:
+class Dungeon:
     def __init__(self):
         self.image = load_image('image_file/bag/game_bg++.png')
         self.w , self.h = 1024, 720
         self.x = self.w //2
         self.y = self.h //2
-        self.play_x1, self.play_y1 = 130, 120
-        self.play_x2, self.play_y2 = 900, 620
+        self.play_x1, self.play_y1 = 130, 100
+        self.play_x2, self.play_y2 = 900, 600
 
     def update(self):
         pass

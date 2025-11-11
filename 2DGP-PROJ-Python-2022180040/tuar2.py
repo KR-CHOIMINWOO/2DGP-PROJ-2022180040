@@ -152,7 +152,7 @@ class Run:
 
 class Tuar:
     def __init__(self):
-        self.x, self.y = 50, 150
+        self.x, self.y = 1024 / 2, 720 / 2
         self.frame = 0
         self.face_dir = 1
         self.dir_x = 0
