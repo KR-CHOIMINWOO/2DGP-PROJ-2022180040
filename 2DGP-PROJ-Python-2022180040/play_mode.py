@@ -30,6 +30,9 @@ def init():
     for w in dungeon.walls:
         game_world.add_object(w, 0)
         game_world.add_collision_pair('tuar:wall', tuar, w)
+    for d in dungeon.doors:
+        game_world.add_object(d, 0)
+        game_world.add_collision_pair('tuar:door', tuar, d)
     game_world.add_object(tuar, 1)
 
 
