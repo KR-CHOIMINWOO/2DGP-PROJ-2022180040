@@ -89,17 +89,17 @@ class Dungeon:
     def _on_door_enter(self, door_name, tuar):
         self.room_id += 1
 
-        margin = 80
+        margin = 50
         cx = (self.play_x1 + self.play_x2) // 2
         cy = (self.play_y1 + self.play_y2) // 2
         if door_name == 'top':
             nx, ny = cx, self.play_y2 - margin
         elif door_name == 'bottom':
-            nx, ny = cx, self.play_y1 + margin
+            nx, ny = cx, self.play_y1 + margin * 2
         elif door_name == 'left':
             nx, ny = self.play_x2 - margin, cy
         elif door_name == 'right':
-            nx, ny = self.play_x1 + margin, cy
+            nx, ny = self.play_x1 + margin * 2, cy
         else:
             nx, ny = cx, cy
 
