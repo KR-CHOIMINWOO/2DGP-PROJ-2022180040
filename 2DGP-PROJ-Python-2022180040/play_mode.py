@@ -29,6 +29,8 @@ def init():
     game_world.add_object(dungeon, 0)
     game_world.add_object(tuar, 1)
 
+    game_world.add_collision_pair('tuar:dungeon', tuar, dungeon)
+
 
 def finish():
     game_world.clear()
@@ -37,6 +39,7 @@ def finish():
 
 def update():
     game_world.update()
+    game_world.handle_collision()
     draw_ui.update(_hp=tuar.hp, _hp_max=tuar.max_hp, _roll_cooltime=tuar.roll_cd, _roll_cooltime_max=ROLL_COOLDOWN, _special_cooltime=tuar.special_cd, _special_cooltime_max=SPECIAL_COOLDOWN , _special_active=tuar.special_active)
 
 
