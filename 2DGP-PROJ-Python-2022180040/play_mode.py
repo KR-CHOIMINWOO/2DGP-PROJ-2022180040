@@ -8,8 +8,16 @@ from make_dungeon import Dungeon
 import game_world
 import game_framework
 
-def handle_events():
+cam_ox, cam_oy = 0, 0
+in_ox, in_oy = 0, 0
+slide_active = False
+slide_t = 0.0
+SLIDE_DUR = 0.38
+dir_x, dir_y = 0, 0
+room_w, room_h = 1024, 720
+_pending_spawn = (0, 0)
 
+def handle_events():
     event_list = get_events()
     for event in event_list:
         if event.type == SDL_QUIT:
