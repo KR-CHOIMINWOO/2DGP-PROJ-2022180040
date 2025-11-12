@@ -82,7 +82,6 @@ def pause():
 def resume():
     pass
 
-# play_mode.py
 def begin_room_slide(door_name: str, spawn_x: int, spawn_y: int):
     global slide_active, slide_t, dir_x, dir_y, _pending_spawn
     global cam_ox, cam_oy, in_ox, in_oy
