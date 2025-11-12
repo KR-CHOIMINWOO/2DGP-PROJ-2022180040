@@ -1,12 +1,12 @@
 from pico2d import *
-
+import play_mode
 
 class Wall:
     def __init__(self, l, b, r, t):
         self.l, self.b, self.r, self.t = l, b, r, t
     def update(self): pass
     def draw(self):
-        draw_rectangle(self.l, self.b, self.r, self.t)
+        draw_rectangle(self.l+play_mode.cam_ox, self.b+play_mode.cam_oy, self.r+play_mode.cam_ox, self.t+play_mode.cam_oy)
     def get_bb(self):
         return (self.l, self.b, self.r, self.t)
     def handle_collision(self, group, other):
@@ -18,7 +18,7 @@ class Door:
         self.on_enter = on_enter
     def update(self): pass
     def draw(self):
-        draw_rectangle(self.l, self.b, self.r, self.t)
+        draw_rectangle(self.l+play_mode.cam_ox, self.b+play_mode.cam_oy, self.r+play_mode.cam_ox, self.t+play_mode.cam_oy)
         pass
     def get_bb(self):
         return (self.l, self.b, self.r, self.t)
@@ -64,7 +64,9 @@ class Dungeon:
         pass
 
     def draw(self):
-        self.image.draw(self.x, self.y, self.w, self.h)
+        self.image.draw(self.x + play_mode.cam_ox, self.y + play_mode.cam_oy, self.w, self.h)
+        if play_mode.slide_active:
+            self.image.draw(self.x + play_mode.in_ox, self.y + play_mode.in_oy, self.w, self.h)
         for w in self.walls:
             w.draw()
     def get_bb(self):
@@ -103,6 +105,4 @@ class Dungeon:
         else:
             nx, ny = cx, cy
 
-        tuar.x, tuar.y = nx, ny
-        tuar.dir_x = 0
-        tuar.dir_y = 0
+        play_mode.begin_room_slide(door_name, nx, ny)

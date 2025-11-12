@@ -51,8 +51,22 @@ def finish():
 
 
 def update():
+    global slide_active, slide_t, cam_ox, cam_oy, in_ox, in_oy
     game_world.update()
     game_world.handle_collision()
+    if slide_active:
+        k = min(1.0, slide_t / SLIDE_DUR)
+        cam_ox = -dir_x * room_w * k
+        cam_oy = -dir_y * room_h * k
+        in_ox = dir_x * room_w * (1.0 - k)
+        in_oy = dir_y * room_h * (1.0 - k)
+
+        slide_t += game_framework.frame_time
+        if k >= 1.0:
+            cam_ox = cam_oy = 0
+            in_ox = in_oy = 0
+            slide_active = False
+            tuar.x, tuar.y = _pending_spawn
     draw_ui.update(_hp=tuar.hp, _hp_max=tuar.max_hp, _roll_cooltime=tuar.roll_cd, _roll_cooltime_max=ROLL_COOLDOWN, _special_cooltime=tuar.special_cd, _special_cooltime_max=SPECIAL_COOLDOWN , _special_active=tuar.special_active)
 
 
@@ -67,3 +81,27 @@ def pause():
 
 def resume():
     pass
+
+# play_mode.py
+def begin_room_slide(door_name: str, spawn_x: int, spawn_y: int):
+    global slide_active, slide_t, dir_x, dir_y, _pending_spawn
+    global cam_ox, cam_oy, in_ox, in_oy
+
+    dirmap = {
+        'top':    (0,  1),
+        'bottom': (0, -1),
+        'left':   (-1, 0),
+        'right':  (1,  0),
+    }
+    dx, dy = dirmap.get(door_name, (0, 0))
+
+    slide_active = True
+    slide_t = 0.0
+    dir_x, dir_y = dx, dy
+    _pending_spawn = (spawn_x, spawn_y)
+
+    # 시작 시점 오프셋 초기화
+    cam_ox = 0
+    cam_oy = 0
+    in_ox  = dx * room_w
+    in_oy  = dy * room_h

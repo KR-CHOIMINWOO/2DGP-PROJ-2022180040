@@ -3,6 +3,7 @@ from sdl2 import SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_w, SDLK_a, SDLK_s, SDL
 
 import game_framework
 import game_world
+import play_mode
 from state_machine import StateMachine
 
 def space_down(e):
@@ -84,7 +85,12 @@ class Idle:
             self.tuar.draw_roll()
             return
         flip = 'h' if self.tuar.face_dir == -1 else ''
-        self.tuar.cur_idle_img.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
+        self.tuar.cur_idle_img.composite_draw(
+            0, flip,
+            self.tuar.x + play_mode.cam_ox,
+            self.tuar.y + play_mode.cam_oy,
+            100, 100
+        )
 
 
 class Run:
@@ -147,7 +153,11 @@ class Run:
             idx = int(self.tuar.frame) % len(self.tuar.cur_run_images)
             img = self.tuar.cur_run_images[idx]
             flip = 'h' if self.tuar.face_dir == -1 else ''
-            img.composite_draw(0, flip, self.tuar.x, self.tuar.y, 100, 100)
+            img.composite_draw(0, flip,
+            self.tuar.x + play_mode.cam_ox,
+            self.tuar.y + play_mode.cam_oy,
+            100, 100
+        )
 
 
 class Tuar:
