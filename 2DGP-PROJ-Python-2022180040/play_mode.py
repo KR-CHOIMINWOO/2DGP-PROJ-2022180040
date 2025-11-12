@@ -1,6 +1,7 @@
 from pico2d import *
 
 import draw_ui
+import waiting_mode
 from tuar2 import Tuar, ROLL_COOLDOWN, SPECIAL_COOLDOWN
 import title_mode
 from make_dungeon import Dungeon
@@ -14,7 +15,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.change_mode(title_mode)
+            game_framework.change_mode(waiting_mode)
         else:
             tuar.handle_event(event)
 
