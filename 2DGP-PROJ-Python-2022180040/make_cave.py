@@ -1,4 +1,4 @@
-from pico2d import get_canvas_width, get_canvas_height, load_image
+from pico2d import get_canvas_width, get_canvas_height, load_image, draw_rectangle
 import game_framework
 import play_mode
 
@@ -18,6 +18,7 @@ class CaveEntrance:
     def draw(self):
         if self.image:
             self.image.draw(self.x, self.y, self.w, self.h)
+        draw_rectangle(* self.get_bb())
 
     def get_bb(self):
         return (self.x - self.w//2, self.y - self.h//2,
