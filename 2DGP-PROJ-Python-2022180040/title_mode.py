@@ -19,7 +19,7 @@ def update():
 
 def draw():
     clear_canvas()
-    image.draw(1024 / 2, 768/2, 1024, 768)
+    image.draw(1024/2, 720/2, 1024, 720)
     update_canvas()
 
 def handle_events():
