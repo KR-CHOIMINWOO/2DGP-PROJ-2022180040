@@ -143,3 +143,5 @@ class Tuar:
     def draw(self):
         self.state_machine.draw()
         draw_rectangle(*self.get_bb())
+    def handle_collision(self, group, other):
+        pass

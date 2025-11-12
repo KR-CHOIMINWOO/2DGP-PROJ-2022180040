@@ -11,9 +11,11 @@ class CaveEntrance:
         self.y = 160
         self.image = load_image('image_file/bag/cave.png')
         self.entered = False
+        self.overlap = False
+        self._player = None
 
     def update(self):
-        pass
+        self.overlap = False
 
     def draw(self):
         if self.image:
@@ -25,6 +27,10 @@ class CaveEntrance:
                 self.x + self.w//2, self.y + self.h//2)
 
     def handle_collision(self, group, other):
-        if group == 'tuar:cave' and not self.entered:
+        if group == 'tuar:cave':
+            self.overlap = True
+            self._player = other
+
+    def try_enter(self):
+        if not self.entered:
             self.entered = True
-            game_framework.change_mode(play_mode)

@@ -5,20 +5,28 @@ import title_mode
 import game_world
 import game_framework
 from make_cave import CaveEntrance
+from sdl2 import SDL_KEYDOWN, SDLK_ESCAPE, SDLK_SPACE
+
+cave = None
+tuar = None
 
 def handle_events():
-
+    global cave, tuar
     event_list = get_events()
     for event in event_list:
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.change_mode(title_mode)
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
+            # Enter를 눌렀을 때, cave가 있고 이번 프레임에 겹쳤으면 입장
+            if cave and cave.overlap and not cave.entered:
+                cave.try_enter()
         else:
             tuar.handle_event(event)
 
 def init():
-    global tuar
+    global tuar, cave, tuar
 
     grass = Grass()
     game_world.add_object(grass, 0)
