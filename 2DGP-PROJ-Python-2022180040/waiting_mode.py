@@ -7,6 +7,7 @@ import title_mode
 import game_world
 import game_framework
 from make_cave import CaveEntrance
+from make_wait_bg import Bg
 from sdl2 import SDL_KEYDOWN, SDLK_ESCAPE, SDLK_SPACE
 
 cave = None
@@ -26,6 +27,9 @@ def handle_events():
 
 def init():
     global tuar, cave, tuar
+
+    bg = Bg()
+    game_world.add_object(bg, 0)
 
     grass = Grass()
     game_world.add_object(grass, 0)
