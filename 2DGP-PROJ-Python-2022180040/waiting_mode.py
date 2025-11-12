@@ -1,4 +1,6 @@
 from pico2d import *
+
+import play_mode
 from tuar import Tuar
 from grass import Grass
 import title_mode
@@ -12,16 +14,13 @@ tuar = None
 
 def handle_events():
     global cave, tuar
-    event_list = get_events()
-    for event in event_list:
+    for event in get_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.change_mode(title_mode)
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
-            # Enter를 눌렀을 때, cave가 있고 이번 프레임에 겹쳤으면 입장
-            if cave and cave.overlap and not cave.entered:
-                cave.try_enter()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE and cave.overlap:
+            game_framework.change_mode(play_mode)
         else:
             tuar.handle_event(event)
 
