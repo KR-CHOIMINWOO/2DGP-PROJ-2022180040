@@ -1,6 +1,7 @@
-from pico2d import load_image, get_time
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT
+from pico2d import load_image, get_time, draw_rectangle
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_d, SDL_KEYUP, SDLK_a
 
+import game_framework
 import game_world
 from state_machine import StateMachine
 
@@ -11,19 +12,33 @@ def space_down(e):
 time_out = lambda e: e[0] == 'TIMEOUT'
 
 def right_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_d
 
 
 def right_up(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_d
 
 
 def left_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
 
 
 def left_up(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_a
+
+# 용사의 Run Speed 계산
+
+# 용사 Run Speed
+PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+RUN_SPEED_KMPH = 20.0  # Km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+# 용사 Action Speed
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
 
 class Idle:
 
@@ -72,19 +87,14 @@ class Run:
         pass
 
     def do(self):
-        current_time = get_time()
-        elapsed = current_time - self.frame_time
-
-        if elapsed > 0.1:
-            self.tuar.frame = (self.tuar.frame + 1) % len(self.images)
-            self.frame_time = current_time
-
-        self.tuar.x += self.tuar.dir * 1
+        self.tuar.frame = (self.tuar.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        self.tuar.x += self.tuar.dir * RUN_SPEED_PPS * game_framework.frame_time
 
     def draw(self):
-        image = self.images[self.tuar.frame]
+        idx = int(self.tuar.frame) % len(self.tuar.cur_run_images)
+        img = self.tuar.cur_run_images[idx]
         flip = 'h' if self.tuar.face_dir == -1 else ''
-        image.composite_draw(0, flip, self.tuar.x, self.tuar.y, 150, 150)
+        img.composite_draw(0, flip, self.tuar.x, self.tuar.y, 150, 150)
 
 
 class Tuar:
@@ -102,6 +112,12 @@ class Tuar:
             load_image('image_file/char/tuar01/tuar_06.png'),
             load_image('image_file/char/tuar01/tuar_07.png'),
         ]
+        self.cur_run_images = [
+            load_image('image_file/char/tuar01/tuar_01.png'),
+            load_image('image_file/char/tuar01/tuar_02.png'),
+            load_image('image_file/char/tuar01/tuar_03.png'),
+            load_image('image_file/char/tuar01/tuar_04.png'),
+        ]
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
@@ -117,9 +133,13 @@ class Tuar:
     def update(self):
         self.state_machine.update()
 
+    def get_bb(self):
+        return self.x - 30, self.y - 80, self.x + 10, self.y + 10
+
     def handle_event(self, event):
         self.state_machine.handle_state_event(('INPUT', event))
         pass
 
     def draw(self):
         self.state_machine.draw()
+        draw_rectangle(*self.get_bb())
