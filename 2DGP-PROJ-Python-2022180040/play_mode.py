@@ -99,7 +99,6 @@ def begin_room_slide(door_name: str, spawn_x: int, spawn_y: int):
     dir_x, dir_y = dx, dy
     _pending_spawn = (spawn_x, spawn_y)
 
-    # 시작 시점 오프셋 초기화
     cam_ox = 0
     cam_oy = 0
     in_ox  = dx * room_w
