@@ -8,6 +8,7 @@ import game_world
 import game_framework
 from make_cave import CaveEntrance
 from make_wait_bg import Bg
+from make_store import Store
 from sdl2 import SDL_KEYDOWN, SDLK_ESCAPE, SDLK_SPACE
 
 cave = None
@@ -26,13 +27,16 @@ def handle_events():
             tuar.handle_event(event)
 
 def init():
-    global tuar, cave, tuar
+    global tuar, cave, tuar, store
 
     bg = Bg()
     game_world.add_object(bg, 0)
 
     grass = Grass()
     game_world.add_object(grass, 0)
+
+    store = Store()
+    game_world.add_object(store, 0)
 
     cave = CaveEntrance()
     game_world.add_object(cave, 0)
