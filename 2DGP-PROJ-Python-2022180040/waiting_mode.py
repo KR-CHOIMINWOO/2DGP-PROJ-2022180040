@@ -4,6 +4,7 @@ from grass import Grass
 import title_mode
 import game_world
 import game_framework
+import play_mode
 
 def handle_events():
 
