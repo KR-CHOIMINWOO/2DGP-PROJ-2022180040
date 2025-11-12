@@ -4,7 +4,7 @@ from grass import Grass
 import title_mode
 import game_world
 import game_framework
-import play_mode
+from make_cave import CaveEntrance
 
 def handle_events():
 
@@ -23,8 +23,13 @@ def init():
     grass = Grass()
     game_world.add_object(grass, 0)
 
+    cave = CaveEntrance()
+    game_world.add_object(cave, 0)
+
     tuar = Tuar()
     game_world.add_object(tuar, 1)
+
+    game_world.add_collision_pair('tuar:cave', tuar, cave)
 
 def finish():
     game_world.clear()

@@ -6,9 +6,9 @@ import play_mode
 class CaveEntrance:
     def __init__(self):
         cw, ch = get_canvas_width(), get_canvas_height()
-        self.w, self.h = 80, 180
-        self.x = cw - 60
-        self.y = ch // 2
+        self.w, self.h = 180, 180
+        self.x = cw - 80
+        self.y = 160
         self.image = load_image('image_file/bag/cave.png')
         self.entered = False
 
