@@ -5,6 +5,7 @@ import game_framework
 import game_world
 import play_mode
 from state_machine import StateMachine
+from slash import Slash
 
 def space_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
@@ -325,6 +326,8 @@ class Tuar:
             return
         self.attack_active = True
         self.attack_t = 0.0
+        if self.special_active:
+            self.spawn_slash()
 
     def try_special(self):
         if self.special_active or self.special_cd > 0.0:
@@ -370,3 +373,6 @@ class Tuar:
         angle = -t * 2.0 * PI * direction
 
         img.clip_composite_draw(0, 0, sw, sh, angle, '', self.x, self.y - 20, W, H)
+
+    def spawn_slash(self):
+        pass
