@@ -5,7 +5,7 @@ import game_framework
 import game_world
 import play_mode
 from state_machine import StateMachine
-from slash import Slash
+from slash import Slash, DIR_RIGHT, DIR_LEFT, DIR_UP, DIR_DOWN
 
 def space_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
