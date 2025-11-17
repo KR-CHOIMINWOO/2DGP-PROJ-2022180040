@@ -375,4 +375,11 @@ class Tuar:
         img.clip_composite_draw(0, 0, sw, sh, angle, '', self.x, self.y - 20, W, H)
 
     def spawn_slash(self):
-        pass
+        offset_x = 40 if self.face_dir >= 0 else -40
+        sx = self.x + offset_x
+        sy = self.y - 10
+
+        slash = Slash(sx, sy, self.face_dir)
+
+        game_world.add_object(slash, 2)
+
