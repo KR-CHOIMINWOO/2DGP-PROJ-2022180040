@@ -4,7 +4,7 @@ import game_world
 import play_mode
 
 class Monster:
-    def __init__(self, x, y, hp, speed, w, h, img_path = None):
+    def __init__(self, x, y, hp, speed, w, h, img_path = None, sheet_cols=1, sheet_rows=1):
         self.x = x
         self.y = y
         self.image = None
@@ -12,6 +12,9 @@ class Monster:
         self.speed = speed
         self.w = w
         self.h = h
+
+        self.sheet_cols = sheet_cols
+        self.sheet_rows = sheet_rows
         if img_path:
             try:
                 self.image = load_image(img_path)
