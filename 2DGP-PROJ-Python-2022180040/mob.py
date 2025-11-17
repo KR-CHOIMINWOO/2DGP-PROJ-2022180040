@@ -33,7 +33,10 @@ class Monster:
         pass
 
 class DeathKnight(Monster):
-    def __init__(self):
+    def __init__(self, x, y):
+        super().__init__(
+            x,y, hp = 300, speed = 80.0, w = 140, h = 160, img_path = 'image_file/mob/boss/Death Knight.png'
+        )
         pass
     def update(self):
         pass
@@ -45,8 +48,15 @@ class DeathKnight(Monster):
         pass
 
 class Ghoul(Monster):
-    def __init__(self):
-        pass
+    def __init__(self, x, y):
+        super().__init__(
+            x, y,
+            hp=40,
+            speed=130.0,
+            w=72,
+            h=80,
+            img_path='image_file/mob/07.Ghoul.png',
+        )
     def update(self):
         pass
     def draw(self):
@@ -57,8 +67,15 @@ class Ghoul(Monster):
         pass
 
 class Grave(Monster):
-    def __init__(self):
-        pass
+    def __init__(self, x, y):
+        super().__init__(
+            x, y,
+            hp=80,
+            speed=0.0,
+            w=82,
+            h=80,
+            img_path='image_file/mob/07.Grave.png',
+        )
     def update(self):
         pass
     def draw(self):
@@ -69,8 +86,15 @@ class Grave(Monster):
         pass
 
 class Zombie(Monster):
-    def __init__(self):
-        pass
+    def __init__(self, x, y):
+        super().__init__(
+            x, y,
+            hp=60,
+            speed=0.0,
+            w=82,
+            h=80,
+            img_path='image_file/mob/07.Zombie.png',
+        )
     def update(self):
         pass
     def draw(self):
