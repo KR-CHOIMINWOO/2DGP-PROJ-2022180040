@@ -50,8 +50,7 @@ class Slash:
             game_world.remove_object(self)
     def draw(self):
         if self.image:
-            flip = 'h' if self.dir < 0 else ''
-            self.image.composite_draw(0, flip, self.x, self.y, SLASH_W*1.2, SLASH_H*1.1)
+            self.image.composite_draw(self.angle, self.flip, self.x, self.y, SLASH_W*1.2, SLASH_H*1.1)
         else:
             draw_rectangle(self.x - SLASH_W//2, self.y - SLASH_H//2,
                            self.x + SLASH_W//2, self.y + SLASH_H//2)
