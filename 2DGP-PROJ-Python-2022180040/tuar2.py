@@ -202,6 +202,8 @@ class Tuar:
 
         self.item = None
 
+        self.last_input_dir = DIR_RIGHT
+
         self.IDLE = Idle(self)
         self.RUN = Run(self)
         self.state_machine = StateMachine(
