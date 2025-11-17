@@ -4,7 +4,19 @@ import game_world
 import play_mode
 
 class Monster:
-    def __init__(self):
+    def __init__(self, x, y, hp, speed, w, h, img_path = None):
+        self.x = x
+        self.y = y
+        self.image = None
+        self.hp = hp
+        self.speed = speed
+        self.w = w
+        self.h = h
+        if img_path:
+            try:
+                self.image = load_image(img_path)
+            except:
+                self.image = None
         pass
     def update(self):
         pass
