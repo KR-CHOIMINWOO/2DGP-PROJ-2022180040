@@ -11,3 +11,11 @@ SLASH_IMG_PATH2    = 'image_file/effect/s1_02.png'
 class Slash:
     def __init__(self):
         pass
+    def update(self)
+        pass
+    def draw(self):
+        pass
+    def get_bb(self):
+        pass
+    def handle_collision(self, group, other):
+        pass
