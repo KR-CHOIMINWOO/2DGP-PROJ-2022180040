@@ -262,16 +262,26 @@ class Tuar:
         self.state_machine.update()
 
     def handle_event(self, event):
+        if event.type == SDL_KEYDOWN:
+            if event.key == SDLK_w:
+                self.last_input_dir = DIR_UP
+            elif event.key == SDLK_s:
+                self.last_input_dir = DIR_DOWN
+            elif event.key == SDLK_a:
+                self.last_input_dir = DIR_LEFT
+            elif event.key == SDLK_d:
+                self.last_input_dir = DIR_RIGHT
+
         if special_down(('INPUT', event)):
             self.try_special()
 
         if attack_down(('INPUT', event)):
             self.try_attack()
-            
+
         if shift_down(('INPUT', event)):
             self.try_roll()
+
         self.state_machine.handle_state_event(('INPUT', event))
-        pass
 
     def get_bb(self):
         return self.x - 30, self.y - 50, self.x + 10, self.y + 10
