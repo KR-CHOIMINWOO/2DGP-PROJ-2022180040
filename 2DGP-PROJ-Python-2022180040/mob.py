@@ -17,13 +17,18 @@ class Monster:
                 self.image = load_image(img_path)
             except:
                 self.image = None
-        pass
     def update(self):
         pass
     def draw(self):
-        pass
+        ox, oy = play_mode.cam_ox, play_mode.cam_oy
+        if self.image:
+            self.image.draw(self.x + ox, self.y + oy, self.w, self.h)
+        else:
+            draw_rectangle(self.x - self.w//2 + ox, self.y - self.h//2 + oy,
+                           self.x + self.w//2 + ox, self.y + self.h//2 + oy)
     def get_bb(self):
-        pass
+        return (self.x - self.w//2 , self.y - self.h//2 ,
+                           self.x + self.w//2 , self.y + self.h//2 )
     def handle_collision(self, group, other):
         pass
 
