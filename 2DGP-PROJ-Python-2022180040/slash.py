@@ -1,10 +1,11 @@
 from pico2d import draw_rectangle, load_image
 import game_framework
+import game_world
 
 SLASH_SPEED_PPS   = 700.0
-SLASH_RANGE       = 320.0
-SLASH_THICK       = 20
-SLASH_W           = 60
+SLASH_RANGE       = 360.0
+SLASH_W           = 50
+SLASH_H           = 90
 SLASH_IMG_PATH1    = 'image_file/effect/s1_01.png'
 SLASH_IMG_PATH2    = 'image_file/effect/s1_02.png'
 
@@ -17,7 +18,7 @@ class Slash:
         self.vy = 0.0
         self.alive_dist = 0.0
         try:
-            self.image = load_image(SLASH_IMG_PATH1)
+            self.image = load_image(SLASH_IMG_PATH1 if self.dir > 0 else SLASH_IMG_PATH2)
         except:
             self.image = None
         pass
