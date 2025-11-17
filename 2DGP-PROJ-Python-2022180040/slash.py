@@ -8,6 +8,8 @@ SLASH_W           = 50
 SLASH_H           = 90
 SLASH_IMG_PATH    = 'image_file/effect/s1_01.png'
 
+DIR_RIGHT, DIR_LEFT, DIR_UP, DIR_DOWN = 'right', 'left', 'up', 'down'
+
 class Slash:
     def __init__(self, x, y, face_dir):
         self.x = x
