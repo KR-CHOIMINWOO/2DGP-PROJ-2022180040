@@ -110,8 +110,8 @@ class DeathKnight(Monster):
             x, y,
             hp=300,
             speed=RUN_SPEED_PPS * 0.7,
-            w=50,
-            h=60,
+            w=80,
+            h=120,
             img_path=None,
             sheet_cols=1
         )
@@ -152,7 +152,12 @@ class DeathKnight(Monster):
             )
 
     def get_bb(self):
-        return super().get_bb()
+        return (
+            self.x - 60,
+            self.y - 100,
+            self.x + 20,
+            self.y + 20
+        )
 
     def handle_collision(self, group, other):
         super().handle_collision(group, other)
@@ -164,8 +169,8 @@ class Ghoul(Monster):
             x, y,
             hp=40,
             speed=RUN_SPEED_PPS * 1.1,
-            w=20,
-            h=30,
+            w=40,
+            h=60,
             img_path=None,
             sheet_cols=1
         )
@@ -218,7 +223,12 @@ class Ghoul(Monster):
             )
 
     def get_bb(self):
-        return super().get_bb()
+        return (
+            self.x - 30,
+            self.y - 50,
+            self.x + 10,
+            self.y + 10
+        )
 
     def handle_collision(self, group, other):
         super().handle_collision(group, other)
@@ -230,8 +240,8 @@ class Grave(Monster):
             x, y,
             hp=80,
             speed=0.0,
-            w=24,
-            h=27,
+            w=40,
+            h=60,
             img_path=None,
             sheet_cols=1
         )
@@ -284,7 +294,12 @@ class Grave(Monster):
             )
 
     def get_bb(self):
-        return super().get_bb()
+        return (
+            self.x - 30,
+            self.y - 50,
+            self.x + 10,
+            self.y + 10
+        )
 
     def handle_collision(self, group, other):
         super().handle_collision(group, other)
@@ -296,8 +311,8 @@ class Zombie(Monster):
             x, y,
             hp=60,
             speed=0.0,
-            w=26,
-            h=22,
+            w=40,
+            h=60,
             img_path=None,
             sheet_cols=1
         )
@@ -350,7 +365,12 @@ class Zombie(Monster):
             )
 
     def get_bb(self):
-        return super().get_bb()
+        return (
+            self.x - 30,
+            self.y - 50,
+            self.x + 10,
+            self.y + 10
+        )
 
     def handle_collision(self, group, other):
         super().handle_collision(group, other)
