@@ -312,7 +312,8 @@ class Tuar:
         elif group == 'tuar:monster':
             if self.attack_active and hasattr(other, 'take_damage'):
                 if other not in self.attack_hit_targets:
-                    other.take_damage(self.atk)
+                    dmg = self.atk * (2 if self.special_active else 1)
+                    other.take_damage(dmg)
                     self.attack_hit_targets.add(other)
 
     def draw(self):
