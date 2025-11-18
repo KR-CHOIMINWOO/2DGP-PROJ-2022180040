@@ -7,6 +7,7 @@ import title_mode
 from make_dungeon import Dungeon
 import game_world
 import game_framework
+from mob import DeathKnight, Ghoul, Grave, Zombie
 
 cam_ox, cam_oy = 0, 0
 in_ox, in_oy = 0, 0
@@ -16,6 +17,8 @@ SLIDE_DUR = 0.38
 dir_x, dir_y = 0, 0
 room_w, room_h = 1024, 720
 _pending_spawn = (0, 0)
+
+monsters = []
 
 def handle_events():
     event_list = get_events()
@@ -30,6 +33,7 @@ def handle_events():
 def init():
     global tuar
     global dungeon
+    global monsters
 
     dungeon = Dungeon()
     draw_ui.init()
@@ -43,6 +47,25 @@ def init():
         game_world.add_object(d, 0)
         game_world.add_collision_pair('tuar:door', tuar, d)
     game_world.add_object(tuar, 1)
+
+    monsters = []
+
+    dk = DeathKnight(400, 400)
+    monsters.append(dk)
+    game_world.add_object(dk, 1)
+
+    ghoul = Ghoul(200, 200)
+    monsters.append(ghoul)
+    game_world.add_object(ghoul, 1)
+
+    grave = Grave(300, 200)
+    monsters.append(grave)
+    game_world.add_object(grave, 1)
+
+    zombie = Zombie(400, 200)
+    monsters.append(zombie)
+    game_world.add_object(zombie, 1)
+
 
 
 def finish():
