@@ -21,6 +21,8 @@ class Slash:
         mult = 2 if getattr(owner, 'special_active', False) else 1
         self.damage = base_atk * mult
 
+        self.hit_targets = set()
+
         if direction == DIR_RIGHT:
             self.vx, self.vy = SLASH_SPEED_PPS, 0.0
             self.angle = 0.0
@@ -56,14 +58,15 @@ class Slash:
         self.x += dx
         self.y += dy
         self.alive_dist += (dx * dx + dy * dy) ** 0.5 + abs(dy)
-
         if self.alive_dist >= SLASH_RANGE:
             if self.is_in_world():
                 game_world.remove_object(self)
 
     def draw(self):
         if self.image:
-            self.image.composite_draw(self.angle, self.flip, self.x, self.y, SLASH_W * 1.2, SLASH_H * 1.1)
+            self.image.composite_draw(self.angle, self.flip,
+                                      self.x, self.y,
+                                      SLASH_W * 1.2, SLASH_H * 1.1)
         else:
             draw_rectangle(self.x - SLASH_W // 2, self.y - SLASH_H // 2,
                            self.x + SLASH_W // 2, self.y + SLASH_H // 2)
@@ -72,17 +75,16 @@ class Slash:
         return (self.x - SLASH_W // 2, self.y - SLASH_H // 2,
                 self.x + SLASH_W // 2, self.y + SLASH_H // 2)
 
-    def is_in_world(self):
-        for layer in game_world.world:
-            if self in layer:
-                return True
-        return False
-
     def handle_collision(self, group, other):
         if group == 'slash:monster':
+            if other in self.hit_targets:
+                return
+
             alive = getattr(other, 'hp', 1) > 0
             in_world = getattr(other, 'is_in_world', lambda: True)()
+
             if alive and in_world and hasattr(other, 'take_damage'):
                 other.take_damage(self.damage)
+                self.hit_targets.add(other)
                 if self.is_in_world():
                     game_world.remove_object(self)
