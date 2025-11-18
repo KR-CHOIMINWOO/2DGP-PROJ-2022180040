@@ -309,6 +309,11 @@ class Tuar:
                     self.y += (tb - ba)
         elif group == 'tuar:door':
             pass
+        elif group == 'tuar:monster':
+            if self.attack_active and hasattr(other, 'take_damage'):
+                if other not in self.attack_hit_targets:
+                    other.take_damage(self.atk)
+                    self.attack_hit_targets.add(other)
 
     def draw(self):
         self.state_machine.draw()
