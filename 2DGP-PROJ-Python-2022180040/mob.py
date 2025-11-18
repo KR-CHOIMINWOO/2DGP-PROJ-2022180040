@@ -38,6 +38,13 @@ class Monster:
         self.set_anim('die', 0, sheet_cols)
         self.set_anim('attack', 0, sheet_cols)
 
+        self.frames = {
+            'move': [],
+            'hit': [],
+            'die': [],
+            'attack': []
+        }
+
         if img_path:
             try:
                 self.image = load_image(img_path)
@@ -131,23 +138,58 @@ class Ghoul(Monster):
             x, y,
             hp=40,
             speed=RUN_SPEED_PPS * 1.1,
-            w=24,
+            w=20,
             h=30,
-            img_path='image_file/mob/normal/07.Ghoul.png',
-            sheet_cols=7,
-            frame_w=24,
-            frame_h=30
+            img_path=None,
+            sheet_cols=1
         )
-        self.set_anim('move', 0, 3)
-        self.set_anim('hit', 3, 1)
-        self.set_anim('die', 3, 1)
-        self.set_anim('attack', 4, 3)
+
+        move_paths = [
+            f'image_file/mob/normal/Ghoul/07.Ghoul_{i}.png' for i in (1, 2, 3)
+        ]
+        hit_paths = [
+            'image_file/mob/normal/Ghoul/07.Ghoul_4.png'
+        ]
+        die_paths = [
+            'image_file/mob/normal/Ghoul/07.Ghoul_4.png'
+        ]
+        attack_paths = [
+            f'image_file/mob/normal/Ghoul/07.Ghoul_{i}.png' for i in (5, 6, 7)
+        ]
+
+        self.frames['move'] = [self.safe_load(p) for p in move_paths]
+        self.frames['hit'] = [self.safe_load(p) for p in hit_paths]
+        self.frames['die'] = [self.safe_load(p) for p in die_paths]
+        self.frames['attack'] = [self.safe_load(p) for p in attack_paths]
+
+        self.state = 'move'
+
+    def safe_load(self, path):
+        try:
+            return load_image(path)
+        except:
+            print("image load fail:", path)
+            return None
 
     def update(self):
         super().update()
 
     def draw(self):
-        super().draw()
+        ox, oy = play_mode.cam_ox, play_mode.cam_oy
+        imgs = self.frames.get(self.state, None)
+        imgs = [img for img in imgs if img is not None] if imgs else None
+
+        if imgs and len(imgs) > 0:
+            idx = int(self.frame) % len(imgs)
+            img = imgs[idx]
+            img.draw(self.x + ox, self.y + oy, self.w, self.h)
+        else:
+            draw_rectangle(
+                self.x - self.w // 2 + ox,
+                self.y - self.h // 2 + oy,
+                self.x + self.w // 2 + ox,
+                self.y + self.h // 2 + oy
+            )
 
     def get_bb(self):
         return super().get_bb()
@@ -163,22 +205,57 @@ class Grave(Monster):
             hp=80,
             speed=0.0,
             w=24,
-            h=30,
-            img_path='image_file/mob/normal/07.Grave.png',
-            sheet_cols=7,
-            frame_w=24,
-            frame_h=30
+            h=27,
+            img_path=None,
+            sheet_cols=1
         )
-        self.set_anim('move', 0, 3)
-        self.set_anim('hit', 3, 1)
-        self.set_anim('die', 3, 1)
-        self.set_anim('attack', 4, 3)
+
+        move_paths = [
+            f'image_file/mob/normal/Grave/07.Grave_{i}.png' for i in (1, 2, 3)
+        ]
+        hit_paths = [
+            'image_file/mob/normal/Grave/07.Grave_4.png'
+        ]
+        die_paths = [
+            'image_file/mob/normal/Grave/07.Grave_4.png'
+        ]
+        attack_paths = [
+            f'image_file/mob/normal/Grave/07.Grave_{i}.png' for i in (5, 6, 7)
+        ]
+
+        self.frames['move'] = [self.safe_load(p) for p in move_paths]
+        self.frames['hit'] = [self.safe_load(p) for p in hit_paths]
+        self.frames['die'] = [self.safe_load(p) for p in die_paths]
+        self.frames['attack'] = [self.safe_load(p) for p in attack_paths]
+
+        self.state = 'move'
+
+    def safe_load(self, path):
+        try:
+            return load_image(path)
+        except:
+            print("image load fail:", path)
+            return None
 
     def update(self):
         super().update()
 
     def draw(self):
-        super().draw()
+        ox, oy = play_mode.cam_ox, play_mode.cam_oy
+        imgs = self.frames.get(self.state, None)
+        imgs = [img for img in imgs if img is not None] if imgs else None
+
+        if imgs and len(imgs) > 0:
+            idx = int(self.frame) % len(imgs)
+            img = imgs[idx]
+            img.draw(self.x + ox, self.y + oy, self.w, self.h)
+        else:
+            draw_rectangle(
+                self.x - self.w // 2 + ox,
+                self.y - self.h // 2 + oy,
+                self.x + self.w // 2 + ox,
+                self.y + self.h // 2 + oy
+            )
 
     def get_bb(self):
         return super().get_bb()
@@ -193,23 +270,58 @@ class Zombie(Monster):
             x, y,
             hp=60,
             speed=0.0,
-            w=24,
-            h=30,
-            img_path='image_file/mob/normal/07.Zombi.png',
-            sheet_cols=7,
-            frame_w=24,
-            frame_h=30
+            w=26,
+            h=22,
+            img_path=None,
+            sheet_cols=1
         )
-        self.set_anim('move', 0, 3)
-        self.set_anim('hit', 3, 1)
-        self.set_anim('die', 3, 1)
-        self.set_anim('attack', 4, 3)
+
+        move_paths = [
+            f'image_file/mob/normal/Zombi/07.Zombi_{i}.png' for i in (1, 2, 3)
+        ]
+        hit_paths = [
+            'image_file/mob/normal/Zombi/07.Zombi_4.png'
+        ]
+        die_paths = [
+            'image_file/mob/normal/Zombi/07.Zombi_4.png'
+        ]
+        attack_paths = [
+            f'image_file/mob/normal/Zombi/07.Zombi_{i}.png' for i in (5, 6, 7)
+        ]
+
+        self.frames['move'] = [self.safe_load(p) for p in move_paths]
+        self.frames['hit'] = [self.safe_load(p) for p in hit_paths]
+        self.frames['die'] = [self.safe_load(p) for p in die_paths]
+        self.frames['attack'] = [self.safe_load(p) for p in attack_paths]
+
+        self.state = 'move'
+
+    def safe_load(self, path):
+        try:
+            return load_image(path)
+        except:
+            print("image load fail:", path)
+            return None
 
     def update(self):
         super().update()
 
     def draw(self):
-        super().draw()
+        ox, oy = play_mode.cam_ox, play_mode.cam_oy
+        imgs = self.frames.get(self.state, None)
+        imgs = [img for img in imgs if img is not None] if imgs else None
+
+        if imgs and len(imgs) > 0:
+            idx = int(self.frame) % len(imgs)
+            img = imgs[idx]
+            img.draw(self.x + ox, self.y + oy, self.w, self.h)
+        else:
+            draw_rectangle(
+                self.x - self.w // 2 + ox,
+                self.y - self.h // 2 + oy,
+                self.x + self.w // 2 + ox,
+                self.y + self.h // 2 + oy
+            )
 
     def get_bb(self):
         return super().get_bb()
