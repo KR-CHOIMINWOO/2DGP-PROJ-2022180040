@@ -1,6 +1,7 @@
 from pico2d import load_image, draw_rectangle
 import game_framework
 import play_mode
+import game_world
 
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 20.0
@@ -99,6 +100,12 @@ class Monster:
             self.x + self.w // 2,
             self.y + self.h // 2
         )
+
+    def take_damage(self, amount):
+        self.hp -= amount
+        print('Monster hit, hp =', self.hp)
+        if self.hp <= 0:
+            game_world.remove_object(self)
 
     def handle_collision(self, group, other):
         pass
