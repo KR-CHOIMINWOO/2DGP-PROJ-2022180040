@@ -46,6 +46,11 @@ class Monster:
             'attack': []
         }
 
+        self.atk = 5
+        self.attack_cool = 0.0
+        self.attack_interval = 1.0
+        self.attack_range = 50.0
+
         if img_path:
             try:
                 self.image = load_image(img_path)
