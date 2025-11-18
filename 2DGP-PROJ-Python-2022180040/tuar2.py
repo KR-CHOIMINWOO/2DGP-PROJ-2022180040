@@ -171,6 +171,9 @@ class Tuar:
         self.hp = 20
         self.max_hp = 100
 
+        self.atk = 10
+        self.attack_hit_targets = set()
+
         self.bb = 100
 
         self.special_active = False
@@ -338,6 +341,7 @@ class Tuar:
             return
         self.attack_active = True
         self.attack_t = 0.0
+        self.attack_hit_targets.clear()
         if self.special_active:
             self.spawn_slash()
 
