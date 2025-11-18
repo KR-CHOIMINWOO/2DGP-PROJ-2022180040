@@ -64,6 +64,12 @@ class Monster:
     def update(self):
         dt = game_framework.frame_time
         self.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * dt
+        if self.attack_cool > 0.0:
+            self.attack_cool -= dt
+        self.try_attack()
+
+    def try_attack(self):
+        pass
 
     def draw(self):
         ox, oy = play_mode.cam_ox, play_mode.cam_oy
