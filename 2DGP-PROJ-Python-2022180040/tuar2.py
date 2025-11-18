@@ -310,10 +310,10 @@ class Tuar:
         elif group == 'tuar:door':
             pass
         elif group == 'tuar:monster':
-            if self.attack_active and hasattr(other, 'take_damege'):
+            if self.attack_active and hasattr(other, 'take_damage'):
                 if other not in self.attack_hit_targets:
                     dmg = self.atk * (2 if self.special_active else 1)
-                    other.take_damege(dmg)
+                    other.take_damage(dmg)
                     self.attack_hit_targets.add(other)
 
     def draw(self):
@@ -414,7 +414,7 @@ class Tuar:
         game_world.add_object(slash, 2)
         game_world.add_collision_pair('slash:monster', slash, None)
 
-    def take_damege(self, amount):
+    def take_damage(self, amount):
         self.hp -= amount
         if self.hp < 0:
             self.hp = 0
