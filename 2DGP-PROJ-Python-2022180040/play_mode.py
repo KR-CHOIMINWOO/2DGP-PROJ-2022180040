@@ -66,6 +66,9 @@ def init():
     monsters.append(zombie)
     game_world.add_object(zombie, 1)
 
+    for m in monsters:
+        game_world.add_collision_pair('tuar:monster', tuar, m)
+
 
 
 def finish():
