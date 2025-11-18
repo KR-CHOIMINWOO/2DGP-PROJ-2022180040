@@ -407,8 +407,9 @@ class Tuar:
             sx -= off
         elif direction == DIR_UP:
             sy += off
-        else:  # DIR_DOWN
+        else:
             sy -= off
 
-        slash = Slash(sx, sy, direction=direction)
+        slash = Slash(sx, sy, direction=direction, owner=self)
         game_world.add_object(slash, 2)
+        game_world.add_collision_pair('slash:monster', slash, None)
