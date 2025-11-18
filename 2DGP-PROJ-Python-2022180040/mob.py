@@ -112,18 +112,44 @@ class DeathKnight(Monster):
             speed=RUN_SPEED_PPS * 0.7,
             w=50,
             h=60,
-            img_path='image_file/mob/boss/Death Knight.png',
-            sheet_cols=5,
-            frame_w=50,
-            frame_h=60
+            img_path=None,
+            sheet_cols=1
         )
-        self.set_anim('move', 0, 5)
+
+        idle_paths = [
+            f'image_file/mob/boss/Death Knight/Death Knight_{i}.png'
+            for i in (1, 2, 3, 4)
+        ]
+
+        self.frames['idle'] = [self.safe_load(p) for p in idle_paths]
+        self.state = 'idle'
+
+    def safe_load(self, path):
+        try:
+            return load_image(path)
+        except:
+            print("image load fail:", path)
+            return None
 
     def update(self):
         super().update()
 
     def draw(self):
-        super().draw()
+        ox, oy = play_mode.cam_ox, play_mode.cam_oy
+        imgs = self.frames.get(self.state, None)
+        imgs = [img for img in imgs if img is not None] if imgs else None
+
+        if imgs and len(imgs) > 0:
+            idx = int(self.frame) % len(imgs)
+            img = imgs[idx]
+            img.draw(self.x + ox, self.y + oy, self.w, self.h)
+        else:
+            draw_rectangle(
+                self.x - self.w // 2 + ox,
+                self.y - self.h // 2 + oy,
+                self.x + self.w // 2 + ox,
+                self.y + self.h // 2 + oy
+            )
 
     def get_bb(self):
         return super().get_bb()
