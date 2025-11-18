@@ -15,7 +15,7 @@ FRAMES_PER_ACTION = 8
 
 
 class Monster:
-    def __init__(self, x, y, hp, speed, w, h, img_path=None, sheet_cols=1, sheet_rows=1):
+    def __init__(self, x, y, hp, speed, w, h, img_path=None, sheet_cols=1):
         self.x = x
         self.y = y
         self.image = None
@@ -25,14 +25,23 @@ class Monster:
         self.h = h
 
         self.sheet_cols = sheet_cols
-        self.sheet_rows = sheet_rows
         self.frame = 0.0
+
+        self.state = 'move'
+        self.anim = {}
+        self.set_anim('move', 0, sheet_cols)
+        self.set_anim('attack', 0, sheet_cols)
+        self.set_anim('hit', 0, sheet_cols)
+        self.set_anim('die', 0, sheet_cols)
 
         if img_path:
             try:
                 self.image = load_image(img_path)
             except:
                 self.image = None
+
+    def set_anim(self, state, start, count):
+        self.anim[state] = (start, count)
 
     def update(self):
         dt = game_framework.frame_time
@@ -41,31 +50,42 @@ class Monster:
     def draw(self):
         ox, oy = play_mode.cam_ox, play_mode.cam_oy
 
-        if self.image and self.sheet_cols > 0 and self.sheet_rows > 0:
-            total = self.sheet_cols * self.sheet_rows
-            if total <= 0:
-                draw_rectangle(self.x - self.w // 2 + ox, self.y - self.h // 2 + oy,
-                               self.x + self.w // 2 + ox, self.y + self.h // 2 + oy)
+        if self.image and self.sheet_cols > 0:
+            start, count = self.anim.get(self.state, (0, self.sheet_cols))
+            if count <= 0:
+                draw_rectangle(
+                    self.x - self.w // 2 + ox,
+                    self.y - self.h // 2 + oy,
+                    self.x + self.w // 2 + ox,
+                    self.y + self.h // 2 + oy
+                )
                 return
 
-            idx = int(self.frame) % total
-            col = idx % self.sheet_cols
-            row = idx // self.sheet_cols
+            idx_in_state = int(self.frame) % count
+            frame_index = (start + idx_in_state) % self.sheet_cols
 
             frame_w = self.image.w // self.sheet_cols
-            frame_h = self.image.h // self.sheet_rows
-            sx = col * frame_w
-            sy = row * frame_h
+            frame_h = self.image.h
+            sx = frame_index * frame_w
+            sy = 0
 
             self.image.clip_draw(sx, sy, frame_w, frame_h,
                                  self.x + ox, self.y + oy, self.w, self.h)
         else:
-            draw_rectangle(self.x - self.w // 2 + ox, self.y - self.h // 2 + oy,
-                           self.x + self.w // 2 + ox, self.y + self.h // 2 + oy)
+            draw_rectangle(
+                self.x - self.w // 2 + ox,
+                self.y - self.h // 2 + oy,
+                self.x + self.w // 2 + ox,
+                self.y + self.h // 2 + oy
+            )
 
     def get_bb(self):
-        return (self.x - self.w // 2, self.y - self.h // 2,
-                self.x + self.w // 2, self.y + self.h // 2)
+        return (
+            self.x - self.w // 2,
+            self.y - self.h // 2,
+            self.x + self.w // 2,
+            self.y + self.h // 2
+        )
 
     def handle_collision(self, group, other):
         pass
@@ -76,16 +96,29 @@ class DeathKnight(Monster):
         super().__init__(
             x, y,
             hp=300,
-            speed=80.0,
+            speed=RUN_SPEED_PPS * 0.7,
             w=140,
             h=160,
-            img_path='image_file/mob/boss/Death Knight.png',
-            sheet_cols=1,
-            sheet_rows=1
+            img_path=None,
+            sheet_cols=1
         )
+        self.state = 'idle'
+        self.images = {}
+        self.sheet_cols_map = {}
+
+        self.add_anim_sheet('idle', 'image_file/mob/boss/Death Knight.png', 8)
+
         self.spawn_x = x
         self.move_range = 150.0
         self.dir_x = -1.0
+
+    def add_anim_sheet(self, state, path, cols):
+        try:
+            img = load_image(path)
+            self.images[state] = img
+            self.sheet_cols_map[state] = cols
+        except:
+            pass
 
     def update(self):
         super().update()
@@ -98,7 +131,25 @@ class DeathKnight(Monster):
             self.dir_x = 1.0
 
     def draw(self):
-        super().draw()
+        ox, oy = play_mode.cam_ox, play_mode.cam_oy
+        img = self.images.get(self.state, None)
+        cols = self.sheet_cols_map.get(self.state, 0)
+
+        if img and cols > 0:
+            idx = int(self.frame) % cols
+            frame_w = img.w // cols
+            frame_h = img.h
+            sx = idx * frame_w
+            sy = 0
+            img.clip_draw(sx, sy, frame_w, frame_h,
+                          self.x + ox, self.y + oy, self.w, self.h)
+        else:
+            draw_rectangle(
+                self.x - self.w // 2 + ox,
+                self.y - self.h // 2 + oy,
+                self.x + self.w // 2 + ox,
+                self.y + self.h // 2 + oy
+            )
 
     def get_bb(self):
         return super().get_bb()
@@ -112,13 +163,17 @@ class Ghoul(Monster):
         super().__init__(
             x, y,
             hp=40,
-            speed=130.0,
+            speed=RUN_SPEED_PPS * 1.1,
             w=72,
             h=80,
             img_path='image_file/mob/07.Ghoul.png',
-            sheet_cols=1,
-            sheet_rows=1
+            sheet_cols=7
         )
+        self.set_anim('move', 0, 3)
+        self.set_anim('hit', 3, 1)
+        self.set_anim('die', 3, 1)
+        self.set_anim('attack', 4, 3)
+
         self.spawn_x = x
         self.move_range = 200.0
         self.dir_x = 1.0
@@ -152,9 +207,12 @@ class Grave(Monster):
             w=82,
             h=80,
             img_path='image_file/mob/07.Grave.png',
-            sheet_cols=1,
-            sheet_rows=1
+            sheet_cols=7
         )
+        self.set_anim('move', 0, 3)
+        self.set_anim('hit', 3, 1)
+        self.set_anim('die', 3, 1)
+        self.set_anim('attack', 4, 3)
 
     def update(self):
         super().update()
@@ -178,9 +236,12 @@ class Zombie(Monster):
             w=82,
             h=80,
             img_path='image_file/mob/07.Zombie.png',
-            sheet_cols=1,
-            sheet_rows=1
+            sheet_cols=7
         )
+        self.set_anim('move', 0, 3)
+        self.set_anim('hit', 3, 1)
+        self.set_anim('die', 3, 1)
+        self.set_anim('attack', 4, 3)
 
     def update(self):
         super().update()
@@ -193,4 +254,3 @@ class Zombie(Monster):
 
     def handle_collision(self, group, other):
         super().handle_collision(group, other)
-
