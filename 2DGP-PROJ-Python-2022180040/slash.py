@@ -72,9 +72,17 @@ class Slash:
         return (self.x - SLASH_W // 2, self.y - SLASH_H // 2,
                 self.x + SLASH_W // 2, self.y + SLASH_H // 2)
 
+    def is_in_world(self):
+        for layer in game_world.world:
+            if self in layer:
+                return True
+        return False
+
     def handle_collision(self, group, other):
         if group == 'slash:monster':
-            if hasattr(other, 'take_damage'):
+            alive = getattr(other, 'hp', 1) > 0
+            in_world = getattr(other, 'is_in_world', lambda: True)()
+            if alive and in_world and hasattr(other, 'take_damage'):
                 other.take_damage(self.damage)
-            if self.is_in_world():
-                game_world.remove_object(self)
+                if self.is_in_world():
+                    game_world.remove_object(self)
