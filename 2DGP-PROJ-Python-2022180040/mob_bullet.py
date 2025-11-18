@@ -3,15 +3,14 @@ import game_framework
 import game_world
 import math
 
-SLASH_SPEED_PPS   = 700.0
-SLASH_RANGE       = 360.0
-SLASH_W           = 50
-SLASH_H           = 90
-SLASH_IMG_PATH    = 'image_file/effect/s1_01.png'
+Bullet_SPEED_PPS   = 700.0
+Bullet_RANGE       = 360.0
+Bullet_W           = 20
+Bullet_H           = 20
 
 DIR_RIGHT, DIR_LEFT, DIR_UP, DIR_DOWN = 'right', 'left', 'up', 'down'
 
-class Slash:
+class Bullet:
     def __init__(self, x, y, direction: str, owner=None):
         self.x, self.y = x, y
         self.direction = direction
@@ -24,26 +23,21 @@ class Slash:
         self.hit_targets = set()
 
         if direction == DIR_RIGHT:
-            self.vx, self.vy = SLASH_SPEED_PPS, 0.0
+            self.vx, self.vy = Bullet_SPEED_PPS, 0.0
             self.angle = 0.0
             self.flip = ''
         elif direction == DIR_LEFT:
-            self.vx, self.vy = -SLASH_SPEED_PPS, 0.0
+            self.vx, self.vy = -Bullet_SPEED_PPS, 0.0
             self.angle = 0.0
             self.flip = 'h'
         elif direction == DIR_UP:
-            self.vx, self.vy = 0.0, SLASH_SPEED_PPS
+            self.vx, self.vy = 0.0, Bullet_SPEED_PPS
             self.angle = math.pi / 2
             self.flip = ''
         else:
-            self.vx, self.vy = 0.0, -SLASH_SPEED_PPS
+            self.vx, self.vy = 0.0, -Bullet_SPEED_PPS
             self.angle = -math.pi / 2
             self.flip = ''
-
-        try:
-            self.image = load_image(SLASH_IMG_PATH)
-        except:
-            self.image = None
 
     def is_in_world(self):
         for layer in game_world.world:
@@ -58,7 +52,7 @@ class Slash:
         self.x += dx
         self.y += dy
         self.alive_dist += (dx * dx + dy * dy) ** 0.5 + abs(dy)
-        if self.alive_dist >= SLASH_RANGE:
+        if self.alive_dist >= Bullet_RANGE:
             if self.is_in_world():
                 game_world.remove_object(self)
 
@@ -66,14 +60,14 @@ class Slash:
         if self.image:
             self.image.composite_draw(self.angle, self.flip,
                                       self.x, self.y,
-                                      SLASH_W * 1.2, SLASH_H * 1.1)
+                                      Bullet_W * 1.2, Bullet_H * 1.1)
         else:
-            draw_rectangle(self.x - SLASH_W // 2, self.y - SLASH_H // 2,
-                           self.x + SLASH_W // 2, self.y + SLASH_H // 2)
+            draw_rectangle(self.x - Bullet_W // 2, self.y - Bullet_H // 2,
+                           self.x + Bullet_W // 2, self.y + Bullet_H // 2)
 
     def get_bb(self):
-        return (self.x - SLASH_W // 2, self.y - SLASH_H // 2,
-                self.x + SLASH_W // 2, self.y + SLASH_H // 2)
+        return (self.x - Bullet_W // 2, self.y - Bullet_H // 2,
+                self.x + Bullet_W // 2, self.y + Bullet_H // 2)
 
     def handle_collision(self, group, other):
         if group == 'slash:monster':
