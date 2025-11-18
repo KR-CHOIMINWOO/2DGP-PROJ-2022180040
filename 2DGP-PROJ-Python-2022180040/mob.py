@@ -51,6 +51,9 @@ class Monster:
         self.attack_interval = 1.0
         self.attack_range = 50.0
 
+        self.attack_frame_time = 0.0
+        self.attack_frame_duration = 0.4
+
         if img_path:
             try:
                 self.image = load_image(img_path)
@@ -64,8 +67,15 @@ class Monster:
     def update(self):
         dt = game_framework.frame_time
         self.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * dt
+
         if self.attack_cool > 0.0:
             self.attack_cool -= dt
+
+        if self.attack_frame_time > 0.0:
+            self.attack_frame_time -= dt
+            if self.attack_frame_time <= 0.0 and self.state == 'attack':
+                self.state = 'move'
+
         self.try_attack()
 
     def try_attack(self):
@@ -227,6 +237,7 @@ class Ghoul(Monster):
         self.atk = 5
         self.attack_interval = 1.0
         self.attack_range = 55.0
+        self.attack_frame_duration = 0.4
 
 
     def safe_load(self, path):
@@ -248,6 +259,9 @@ class Ghoul(Monster):
         if dist2 <= self.attack_range * self.attack_range and self.attack_cool <= 0.0:
             tuar.take_damage(self.atk)
             self.attack_cool = self.attack_interval
+            self.state = 'attack'
+            self.frame = 0.0
+            self.attack_frame_time = self.attack_frame_duration
 
     def update(self):
         super().update()
