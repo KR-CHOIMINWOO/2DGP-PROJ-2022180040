@@ -42,6 +42,7 @@ class Monster:
             try:
                 self.image = load_image(img_path)
             except:
+                print("image load fail:", img_path)
                 self.image = None
 
     def set_anim(self, state, start, count):
@@ -109,7 +110,6 @@ class DeathKnight(Monster):
             frame_w=50,
             frame_h=60
         )
-        self.state = 'move'
         self.set_anim('move', 0, 5)
 
     def update(self):
@@ -133,7 +133,7 @@ class Ghoul(Monster):
             speed=RUN_SPEED_PPS * 1.1,
             w=24,
             h=30,
-            img_path='image_file/mob/07.Ghoul.png',
+            img_path='image_file/mob/normal/07.Ghoul.png',
             sheet_cols=7,
             frame_w=24,
             frame_h=30
@@ -164,7 +164,7 @@ class Grave(Monster):
             speed=0.0,
             w=24,
             h=30,
-            img_path='image_file/mob/07.Grave.png',
+            img_path='image_file/mob/normal/07.Grave.png',
             sheet_cols=7,
             frame_w=24,
             frame_h=30
@@ -195,7 +195,7 @@ class Zombie(Monster):
             speed=0.0,
             w=24,
             h=30,
-            img_path='image_file/mob/07.Zombie.png',
+            img_path='image_file/mob/normal/07.Zombi.png',
             sheet_cols=7,
             frame_w=24,
             frame_h=30
