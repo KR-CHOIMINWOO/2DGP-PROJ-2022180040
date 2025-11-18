@@ -101,11 +101,22 @@ class Monster:
             self.y + self.h // 2
         )
 
+    def is_in_world(self):
+        for layer in game_world.world:
+            if self in layer:
+                return True
+        return False
+
     def take_damage(self, amount):
-        self.hp -= amount
-        print('Monster hit, hp =', self.hp)
         if self.hp <= 0:
-            game_world.remove_object(self)
+            return
+
+        self.hp -= amount
+        print("Monster hit, hp =", self.hp)
+
+        if self.hp <= 0:
+            if self.is_in_world():
+                game_world.remove_object(self)
 
     def handle_collision(self, group, other):
         pass
