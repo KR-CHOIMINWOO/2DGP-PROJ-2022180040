@@ -118,7 +118,7 @@ class Monster:
                 return True
         return False
 
-    def take_damage(self, amount):
+    def take_damege(self, amount):
         if self.hp <= 0:
             return
 
@@ -246,7 +246,7 @@ class Ghoul(Monster):
         dist2 = dx * dx + dy * dy
 
         if dist2 <= self.attack_range * self.attack_range and self.attack_cool <= 0.0:
-            tuar.take_damage(self.atk)
+            tuar.take_damege(self.atk)
             self.attack_cool = self.attack_interval
 
     def update(self):
