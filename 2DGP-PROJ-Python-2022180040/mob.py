@@ -224,12 +224,30 @@ class Ghoul(Monster):
 
         self.state = 'move'
 
+        self.atk = 5
+        self.attack_interval = 1.0
+        self.attack_range = 55.0
+
+
     def safe_load(self, path):
         try:
             return load_image(path)
         except:
             print("image load fail:", path)
             return None
+
+    def try_attack(self):
+        tuar = getattr(play_mode, 'tuar', None)
+        if not tuar:
+            return
+
+        dx = tuar.x - self.x
+        dy = tuar.y - self.y
+        dist2 = dx * dx + dy * dy
+
+        if dist2 <= self.attack_range * self.attack_range and self.attack_cool <= 0.0:
+            tuar.take_damage(self.atk)
+            self.attack_cool = self.attack_interval
 
     def update(self):
         super().update()
