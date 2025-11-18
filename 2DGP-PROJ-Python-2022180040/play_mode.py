@@ -68,6 +68,7 @@ def init():
 
     for m in monsters:
         game_world.add_collision_pair('tuar:monster', tuar, m)
+        game_world.add_collision_pair('slash:monster', None, m)
 
 
 
