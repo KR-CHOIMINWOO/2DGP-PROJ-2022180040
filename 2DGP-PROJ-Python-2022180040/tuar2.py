@@ -413,3 +413,9 @@ class Tuar:
         slash = Slash(sx, sy, direction=direction, owner=self)
         game_world.add_object(slash, 2)
         game_world.add_collision_pair('slash:monster', slash, None)
+
+    def take_damege(self, amount):
+        self.hp -= amount
+        if self.hp < 0:
+            self.hp = 0
+        print('Tuar hit, hp = ', self.hp)
