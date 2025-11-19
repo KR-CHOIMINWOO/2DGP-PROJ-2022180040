@@ -105,4 +105,4 @@ class Dungeon:
         else:
             nx, ny = cx, cy
 
-        play_mode.begin_room_slide(door_name, nx, ny)
+        play_mode.ready_room_slide(door_name, nx, ny)

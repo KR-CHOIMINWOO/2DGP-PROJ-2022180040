@@ -22,13 +22,28 @@ _pending_spawn = (0, 0)
 current_room = 0
 room_monsters = []
 
+door_ready = False
+door_info = None
+
 def handle_events():
+    global door_ready, door_info
     event_list = get_events()
     for event in event_list:
         if event.type == SDL_QUIT:
             game_framework.quit()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.change_mode(title_mode)
+        elif event.type == SDL_KEYDOWN:
+            if event.key == SDLK_ESCAPE:
+                game_framework.change_mode(title_mode)
+            elif event.key == SDLK_SPACE:
+                if door_ready and (not slide_active) and door_info is not None:
+                    door_ready = False
+                    door_name, sx, sy = door_info
+                    door_info = None
+                    begin_room_slide(door_name, sx, sy)
+                else:
+                    tuar.handle_event(event)
+            else:
+                tuar.handle_event(event)
         else:
             tuar.handle_event(event)
 
@@ -130,6 +145,11 @@ def pause():
 
 def resume():
     pass
+
+def ready_room_slide(door_name: str, spawn_x: int, spawn_y: int):
+    global door_ready, door_info
+    door_ready = True
+    door_info = (door_name, spawn_x, spawn_y)
 
 def begin_room_slide(door_name: str, spawn_x: int, spawn_y: int):
     global slide_active, slide_t, dir_x, dir_y, _pending_spawn
