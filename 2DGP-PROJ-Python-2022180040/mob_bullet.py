@@ -51,7 +51,7 @@ class Bullet:
 
     def draw(self):
         r = BULLET_W // 2
-        draw_circle(self.x, self.y, r)
+        draw_circle(self.x, self.y, r,0,255,0,255, filled=True)
 
     def get_bb(self):
         return (
