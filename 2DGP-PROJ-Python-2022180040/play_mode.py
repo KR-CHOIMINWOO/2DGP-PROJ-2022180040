@@ -50,23 +50,23 @@ def init():
         game_world.add_collision_pair('tuar:door', tuar, d)
     game_world.add_object(tuar, 1)
 
-    monsters = []
+    # monsters = []
 
-    dk = DeathKnight(400, 400)
-    monsters.append(dk)
-    game_world.add_object(dk, 1)
-
-    ghoul = Ghoul(200, 200)
-    monsters.append(ghoul)
-    game_world.add_object(ghoul, 1)
-
-    grave = Grave(300, 200)
-    monsters.append(grave)
-    game_world.add_object(grave, 1)
-
-    zombie = Zombie(400, 200)
-    monsters.append(zombie)
-    game_world.add_object(zombie, 1)
+    # dk = DeathKnight(400, 400)
+    # monsters.append(dk)
+    # game_world.add_object(dk, 1)
+    #
+    # ghoul = Ghoul(200, 200)
+    # monsters.append(ghoul)
+    # game_world.add_object(ghoul, 1)
+    #
+    # grave = Grave(300, 200)
+    # monsters.append(grave)
+    # game_world.add_object(grave, 1)
+    #
+    # zombie = Zombie(400, 200)
+    # monsters.append(zombie)
+    # game_world.add_object(zombie, 1)
 
     for m in monsters:
         game_world.add_collision_pair('tuar:monster', tuar, m)
