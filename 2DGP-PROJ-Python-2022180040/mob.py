@@ -56,6 +56,9 @@ class Monster:
         self.attack_frame_time = 0.0
         self.attack_frame_duration = 0.4
 
+        self.attack_hit_done = False
+        self.attack_hit_ratio = 0.7
+
         if img_path:
             try:
                 self.image = load_image(img_path)
@@ -76,9 +79,9 @@ class Monster:
             self.attack_frame_time -= dt
             if self.attack_frame_time <= 0.0 and self.state == 'attack':
                 self.state = 'move'
+                self.attack_hit_done = False
 
         self.try_attack()
-
 
     def try_attack(self):
         pass
@@ -258,12 +261,25 @@ class Ghoul(Monster):
         dy = tuar.y - self.y
         dist2 = dx * dx + dy * dy
 
+        if self.state == 'attack':
+            if self.attack_frame_duration > 0.0:
+                progress = (self.attack_frame_duration - self.attack_frame_time) / self.attack_frame_duration
+            else:
+                progress = 1.0
+
+            if (not self.attack_hit_done) and progress >= self.attack_hit_ratio:
+                if dist2 <= self.attack_range * self.attack_range:
+                    if not getattr(tuar, 'roll_active', False):
+                        tuar.take_damage(self.atk)
+                self.attack_hit_done = True
+            return
+
         if dist2 <= self.attack_range * self.attack_range and self.attack_cool <= 0.0:
-            tuar.take_damage(self.atk)
             self.attack_cool = self.attack_interval
             self.state = 'attack'
             self.frame = 0.0
             self.attack_frame_time = self.attack_frame_duration
+            self.attack_hit_done = False
 
     def update(self):
         tuar = getattr(play_mode, 'tuar', None)
