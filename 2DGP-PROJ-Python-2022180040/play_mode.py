@@ -8,6 +8,7 @@ from make_dungeon import Dungeon
 import game_world
 import game_framework
 from mob import DeathKnight, Ghoul, Grave, Zombie
+import random
 
 cam_ox, cam_oy = 0, 0
 in_ox, in_oy = 0, 0
@@ -18,7 +19,8 @@ dir_x, dir_y = 0, 0
 room_w, room_h = 1024, 720
 _pending_spawn = (0, 0)
 
-monsters = []
+current_room = 0
+room_monsters = []
 
 def handle_events():
     event_list = get_events()
@@ -130,3 +132,12 @@ def begin_room_slide(door_name: str, spawn_x: int, spawn_y: int):
     cam_oy = 0
     in_ox  = dx * room_w
     in_oy  = dy * room_h
+
+def clear_room_monsters():
+    pass
+
+def random_spawn_mob_pos():
+    pass
+
+def spawn_mob():
+    pass
