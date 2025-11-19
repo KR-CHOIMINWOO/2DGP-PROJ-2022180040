@@ -144,7 +144,10 @@ def clear_room_monsters():
     room_monsters = []
 
 def random_spawn_mob_pos():
-    pass
+    margin = 40
+    x = random.randint(dungeon.play_x1 + margin, dungeon.play_x2 - margin)
+    y = random.randint(dungeon.play_y1 + margin, dungeon.play_y2 - margin)
+    return x, y
 
 def spawn_mob():
     pass
