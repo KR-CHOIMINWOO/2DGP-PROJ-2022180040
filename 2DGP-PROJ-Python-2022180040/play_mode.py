@@ -154,3 +154,19 @@ def spawn_mob():
 
     if current_room == 0:
         return
+
+    spawn_count = random.randint(1, 3)
+    monster_types = [Ghoul, Grave, Zombie]
+
+    room_monsters = []
+    for _ in range(spawn_count):
+        mx, my = random_spawn_mob_pos()
+        MCls = random.choice(monster_types)
+        m = MCls(mx, my)
+
+        room_monsters.append(m)
+        game_world.add_object(m, 1)
+
+        game_world.add_collision_pair('tuar:monster', tuar, m)
+
+        game_world.add_collision_pair('slash:monster', None, m)
