@@ -98,9 +98,22 @@ def update():
             cam_ox = cam_oy = 0
             in_ox = in_oy = 0
             slide_active = False
+
             tuar.x, tuar.y = _pending_spawn
 
-            clear_room_monsters()
+            game_world.clear()
+
+            game_world.add_object(dungeon, 0)
+            for w in dungeon.walls:
+                game_world.add_object(w, 0)
+                game_world.add_collision_pair('tuar:wall', tuar, w)
+            for d in dungeon.doors:
+                game_world.add_object(d, 0)
+                game_world.add_collision_pair('tuar:door', tuar, d)
+            game_world.add_object(tuar, 1)
+
+            global room_monsters
+            room_monsters = []
 
             current_room += 1
             spawn_mob()
