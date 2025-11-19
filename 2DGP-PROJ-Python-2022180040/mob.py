@@ -274,15 +274,16 @@ class Ghoul(Monster):
             dy = tuar.y - self.y
             dist2 = dx * dx + dy * dy
 
-            if dist2 > 1e-3:
+            if dist2 > self.attack_range * self.attack_range:
                 dist = math.sqrt(dist2)
-                dir_x = dx / dist
-                dir_y = dy / dist
-
-                self.x += self.speed * dir_x * dt
-                self.y += self.speed * dir_y * dt
+                if dist > 1e-3:
+                    dir_x = dx / dist
+                    dir_y = dy / dist
+                    self.x += self.speed * dir_x * dt
+                    self.y += self.speed * dir_y * dt
 
         super().update()
+
 
     def draw(self):
         ox, oy = play_mode.cam_ox, play_mode.cam_oy
