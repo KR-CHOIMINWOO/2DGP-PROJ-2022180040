@@ -1,9 +1,9 @@
-from pico2d import draw_rectangle, draw_circle
+from pico2d import draw_circle
 import game_framework
 import game_world
 import math
 
-BULLET_SPEED_PPS = 300.0
+BULLET_SPEED_PPS = 500.0
 BULLET_RANGE     = 600.0
 BULLET_W         = 20
 BULLET_H         = 20
@@ -28,6 +28,8 @@ class Bullet:
             self.vx, self.vy = 0.0, BULLET_SPEED_PPS
         else:
             self.vx, self.vy = 0.0, -BULLET_SPEED_PPS
+
+        self.hit_targets = set()
 
     def is_in_world(self):
         for layer in game_world.world:
@@ -61,7 +63,16 @@ class Bullet:
 
     def handle_collision(self, group, other):
         if group == 'bullet:tuar':
+            if not self.is_in_world():
+                return
+
+            if other in self.hit_targets:
+                return
+
             if hasattr(other, 'take_damage'):
                 other.take_damage(self.damage)
+
+            self.hit_targets.add(other)
+
             if self.is_in_world():
                 game_world.remove_object(self)
