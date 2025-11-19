@@ -134,7 +134,14 @@ def begin_room_slide(door_name: str, spawn_x: int, spawn_y: int):
     in_oy  = dy * room_h
 
 def clear_room_monsters():
-    pass
+    global room_monsters
+    for m in room_monsters:
+        try:
+            if m and m in sum(game_world.world, []):
+                game_world.remove_object(m)
+        except:
+            pass
+    room_monsters = []
 
 def random_spawn_mob_pos():
     pass
