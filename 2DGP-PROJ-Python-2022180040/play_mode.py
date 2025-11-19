@@ -35,7 +35,7 @@ def handle_events():
 def init():
     global tuar
     global dungeon
-    global monsters
+    global current_room, room_monsters
 
     dungeon = Dungeon()
     draw_ui.init()
@@ -49,6 +49,9 @@ def init():
         game_world.add_object(d, 0)
         game_world.add_collision_pair('tuar:door', tuar, d)
     game_world.add_object(tuar, 1)
+
+    current_room = 0
+    room_monsters = []
 
     # monsters = []
 
@@ -80,7 +83,7 @@ def finish():
 
 
 def update():
-    global slide_active, slide_t, cam_ox, cam_oy, in_ox, in_oy
+    global slide_active, slide_t, cam_ox, cam_oy, in_ox, in_oy, current_room
     game_world.update()
     game_world.handle_collision()
     if slide_active:
@@ -100,7 +103,6 @@ def update():
             clear_room_monsters()
 
             current_room += 1
-
             spawn_mob()
     draw_ui.update(_hp=tuar.hp, _hp_max=tuar.max_hp, _roll_cooltime=tuar.roll_cd, _roll_cooltime_max=ROLL_COOLDOWN, _special_cooltime=tuar.special_cd, _special_cooltime_max=SPECIAL_COOLDOWN , _special_active=tuar.special_active)
 
