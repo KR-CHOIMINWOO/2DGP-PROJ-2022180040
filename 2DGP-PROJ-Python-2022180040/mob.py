@@ -421,6 +421,11 @@ class Zombie(Monster):
 
         self.state = 'move'
 
+        self.atk = 4
+        self.attack_interval = 2.0
+        self.attack_range = 400.0
+        self.attack_frame_duration = 0.4
+
     def safe_load(self, path):
         try:
             return load_image(path)
