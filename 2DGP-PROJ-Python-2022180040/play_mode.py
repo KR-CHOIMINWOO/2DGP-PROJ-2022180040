@@ -68,9 +68,9 @@ def init():
     # monsters.append(zombie)
     # game_world.add_object(zombie, 1)
 
-    for m in monsters:
-        game_world.add_collision_pair('tuar:monster', tuar, m)
-        game_world.add_collision_pair('slash:monster', None, m)
+    # for m in monsters:
+    #     game_world.add_collision_pair('tuar:monster', tuar, m)
+    #     game_world.add_collision_pair('slash:monster', None, m)
 
 
 
@@ -96,6 +96,12 @@ def update():
             in_ox = in_oy = 0
             slide_active = False
             tuar.x, tuar.y = _pending_spawn
+
+            clear_room_monsters()
+
+            current_room += 1
+
+            spawn_mob()
     draw_ui.update(_hp=tuar.hp, _hp_max=tuar.max_hp, _roll_cooltime=tuar.roll_cd, _roll_cooltime_max=ROLL_COOLDOWN, _special_cooltime=tuar.special_cd, _special_cooltime_max=SPECIAL_COOLDOWN , _special_active=tuar.special_active)
 
 
