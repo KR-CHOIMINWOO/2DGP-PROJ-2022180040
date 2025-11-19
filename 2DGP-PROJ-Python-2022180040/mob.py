@@ -2,6 +2,7 @@ from pico2d import load_image, draw_rectangle
 import game_framework
 import play_mode
 import game_world
+from mob_bullet import Bullet, DIR_RIGHT, DIR_LEFT, DIR_UP, DIR_DOWN
 
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 20.0
@@ -68,8 +69,7 @@ class Monster:
         dt = game_framework.frame_time
         self.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * dt
 
-        if self.attack_cool > 0.0:
-            self.attack_cool -= dt
+        self.attack_cool = max(0.0, self.attack_cool - dt)
 
         if self.attack_frame_time > 0.0:
             self.attack_frame_time -= dt
@@ -77,6 +77,7 @@ class Monster:
                 self.state = 'move'
 
         self.try_attack()
+
 
     def try_attack(self):
         pass
