@@ -66,6 +66,11 @@ class Bullet:
             if not self.is_in_world():
                 return
 
+            if getattr(other, 'roll_active', False):
+                if self.is_in_world():
+                    game_world.remove_object(self)
+                return
+
             if other in self.hit_targets:
                 return
 
@@ -76,3 +81,4 @@ class Bullet:
 
             if self.is_in_world():
                 game_world.remove_object(self)
+
