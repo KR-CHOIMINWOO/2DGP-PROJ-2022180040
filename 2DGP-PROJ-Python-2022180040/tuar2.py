@@ -168,7 +168,7 @@ class Tuar:
         self.face_dir = 1
         self.dir_x = 0
         self.dir_y = 0
-        self.hp = 100
+        self.hp = 1
         self.max_hp = 100
 
         self.atk = 10

@@ -83,9 +83,10 @@ def finish():
 
 
 def update():
-    global slide_active, slide_t, cam_ox, cam_oy, in_ox, in_oy, current_room
+    global slide_active, slide_t, cam_ox, cam_oy, in_ox, in_oy, current_room, room_monsters
     game_world.update()
     game_world.handle_collision()
+
     if slide_active:
         k = min(1.0, slide_t / SLIDE_DUR)
         cam_ox = -dir_x * room_w * k
@@ -98,10 +99,21 @@ def update():
             cam_ox = cam_oy = 0
             in_ox = in_oy = 0
             slide_active = False
+
             tuar.x, tuar.y = _pending_spawn
 
-            clear_room_monsters()
+            game_world.clear()
 
+            game_world.add_object(dungeon, 0)
+            for w in dungeon.walls:
+                game_world.add_object(w, 0)
+                game_world.add_collision_pair('tuar:wall', tuar, w)
+            for d in dungeon.doors:
+                game_world.add_object(d, 0)
+                game_world.add_collision_pair('tuar:door', tuar, d)
+            game_world.add_object(tuar, 1)
+
+            room_monsters = []
             current_room += 1
             spawn_mob()
     draw_ui.update(_hp=tuar.hp, _hp_max=tuar.max_hp, _roll_cooltime=tuar.roll_cd, _roll_cooltime_max=ROLL_COOLDOWN, _special_cooltime=tuar.special_cd, _special_cooltime_max=SPECIAL_COOLDOWN , _special_active=tuar.special_active)

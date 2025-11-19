@@ -36,6 +36,7 @@ def remove_collision_object(o):
 def clear():
     for layer in world:
         layer.clear()
+    collision_pairs.clear()
 
 def collide(a, b):
     left_a, bottom_a, right_a, top_a = a.get_bb()
