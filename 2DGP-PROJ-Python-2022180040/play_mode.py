@@ -150,4 +150,7 @@ def random_spawn_mob_pos():
     return x, y
 
 def spawn_mob():
-    pass
+    global current_room, room_monsters, tuar
+
+    if current_room == 0:
+        return
