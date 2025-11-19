@@ -436,6 +436,30 @@ class Zombie(Monster):
     def update(self):
         super().update()
 
+    def try_attack(self):
+        tuar = getattr(play_mode, 'tuar', None)
+        if not tuar:
+            return
+
+        dx = tuar.x - self.x
+        dy = tuar.y - self.y
+        dist2 = dx * dx + dy * dy
+
+        if dist2 <= self.attack_range * self.attack_range and self.attack_cool <= 0.0:
+            if abs(dx) > abs(dy):
+                direction = DIR_RIGHT if dx > 0 else DIR_LEFT
+            else:
+                direction = DIR_UP if dy > 0 else DIR_DOWN
+
+            b = Bullet(self.x, self.y, direction, owner=self)
+            game_world.add_object(b, 2)
+            game_world.add_collision_pair('bullet:tuar', b, tuar)
+
+            self.attack_cool = self.attack_interval
+            self.state = 'attack'
+            self.frame = 0.0
+            self.attack_frame_time = self.attack_frame_duration
+
     def draw(self):
         ox, oy = play_mode.cam_ox, play_mode.cam_oy
         imgs = self.frames.get(self.state, None)
