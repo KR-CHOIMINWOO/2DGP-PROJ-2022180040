@@ -340,6 +340,23 @@ class Grave(Monster):
             print("image load fail:", path)
             return None
 
+    def try_attack(self):
+        tuar = getattr(play_mode, 'tuar', None)
+        if not tuar:
+            return
+
+        dx = tuar.x - self.x
+        dy = tuar.y - self.y
+        dist2 = dx * dx + dy * dy
+
+        if dist2 <= self.attack_range * self.attack_range and self.attack_cool <= 0.0:
+            tuar.take_damage(self.atk)
+            self.attack_cool = self.attack_interval
+            self.state = 'attack'
+            self.frame = 0.0
+            self.attack_frame_time = self.attack_frame_duration
+
+
     def update(self):
         super().update()
 
