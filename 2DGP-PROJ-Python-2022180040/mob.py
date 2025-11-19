@@ -328,6 +328,11 @@ class Grave(Monster):
 
         self.state = 'move'
 
+        self.atk = 7
+        self.attack_interval = 1.5
+        self.attack_range = 60.0
+        self.attack_frame_duration = 0.4
+
     def safe_load(self, path):
         try:
             return load_image(path)
