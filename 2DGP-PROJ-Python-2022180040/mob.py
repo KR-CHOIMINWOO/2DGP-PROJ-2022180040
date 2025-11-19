@@ -2,6 +2,7 @@ from pico2d import load_image, draw_rectangle
 import game_framework
 import play_mode
 import game_world
+import math
 from mob_bullet import Bullet, DIR_RIGHT, DIR_LEFT, DIR_UP, DIR_DOWN
 
 PIXEL_PER_METER = (10.0 / 0.3)
@@ -265,6 +266,22 @@ class Ghoul(Monster):
             self.attack_frame_time = self.attack_frame_duration
 
     def update(self):
+        tuar = getattr(play_mode, 'tuar', None)
+        dt = game_framework.frame_time
+
+        if tuar:
+            dx = tuar.x - self.x
+            dy = tuar.y - self.y
+            dist2 = dx * dx + dy * dy
+
+            if dist2 > 1e-3:
+                dist = math.sqrt(dist2)
+                dir_x = dx / dist
+                dir_y = dy / dist
+
+                self.x += self.speed * dir_x * dt
+                self.y += self.speed * dir_y * dt
+
         super().update()
 
     def draw(self):
