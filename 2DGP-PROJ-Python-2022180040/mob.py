@@ -286,6 +286,9 @@ class DeathKnight(Monster):
         if self.sequence is not None:
             return
 
+        if self.phase != 1:
+            return
+
         tuar = getattr(play_mode, 'tuar', None)
         if not tuar:
             return
