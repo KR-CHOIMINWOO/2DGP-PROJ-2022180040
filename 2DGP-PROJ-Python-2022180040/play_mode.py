@@ -204,9 +204,11 @@ def spawn_mob():
         dk = DeathKnight(400, 400)
         room_monsters.append(dk)
         game_world.add_object(dk, 1)
-        game_world.add_collision_pair('tuar:monster', tuar, m)
+        game_world.add_collision_pair('tuar:monster', tuar, dk)
 
-        game_world.add_collision_pair('slash:monster', None, m)
+        game_world.add_collision_pair('slash:monster', None, dk)
+
+        return
 
     spawn_count = random.randint(1, 3)
     monster_types = [Ghoul, Grave, Zombie]
