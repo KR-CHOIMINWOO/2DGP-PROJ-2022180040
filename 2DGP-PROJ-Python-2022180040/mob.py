@@ -230,7 +230,7 @@ class DeathKnight(Monster):
         self.phase2_timer = 0.0
         self.phase2_dash_count = 0
         self.phase2_idle_interval = 1.0
-        self.phase2_dash_speed = RUN_SPEED_PPS * 3.0
+        self.phase2_dash_speed = RUN_SPEED_PPS * 5.0
         self.phase2_max_dash = 3
 
     def safe_load(self, path):
