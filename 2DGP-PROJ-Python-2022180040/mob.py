@@ -234,6 +234,9 @@ class DeathKnight(Monster):
         if self.sequence is not None:
             return
 
+        self.hp -= amount
+        print("DeathKnight hit, hp =", self.hp)
+
     def try_attack(self):
         if self.phase != 1:
             return
