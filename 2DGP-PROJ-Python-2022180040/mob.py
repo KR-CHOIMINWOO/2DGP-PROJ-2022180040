@@ -195,6 +195,36 @@ class DeathKnight(Monster):
     def update(self):
         super().update()
 
+    def try_attack(self):
+        if self.phase != 1:
+            return
+
+        tuar = getattr(play_mode, 'tuar', None)
+        if not tuar:
+            return
+
+        dx = tuar.x - self.x
+        dy = tuar.y - self.y
+        dist2 = dx * dx + dy * dy
+
+        if dist2 > self.attack_range * self.attack_range:
+            dist = dist2 ** 0.5
+            if dist > 0.0001:
+                dir_x = dx / dist
+                dir_y = dy / dist
+                dt = game_framework.frame_time
+                self.x += dir_x * self.speed * dt
+                self.y += dir_y * self.speed * dt
+            if self.state != 'attack':
+                self.state = 'idle'
+        else:
+            if self.attack_cool <= 0.0:
+                tuar.take_damage(self.atk)
+                self.attack_cool = self.attack_interval
+                self.state = 'attack'
+                self.frame = 0.0
+                self.attack_frame_time = self.attack_frame_duration
+
     def draw(self):
         ox, oy = play_mode.cam_ox, play_mode.cam_oy
         imgs = self.frames.get(self.state, None)
