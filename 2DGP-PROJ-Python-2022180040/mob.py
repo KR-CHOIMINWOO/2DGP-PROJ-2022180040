@@ -153,8 +153,8 @@ class DeathKnight(Monster):
         super().__init__(
             x, y,
             hp=300,
-            speed=RUN_SPEED_PPS * 0.7,
-            w=80,
+            speed=RUN_SPEED_PPS * 0.9,
+            w=90,
             h=120,
             img_path=None,
             sheet_cols=1
@@ -165,12 +165,30 @@ class DeathKnight(Monster):
             'attack': [],
             'revive': [],
             'teleport': [],
-            'special': [],
-            'hit': [],
-            'die': []
+            'special': []
         }
 
         idle_paths = [
+            f'image_file/mob/boss/Death Knight/Death Knight_{i}.png'
+            for i in (1, 2, 3, 4)
+        ]
+
+        attack_paths = [
+            f'image_file/mob/boss/Death Knight/Death Knight_{i}.png'
+            for i in (1, 2, 3, 4)
+        ]
+
+        revive_paths = [
+            f'image_file/mob/boss/Death Knight/Death Knight_{i}.png'
+            for i in (1, 2, 3, 4)
+        ]
+
+        teleport_paths = [
+            f'image_file/mob/boss/Death Knight/Death Knight_{i}.png'
+            for i in (1, 2, 3, 4)
+        ]
+
+        special_paths = [
             f'image_file/mob/boss/Death Knight/Death Knight_{i}.png'
             for i in (1, 2, 3, 4)
         ]
