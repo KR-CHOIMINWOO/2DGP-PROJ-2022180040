@@ -1,4 +1,4 @@
-from pico2d import load_image, draw_rectangle, delay
+from pico2d import load_image, draw_rectangle
 import game_framework
 import play_mode
 import game_world
@@ -153,8 +153,8 @@ class DeathKnight(Monster):
         super().__init__(
             x, y,
             hp=5,
-            speed=RUN_SPEED_PPS * 0.9,
-            w=90,
+            speed=RUN_SPEED_PPS * 0.6,
+            w=80,
             h=120,
             img_path=None,
             sheet_cols=1
@@ -197,27 +197,33 @@ class DeathKnight(Monster):
 
         special_paths = [
             f'image_file/mob/boss/Death In/Death In_{i}.png'
-            for i in (1, 2, 3, 4, 5)
+            for i in (1, 2, 3)
         ]
 
-        self.frames['idle'] = [self.safe_load(p) for p in idle_paths]
-        self.frames['attack'] = [self.safe_load(p) for p in attack_paths]
-        self.frames['die'] = [self.safe_load(p) for p in die_paths]
-        self.frames['revive'] = [self.safe_load(p) for p in revive_paths]
+        self.frames['idle']     = [self.safe_load(p) for p in idle_paths]
+        self.frames['move']     = self.frames['idle']
+        self.frames['attack']   = [self.safe_load(p) for p in attack_paths]
+        self.frames['die']      = [self.safe_load(p) for p in die_paths]
+        self.frames['revive']   = [self.safe_load(p) for p in revive_paths]
         self.frames['teleport'] = [self.safe_load(p) for p in teleport_paths]
-        self.frames['special'] = [self.safe_load(p) for p in special_paths]
-        self.frames['move'] = self.frames['idle']
+        self.frames['special']  = [self.safe_load(p) for p in special_paths]
+
         self.state = 'idle'
         self.phase = 1
+        self.max_hp_phase1 = 100
+        self.max_hp_phase2 = 300
 
         self.atk = 20
-        self.maxhp2 = 300
         self.attack_interval = 1.2
         self.attack_range = 80.0
         self.attack_frame_duration = 0.5
 
         self.sequence = None
 
+        self.special_orbs = []
+        self.special_time = 0.0
+        self.special_duration = 3.0
+        self.special_radius = 500.0
 
     def safe_load(self, path):
         try:
@@ -226,35 +232,26 @@ class DeathKnight(Monster):
             print("image load fail:", path)
             return None
 
-    def update(self):
-        dt = game_framework.frame_time
+    def is_in_world(self):
+        for layer in game_world.world:
+            if self in layer:
+                return True
+        return False
 
-        if self.sequence == 'phase_change':
-            self.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * dt
-
-            if self.state == 'die':
-                imgs = [img for img in self.frames['die'] if img is not None]
-                if not imgs or int(self.frame) >= len(imgs):
-                    self.state = 'revive'
-                    self.frame = 0.0
-                    delay(3)
-
-            elif self.state == 'revive':
-                imgs = [img for img in self.frames['revive'] if img is not None]
-                if not imgs or int(self.frame) >= len(imgs):
-                    self.sequence = None
-                    self.state = 'idle'
-                    self.frame = 0.0
-                    self.attack_cool = 0.5
-
-            return
-
-        super().update()
+    def start_phase_change(self):
+        self.phase = 2
+        self.hp = self.max_hp_phase2
+        self.sequence = 'phase_change'
+        self.state = 'die'
+        self.frame = 0.0
+        self.attack_cool = 9999.0
+        self.attack_frame_time = 0.0
+        self.special_orbs = []
+        self.special_time = 0.0
 
     def take_damage(self, amount):
         if self.hp <= 0 and self.phase == 2:
             return
-
         if self.sequence is not None:
             return
 
@@ -262,25 +259,31 @@ class DeathKnight(Monster):
         print("DeathKnight hit, hp =", self.hp)
 
         if self.phase == 1 and self.hp <= 0:
-            self.phase = 2
-            self.hp = self.maxhp2
-
-            self.sequence = 'phase_change'
-            self.state = 'die'
-            self.frame = 0.0
-            self.attack_cool = 9999.0
-            self.attack_frame_time = 0.0
+            self.start_phase_change()
             return
 
         if self.phase == 2 and self.hp <= 0:
             if self.is_in_world():
                 game_world.remove_object(self)
 
-    def try_attack(self):
-        if self.sequence is not None:
+    def init_special_orbs(self):
+        self.special_orbs = []
+        imgs = [img for img in self.frames['special'] if img is not None]
+        if not imgs:
             return
 
-        if self.phase != 1:
+        base_angles = [0.0, 2 * math.pi / 3.0, 4 * math.pi / 3.0]
+        self.special_time = 0.0
+
+        for i, a in enumerate(base_angles):
+            self.special_orbs.append({
+                'img': imgs[i % len(imgs)],
+                'theta': a,
+                'radius': self.special_radius
+            })
+
+    def try_attack(self):
+        if self.sequence is not None:
             return
 
         tuar = getattr(play_mode, 'tuar', None)
@@ -309,8 +312,55 @@ class DeathKnight(Monster):
                 self.frame = 0.0
                 self.attack_frame_time = self.attack_frame_duration
 
+    def update(self):
+        dt = game_framework.frame_time
+
+        if self.sequence == 'phase_change':
+            if self.state == 'die':
+                self.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * dt
+                imgs = [img for img in self.frames['die'] if img is not None]
+                if not imgs or int(self.frame) >= len(imgs):
+                    self.state = 'special'
+                    self.frame = 0.0
+                    self.init_special_orbs()
+
+            elif self.state == 'special':
+                self.special_time += dt
+                t = min(1.0, self.special_time / self.special_duration)
+                for orb in self.special_orbs:
+                    orb['theta'] += 2.0 * math.pi * 2.0 * dt
+                    orb['radius'] = self.special_radius * (1.0 - t)
+                if self.special_time >= self.special_duration:
+                    self.state = 'revive'
+                    self.frame = 0.0
+
+            elif self.state == 'revive':
+                self.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * dt
+                imgs = [img for img in self.frames['revive'] if img is not None]
+                if not imgs or int(self.frame) >= len(imgs):
+                    self.sequence = None
+                    self.state = 'idle'
+                    self.frame = 0.0
+                    self.attack_cool = 0.5
+
+            return
+
+        super().update()
+
     def draw(self):
         ox, oy = play_mode.cam_ox, play_mode.cam_oy
+
+        if self.sequence == 'phase_change' and self.state == 'special' and self.special_orbs:
+            for orb in self.special_orbs:
+                img = orb['img']
+                if img is None:
+                    continue
+                r = orb['radius']
+                x = self.x + math.cos(orb['theta']) * r + ox
+                y = self.y + math.sin(orb['theta']) * r + oy
+                img.draw(x, y, 64, 64)
+            return
+
         imgs = self.frames.get(self.state, None)
         imgs = [img for img in imgs if img is not None] if imgs else None
 
@@ -336,6 +386,7 @@ class DeathKnight(Monster):
 
     def handle_collision(self, group, other):
         super().handle_collision(group, other)
+
 
 
 class Ghoul(Monster):
