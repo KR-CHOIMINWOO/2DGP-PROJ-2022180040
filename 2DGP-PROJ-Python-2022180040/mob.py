@@ -160,6 +160,16 @@ class DeathKnight(Monster):
             sheet_cols=1
         )
 
+        self.frames = {
+            'idle': [],
+            'attack': [],
+            'revive': [],
+            'teleport': [],
+            'special': [],
+            'hit': [],
+            'die': []
+        }
+
         idle_paths = [
             f'image_file/mob/boss/Death Knight/Death Knight_{i}.png'
             for i in (1, 2, 3, 4)
@@ -167,6 +177,13 @@ class DeathKnight(Monster):
 
         self.frames['idle'] = [self.safe_load(p) for p in idle_paths]
         self.state = 'idle'
+
+        self.phase = 1
+
+        self.atk = 20
+        self.attack_interval = 1.2
+        self.attack_range = 80.0
+        self.attack_frame_duration = 0.5
 
     def safe_load(self, path):
         try:
