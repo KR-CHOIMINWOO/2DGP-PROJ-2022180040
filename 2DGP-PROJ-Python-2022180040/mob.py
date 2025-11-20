@@ -215,6 +215,8 @@ class DeathKnight(Monster):
         self.attack_range = 80.0
         self.attack_frame_duration = 0.5
 
+        self.sequence = None
+
     def safe_load(self, path):
         try:
             return load_image(path)
@@ -224,6 +226,13 @@ class DeathKnight(Monster):
 
     def update(self):
         super().update()
+
+    def take_damage(self, amount):
+        if self.hp <= 0 and self.phase == 2:
+            return
+
+        if self.sequence is not None:
+            return
 
     def try_attack(self):
         if self.phase != 1:
