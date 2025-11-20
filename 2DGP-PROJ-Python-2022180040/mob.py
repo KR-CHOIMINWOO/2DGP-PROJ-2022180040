@@ -286,8 +286,15 @@ class DeathKnight(Monster):
         if self.sequence is not None:
             return
 
-        if self.phase != 1:
-            return
+        if self.phase == 1:
+            self.try_attack_phases1()
+        else:
+            self.try_attack_phases2()
+
+    def try_attack_phases2(self):
+        pass
+
+    def try_attack_phases1(self):
 
         tuar = getattr(play_mode, 'tuar', None)
         if not tuar:
@@ -389,7 +396,6 @@ class DeathKnight(Monster):
 
     def handle_collision(self, group, other):
         super().handle_collision(group, other)
-
 
 
 class Ghoul(Monster):
