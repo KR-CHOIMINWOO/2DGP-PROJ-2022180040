@@ -152,7 +152,7 @@ class DeathKnight(Monster):
     def __init__(self, x, y):
         super().__init__(
             x, y,
-            hp=300,
+            hp=100,
             speed=RUN_SPEED_PPS * 0.9,
             w=90,
             h=120,
@@ -211,11 +211,13 @@ class DeathKnight(Monster):
         self.phase = 1
 
         self.atk = 20
+        self.maxhp2 = 300
         self.attack_interval = 1.2
         self.attack_range = 80.0
         self.attack_frame_duration = 0.5
 
         self.sequence = None
+
 
     def safe_load(self, path):
         try:
@@ -225,6 +227,27 @@ class DeathKnight(Monster):
             return None
 
     def update(self):
+        dt = game_framework.frame_time
+
+        if self.sequence == 'phase_change':
+            self.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * dt
+
+            if self.state == 'die':
+                imgs = [img for img in self.frames['die'] if img is not None]
+                if not imgs or int(self.frame) >= len(imgs):
+                    self.state = 'revive'
+                    self.frame = 0.0
+
+            elif self.state == 'revive':
+                imgs = [img for img in self.frames['revive'] if img is not None]
+                if not imgs or int(self.frame) >= len(imgs):
+                    self.sequence = None
+                    self.state = 'idle'
+                    self.frame = 0.0
+                    self.attack_cool = 0.5
+
+            return
+
         super().update()
 
     def take_damage(self, amount):
@@ -237,7 +260,25 @@ class DeathKnight(Monster):
         self.hp -= amount
         print("DeathKnight hit, hp =", self.hp)
 
+        if self.phase == 1 and self.hp <= 0:
+            self.phase = 2
+            self.hp = self.maxhp2
+
+            self.sequence = 'phase_change'
+            self.state = 'die'
+            self.frame = 0.0
+            self.attack_cool = 9999.0
+            self.attack_frame_time = 0.0
+            return
+
+        if self.phase == 2 and self.hp <= 0:
+            if self.is_in_world():
+                game_world.remove_object(self)
+
     def try_attack(self):
+        if self.sequence is not None:
+            return
+
         if self.phase != 1:
             return
 
