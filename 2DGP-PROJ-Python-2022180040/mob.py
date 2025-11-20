@@ -200,8 +200,13 @@ class DeathKnight(Monster):
         ]
 
         self.frames['idle'] = [self.safe_load(p) for p in idle_paths]
-        self.state = 'idle'
+        self.frames['attack'] = [self.safe_load(p) for p in attack_paths]
+        self.frames['die'] = [self.safe_load(p) for p in die_paths]
+        self.frames['revive'] = [self.safe_load(p) for p in revive_paths]
+        self.frames['teleport'] = [self.safe_load(p) for p in teleport_paths]
+        self.frames['special'] = [self.safe_load(p) for p in special_paths]
 
+        self.state = 'idle'
         self.phase = 1
 
         self.atk = 20
