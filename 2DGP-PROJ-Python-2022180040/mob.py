@@ -232,6 +232,7 @@ class DeathKnight(Monster):
         self.phase2_idle_interval = 1.0
         self.phase2_dash_speed = RUN_SPEED_PPS * 5.0
         self.phase2_max_dash = 3
+        self.phase2_dash_hit = False
 
     def safe_load(self, path):
         try:
@@ -392,8 +393,9 @@ class DeathKnight(Monster):
                 self.y -= self.phase2_dash_speed * dt
 
                 tuar = getattr(play_mode, 'tuar', None)
-                if tuar and self.check_hit_tuar(tuar):
+                if tuar and not self.phase2_dash_hit and self.check_hit_tuar(tuar):
                     tuar.take_damage(self.atk)
+                    self.phase2_dash_hit = True
 
                 if self.y < bottom_limit:
                     self.phase2_dash_count += 1
@@ -418,6 +420,7 @@ class DeathKnight(Monster):
         self.phase2_mode = 'dash'
         self.state = 'attack'
         self.frame = 0.0
+        self.phase2_dash_hit = False
 
     def check_hit_tuar(self, tuar):
         la, ba, ra, ta = self.get_bb()
