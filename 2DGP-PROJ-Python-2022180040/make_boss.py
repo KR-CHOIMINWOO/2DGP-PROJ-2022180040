@@ -1,20 +1,11 @@
 from pico2d import load_image, draw_rectangle
 import game_framework
-import play_mode
 import game_world
+import play_mode
 import math
 import random
-from mob import Monster
+from mob import Monster, RUN_SPEED_PPS, FRAMES_PER_ACTION, ACTION_PER_TIME
 
-PIXEL_PER_METER = (10.0 / 0.3)
-RUN_SPEED_KMPH = 10.0
-RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
-RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
-RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
-
-TIME_PER_ACTION = 0.9
-ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 8
 
 class DeathKnight(Monster):
     def __init__(self, x, y):
@@ -22,7 +13,7 @@ class DeathKnight(Monster):
             x, y,
             hp=5,
             speed=RUN_SPEED_PPS * 0.6,
-            w=80,
+            w=110,
             h=120,
             img_path=None,
             sheet_cols=1
@@ -42,27 +33,22 @@ class DeathKnight(Monster):
             f'image_file/mob/boss/Death Knight/Death Knight_{i}.png'
             for i in (1, 2, 3, 4)
         ]
-
         attack_paths = [
             f'image_file/mob/boss/Death Knight Att/Death Knight Att_{i}.png'
             for i in (1, 2, 3, 4, 5, 6)
         ]
-
         die_paths = [
             f'image_file/mob/boss/Death Knight Revive/Death Knight Revive_{i}.png'
             for i in (1, 2, 3, 4, 5)
         ]
-
         revive_paths = [
             f'image_file/mob/boss/Death Knight Revive/Death Knight Revive_{i}.png'
             for i in (6, 7, 8, 9, 10)
         ]
-
         teleport_paths = [
             f'image_file/mob/boss/Death Knight BackRun/Death Knight BackRun_{i}.png'
             for i in (1, 2, 3, 4, 5)
         ]
-
         special_paths = [
             f'image_file/mob/boss/Death In/Death In_{i}.png'
             for i in (1, 2, 3)
@@ -78,6 +64,7 @@ class DeathKnight(Monster):
 
         self.state = 'idle'
         self.phase = 1
+        self.max_hp_phase1 = 100
         self.max_hp_phase2 = 300
 
         self.atk = 20
@@ -100,12 +87,25 @@ class DeathKnight(Monster):
         self.phase2_max_dash = 3
         self.phase2_dash_hit = False
 
+        self.floor_zones = []
+        self.floor_time = 0.0
+        self.floor_duration = 1.5
+
+        self.phase2_rest_time = 0.0
+        self.phase2_rest_duration = 3.0
+
     def safe_load(self, path):
         try:
             return load_image(path)
         except:
             print("image load fail:", path)
             return None
+
+    def is_in_world(self):
+        for layer in game_world.world:
+            if self in layer:
+                return True
+        return False
 
     def start_phase_change(self):
         self.phase = 2
@@ -156,9 +156,11 @@ class DeathKnight(Monster):
             return
 
         if self.phase == 1:
-            self.try_attack_phases1()
+            self.try_attack_phase1()
+        else:
+            pass
 
-    def try_attack_phases1(self):
+    def try_attack_phase1(self):
         tuar = getattr(play_mode, 'tuar', None)
         if not tuar:
             return
@@ -229,16 +231,19 @@ class DeathKnight(Monster):
                     self.phase2_mode = 'teleport'
                     self.state = 'teleport'
                     self.frame = 0.0
+                super().update()
                 return
 
             if self.phase2_mode == 'teleport':
                 imgs = [img for img in self.frames['teleport'] if img is not None]
                 if not imgs:
                     self.start_phase2_dash()
+                    super().update()
                     return
 
                 if int(self.frame) >= len(imgs):
                     self.start_phase2_dash()
+                super().update()
                 return
 
             if self.phase2_mode == 'dash':
@@ -255,13 +260,24 @@ class DeathKnight(Monster):
                 if self.y < bottom_limit:
                     self.phase2_dash_count += 1
                     if self.phase2_dash_count >= self.phase2_max_dash:
-                        self.phase2_mode = 'idle'
-                        self.state = 'idle'
-                        self.phase2_timer = 0.0
+                        self.x = (dungeon.play_x1 + dungeon.play_x2) / 2
+                        self.y = (dungeon.play_y1 + dungeon.play_y2) / 2
+                        self.phase2_mode = 'rest'
                     else:
                         self.phase2_mode = 'teleport'
                         self.state = 'teleport'
                         self.frame = 0.0
+
+                super().update()
+                return
+
+            if self.phase2_mode == 'rest':
+                self.phase2_rest_time += dt
+                if self.phase2_rest_time >= self.phase2_rest_duration:
+                    self.phase2_mode = 'idle'
+                    self.phase2_timer = 0.0
+                super().update()
+                return
 
         super().update()
 
@@ -307,6 +323,15 @@ class DeathKnight(Monster):
                 last.draw(self.x + ox, self.y + oy, self.w, self.h)
                 return
 
+        if self.phase == 2 and self.phase2_mode == 'floor' and self.floor_zones:
+            for zone in self.floor_zones:
+                img = zone['img']
+                if img is None:
+                    continue
+                x = zone['x'] + ox
+                y = zone['y'] + oy
+                img.draw(x, y, 120, 120)
+
         imgs = self.frames.get(self.state, None)
         imgs = [img for img in imgs if img is not None] if imgs else None
 
@@ -331,4 +356,4 @@ class DeathKnight(Monster):
         )
 
     def handle_collision(self, group, other):
-        super().handle_collision(group, other)
+        pass
