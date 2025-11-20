@@ -102,6 +102,10 @@ def update():
     game_world.update()
     game_world.handle_collision()
 
+    if tuar.hp <= 0:
+        game_framework.change_mode(waiting_mode)
+        return
+
     if slide_active:
         k = min(1.0, slide_t / SLIDE_DUR)
         cam_ox = -dir_x * room_w * k
