@@ -7,7 +7,8 @@ import title_mode
 from make_dungeon import Dungeon
 import game_world
 import game_framework
-from mob import DeathKnight, Ghoul, Grave, Zombie
+from mob import Ghoul, Grave, Zombie
+from make_boss import DeathKnight
 import random
 
 cam_ox, cam_oy = 0, 0

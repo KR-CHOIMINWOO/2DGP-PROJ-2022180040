@@ -78,7 +78,6 @@ class DeathKnight(Monster):
 
         self.state = 'idle'
         self.phase = 1
-        self.max_hp_phase1 = 100
         self.max_hp_phase2 = 300
 
         self.atk = 20
@@ -107,12 +106,6 @@ class DeathKnight(Monster):
         except:
             print("image load fail:", path)
             return None
-
-    def is_in_world(self):
-        for layer in game_world.world:
-            if self in layer:
-                return True
-        return False
 
     def start_phase_change(self):
         self.phase = 2
@@ -164,14 +157,8 @@ class DeathKnight(Monster):
 
         if self.phase == 1:
             self.try_attack_phases1()
-        else:
-            self.try_attack_phases2()
-
-    def try_attack_phases2(self):
-        pass
 
     def try_attack_phases1(self):
-
         tuar = getattr(play_mode, 'tuar', None)
         if not tuar:
             return
@@ -230,6 +217,7 @@ class DeathKnight(Monster):
                     self.attack_cool = 0.5
 
             return
+
         if self.phase == 2:
             self.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * dt
 

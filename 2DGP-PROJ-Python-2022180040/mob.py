@@ -3,7 +3,6 @@ import game_framework
 import play_mode
 import game_world
 import math
-import random
 from mob_bullet import Bullet, DIR_RIGHT, DIR_LEFT, DIR_UP, DIR_DOWN
 
 PIXEL_PER_METER = (10.0 / 0.3)
