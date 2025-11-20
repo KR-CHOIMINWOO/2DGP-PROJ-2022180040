@@ -273,6 +273,8 @@ class DeathKnight(Monster):
 
             if self.phase2_mode == 'rest':
                 self.phase2_rest_time += dt
+                if self.state != 'idle':
+                    self.state = 'idle'
                 if self.phase2_rest_time >= self.phase2_rest_duration:
                     self.phase2_mode = 'idle'
                     self.phase2_timer = 0.0
