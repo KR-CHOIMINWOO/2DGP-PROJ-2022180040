@@ -1,4 +1,4 @@
-from pico2d import load_image, draw_rectangle
+from pico2d import load_image, draw_rectangle, delay
 import game_framework
 import play_mode
 import game_world
@@ -152,7 +152,7 @@ class DeathKnight(Monster):
     def __init__(self, x, y):
         super().__init__(
             x, y,
-            hp=100,
+            hp=5,
             speed=RUN_SPEED_PPS * 0.9,
             w=90,
             h=120,
@@ -237,6 +237,7 @@ class DeathKnight(Monster):
                 if not imgs or int(self.frame) >= len(imgs):
                     self.state = 'revive'
                     self.frame = 0.0
+                    delay(3)
 
             elif self.state == 'revive':
                 imgs = [img for img in self.frames['revive'] if img is not None]
