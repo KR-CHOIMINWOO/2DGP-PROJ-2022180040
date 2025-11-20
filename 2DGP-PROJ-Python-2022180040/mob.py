@@ -165,7 +165,8 @@ class DeathKnight(Monster):
             'attack': [],
             'revive': [],
             'teleport': [],
-            'special': []
+            'special': [],
+            'die': []
         }
 
         idle_paths = [
@@ -174,23 +175,28 @@ class DeathKnight(Monster):
         ]
 
         attack_paths = [
-            f'image_file/mob/boss/Death Knight/Death Knight_{i}.png'
-            for i in (1, 2, 3, 4)
+            f'image_file/mob/boss/Death Knight Att/Death Knight Att_{i}.png'
+            for i in (1, 2, 3, 4, 5, 6)
+        ]
+
+        die_paths = [
+            f'image_file/mob/boss/Death Knight Revive/Death Knight Revive_{i}.png'
+            for i in (1, 2, 3, 4, 5)
         ]
 
         revive_paths = [
-            f'image_file/mob/boss/Death Knight/Death Knight_{i}.png'
-            for i in (1, 2, 3, 4)
+            f'image_file/mob/boss/Death Knight Revive/Death Knight Revive_{i}.png'
+            for i in (6, 7, 8, 9, 10)
         ]
 
         teleport_paths = [
-            f'image_file/mob/boss/Death Knight/Death Knight_{i}.png'
-            for i in (1, 2, 3, 4)
+            f'image_file/mob/boss/Death Knight BackRun/Death Knight BackRun_{i}.png'
+            for i in (1, 2, 3, 4, 5)
         ]
 
         special_paths = [
-            f'image_file/mob/boss/Death Knight/Death Knight_{i}.png'
-            for i in (1, 2, 3, 4)
+            f'image_file/mob/boss/Death In/Death In_{i}.png'
+            for i in (1, 2, 3, 4, 5)
         ]
 
         self.frames['idle'] = [self.safe_load(p) for p in idle_paths]
