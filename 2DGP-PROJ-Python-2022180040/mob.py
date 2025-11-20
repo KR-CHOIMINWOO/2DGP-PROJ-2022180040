@@ -442,6 +442,13 @@ class DeathKnight(Monster):
                 img.draw(x, y, 64, 64)
             return
 
+        if self.phase == 2 and self.phase2_mode == 'dash':
+            imgs = [img for img in self.frames['attack'] if img is not None]
+            if imgs:
+                last = imgs[-1]
+                last.draw(self.x + ox, self.y + oy, self.w, self.h)
+                return
+
         imgs = self.frames.get(self.state, None)
         imgs = [img for img in imgs if img is not None] if imgs else None
 
