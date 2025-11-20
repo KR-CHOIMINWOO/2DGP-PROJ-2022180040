@@ -3,6 +3,7 @@ import game_framework
 import play_mode
 import game_world
 import math
+import random
 from mob_bullet import Bullet, DIR_RIGHT, DIR_LEFT, DIR_UP, DIR_DOWN
 
 PIXEL_PER_METER = (10.0 / 0.3)
@@ -225,6 +226,13 @@ class DeathKnight(Monster):
         self.special_duration = 3.0
         self.special_radius = 500.0
 
+        self.phase2_mode = 'idle'
+        self.phase2_timer = 0.0
+        self.phase2_dash_count = 0
+        self.phase2_idle_interval = 1.0
+        self.phase2_dash_speed = RUN_SPEED_PPS * 3.0
+        self.phase2_max_dash = 3
+
     def safe_load(self, path):
         try:
             return load_image(path)
@@ -354,8 +362,71 @@ class DeathKnight(Monster):
                     self.attack_cool = 0.5
 
             return
+        if self.phase == 2:
+            self.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * dt
+
+            if self.phase2_mode == 'idle':
+                self.phase2_timer += dt
+                if self.phase2_timer >= self.phase2_idle_interval:
+                    self.phase2_timer = 0.0
+                    self.phase2_dash_count = 0
+                    self.phase2_mode = 'teleport'
+                    self.state = 'teleport'
+                    self.frame = 0.0
+                return
+
+            if self.phase2_mode == 'teleport':
+                imgs = [img for img in self.frames['teleport'] if img is not None]
+                if not imgs:
+                    self.start_phase2_dash()
+                    return
+
+                if int(self.frame) >= len(imgs):
+                    self.start_phase2_dash()
+                return
+
+            if self.phase2_mode == 'dash':
+                dungeon = getattr(play_mode, 'dungeon', None)
+                bottom_limit = dungeon.play_y1 - 100 if dungeon else self.y - 400
+
+                self.y -= self.phase2_dash_speed * dt
+
+                tuar = getattr(play_mode, 'tuar', None)
+                if tuar and self.check_hit_tuar(tuar):
+                    tuar.take_damage(self.atk)
+
+                if self.y < bottom_limit:
+                    self.phase2_dash_count += 1
+                    if self.phase2_dash_count >= self.phase2_max_dash:
+                        self.phase2_mode = 'idle'
+                        self.state = 'idle'
+                        self.phase2_timer = 0.0
+                    else:
+                        self.phase2_mode = 'teleport'
+                        self.state = 'teleport'
+                        self.frame = 0.0
 
         super().update()
+
+    def start_phase2_dash(self):
+        dungeon = getattr(play_mode, 'dungeon', None)
+        if dungeon:
+            margin = 60
+            x = random.randint(dungeon.play_x1 + margin, dungeon.play_x2 - margin)
+            self.x = x
+            self.y = dungeon.play_y2 + 150
+        self.phase2_mode = 'dash'
+        self.state = 'attack'
+        self.frame = 0.0
+
+    def check_hit_tuar(self, tuar):
+        la, ba, ra, ta = self.get_bb()
+        lb, bb, rb, tb = tuar.get_bb()
+        if la > rb or ra < lb or ba > tb or ta < bb:
+            return False
+        if getattr(tuar, 'roll_active', False):
+            return False
+        return True
 
     def draw(self):
         ox, oy = play_mode.cam_ox, play_mode.cam_oy
