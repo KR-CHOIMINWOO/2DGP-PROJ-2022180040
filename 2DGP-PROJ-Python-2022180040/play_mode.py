@@ -68,11 +68,11 @@ def init():
     current_room = 0
     room_monsters = []
 
-    # monsters = []
+    monsters = []
 
-    # dk = DeathKnight(400, 400)
-    # monsters.append(dk)
-    # game_world.add_object(dk, 1)
+    dk = DeathKnight(400, 400)
+    monsters.append(dk)
+    game_world.add_object(dk, 1)
     #
     # ghoul = Ghoul(200, 200)
     # monsters.append(ghoul)
@@ -86,9 +86,9 @@ def init():
     # monsters.append(zombie)
     # game_world.add_object(zombie, 1)
 
-    # for m in monsters:
-    #     game_world.add_collision_pair('tuar:monster', tuar, m)
-    #     game_world.add_collision_pair('slash:monster', None, m)
+    for m in monsters:
+        game_world.add_collision_pair('tuar:monster', tuar, m)
+        game_world.add_collision_pair('slash:monster', None, m)
 
 
 
@@ -134,7 +134,7 @@ def update():
 
             room_monsters = []
             current_room += 1
-            spawn_mob()
+            # spawn_mob()
     draw_ui.update(_hp=tuar.hp, _hp_max=tuar.max_hp, _roll_cooltime=tuar.roll_cd, _roll_cooltime_max=ROLL_COOLDOWN, _special_cooltime=tuar.special_cd, _special_cooltime_max=SPECIAL_COOLDOWN , _special_active=tuar.special_active)
 
 
