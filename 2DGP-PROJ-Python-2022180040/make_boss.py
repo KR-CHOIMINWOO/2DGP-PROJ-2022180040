@@ -85,12 +85,8 @@ class DeathKnight(Monster):
         self.phase2_dash_count = 0
         self.phase2_idle_interval = 1.0
         self.phase2_dash_speed = RUN_SPEED_PPS * 5.0
-        self.phase2_max_dash = 3
+        self.phase2_max_dash = 2
         self.phase2_dash_hit = False
-
-        self.floor_zones = []
-        self.floor_time = 0.0
-        self.floor_duration = 1.5
 
         self.phase2_rest_time = 0.0
         self.phase2_rest_duration = 3.0
@@ -261,9 +257,11 @@ class DeathKnight(Monster):
                 if self.y < bottom_limit:
                     self.phase2_dash_count += 1
                     if self.phase2_dash_count >= self.phase2_max_dash:
-                        self.x = (dungeon.play_x1 + dungeon.play_x2) / 2
-                        self.y = (dungeon.play_y1 + dungeon.play_y2) / 2
+                        self.start_phase2_floor_attack()
                         self.phase2_mode = 'rest'
+                        self.phase2_rest_time = 0.0
+                        self.state = 'idle'
+                        self.frame = 0.0
                     else:
                         self.phase2_mode = 'teleport'
                         self.state = 'teleport'
@@ -296,6 +294,22 @@ class DeathKnight(Monster):
         self.frame = 0.0
         self.phase2_dash_hit = False
 
+    def start_phase2_floor_attack(self):
+        dungeon = getattr(play_mode, 'dungeon', None)
+        if not dungeon:
+            return
+
+        self.x = (dungeon.play_x1 + dungeon.play_x2) / 2
+        self.y = (dungeon.play_y1 + dungeon.play_y2) / 2
+
+        count = 4
+        margin = 80
+        for _ in range(count):
+            fx = random.randint(dungeon.play_x1 + margin, dungeon.play_x2 - margin)
+            fy = random.randint(dungeon.play_y1 + margin, dungeon.play_y2 - margin)
+            eff = DeathInEffect(fx, fy, damage=self.atk)
+            game_world.add_object(eff, 1)
+
     def check_hit_tuar(self, tuar):
         la, ba, ra, ta = self.get_bb()
         lb, bb, rb, tb = tuar.get_bb()
@@ -326,15 +340,6 @@ class DeathKnight(Monster):
                 last.draw(self.x + ox, self.y + oy, self.w, self.h)
                 return
 
-        if self.phase == 2 and self.phase2_mode == 'floor' and self.floor_zones:
-            for zone in self.floor_zones:
-                img = zone['img']
-                if img is None:
-                    continue
-                x = zone['x'] + ox
-                y = zone['y'] + oy
-                img.draw(x, y, 120, 120)
-
         imgs = self.frames.get(self.state, None)
         imgs = [img for img in imgs if img is not None] if imgs else None
 
@@ -354,9 +359,10 @@ class DeathKnight(Monster):
         return (
             self.x - 60,
             self.y - 100,
-            self.x + 20,
+            self.x + 50,
             self.y + 20
         )
 
     def handle_collision(self, group, other):
         pass
+
