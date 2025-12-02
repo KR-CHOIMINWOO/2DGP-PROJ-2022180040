@@ -49,5 +49,60 @@ class DeathInEffect:
         self.phase = 'warn'
         self.hit_done = False
 
-        self.w = 140
-        self.h = 140
+        self.w = 24
+        self.h = 24
+
+    def update(self):
+        dt = game_framework.frame_time
+        self.timer += dt
+        self.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * dt
+
+        if self.phase == 'warn':
+            if self.timer >= self.warn_time:
+                self.phase = 'active'
+                self.timer = 0.0
+        elif self.phase == 'active':
+            tuar = getattr(play_mode, 'tuar', None)
+            if tuar and not self.hit_done and not getattr(tuar, 'roll_active', False):
+                if self.check_hit_tuar(tuar):
+                    tuar.take_damage(self.damage)
+                    self.hit_done = True
+            if self.timer >= self.active_time:
+                if self in sum(game_world.world, []):
+                    game_world.remove_object(self)
+
+    def check_hit_tuar(self, tuar):
+        la, ba, ra, ta = self.get_bb()
+        lb, bb, rb, tb = tuar.get_bb()
+        if la > rb or ra < lb or ba > tb or ta < bb:
+            return False
+        return True
+
+    def draw(self):
+        ox, oy = play_mode.cam_ox, play_mode.cam_oy
+        if not self.images:
+            draw_rectangle(
+                self.x - self.w // 2 + ox,
+                self.y - self.h // 2 + oy,
+                self.x + self.w // 2 + ox,
+                self.y + self.h // 2 + oy
+            )
+            return
+
+        if self.phase == 'warn':
+            img = self.images[0]
+        else:
+            img = self.images[-1]
+
+        img.draw(self.x + ox, self.y + oy, self.w, self.h)
+
+    def get_bb(self):
+        return (
+            self.x - self.w // 2,
+            self.y - self.h // 2,
+            self.x + self.w // 2,
+            self.y + self.h // 2
+        )
+
+    def handle_collision(self, group, other):
+        pass
