@@ -5,6 +5,7 @@ import play_mode
 import math
 import random
 from mob import Monster, RUN_SPEED_PPS, FRAMES_PER_ACTION, ACTION_PER_TIME
+from DeathInEffect import DeathInEffect
 
 
 class DeathKnight(Monster):
