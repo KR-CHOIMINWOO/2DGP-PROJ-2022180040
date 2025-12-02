@@ -18,6 +18,36 @@ FRAMES_PER_ACTION = 8
 
 DEATH_IN_IMAGES = None
 
+def load_death_in_images():
+    global DEATH_IN_IMAGES
+    if DEATH_IN_IMAGES is None:
+        paths = [
+            f'image_file/mob/boss/Death In/Death In_{i}.png'
+            for i in (1, 2, 3)
+        ]
+        imgs = []
+        for p in paths:
+            try:
+                imgs.append(load_image(p))
+            except:
+                print("image load fail:", p)
+        DEATH_IN_IMAGES = imgs
+    return DEATH_IN_IMAGES
+
 class DeathInEffect:
-    def __init__(self):
-        pass
+    def __init__(self, x, y, damage=20):
+        self.x = x
+        self.y = y
+        self.damage = damage
+
+        self.images = load_death_in_images()
+        self.frame = 0.0
+
+        self.warn_time = 0.6
+        self.active_time = 0.4
+        self.timer = 0.0
+        self.phase = 'warn'
+        self.hit_done = False
+
+        self.w = 140
+        self.h = 140
