@@ -210,7 +210,7 @@ def spawn_mob():
 
         return
 
-    spawn_count = random.randint(1, 3)
+    spawn_count = random.randint(1, 7)
     monster_types = [Ghoul, Grave, Zombie]
 
     for _ in range(spawn_count):
