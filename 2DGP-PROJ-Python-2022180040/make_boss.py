@@ -299,16 +299,25 @@ class DeathKnight(Monster):
         if not dungeon:
             return
 
-        self.x = (dungeon.play_x1 + dungeon.play_x2) / 2
-        self.y = (dungeon.play_y1 + dungeon.play_y2) / 2
+        cx = (dungeon.play_x1 + dungeon.play_x2) / 2
+        cy = (dungeon.play_y1 + dungeon.play_y2) / 2
+        self.x = cx
+        self.y = cy
 
-        count = 4
-        margin = 80
-        for _ in range(count):
-            fx = random.randint(dungeon.play_x1 + margin, dungeon.play_x2 - margin)
-            fy = random.randint(dungeon.play_y1 + margin, dungeon.play_y2 - margin)
-            eff = DeathInEffect(fx, fy, damage=self.atk)
-            game_world.add_object(eff, 1)
+        spacing = 120
+        max_step = 6
+
+        dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+        for dx, dy in dirs:
+            for step in range(1, max_step + 1):
+                fx = cx + dx * spacing * step
+                fy = cy + dy * spacing * step
+
+                if (dungeon.play_x1 <= fx <= dungeon.play_x2 and
+                        dungeon.play_y1 <= fy <= dungeon.play_y2):
+                    eff = DeathInEffect(fx, fy, damage=self.atk)
+                    game_world.add_object(eff, 1)
 
     def check_hit_tuar(self, tuar):
         la, ba, ra, ta = self.get_bb()

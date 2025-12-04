@@ -49,8 +49,8 @@ class DeathInEffect:
         self.phase = 'warn'
         self.hit_done = False
 
-        self.w = 24
-        self.h = 24
+        self.w = 48
+        self.h = 48
 
     def update(self):
         dt = game_framework.frame_time
