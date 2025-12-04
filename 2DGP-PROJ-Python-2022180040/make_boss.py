@@ -90,6 +90,7 @@ class DeathKnight(Monster):
 
         self.phase2_rest_time = 0.0
         self.phase2_rest_duration = 3.0
+        self.floor_duration = 5
 
     def safe_load(self, path):
         try:
@@ -258,14 +259,35 @@ class DeathKnight(Monster):
                     self.phase2_dash_count += 1
                     if self.phase2_dash_count >= self.phase2_max_dash:
                         self.start_phase2_floor_attack()
-                        self.phase2_mode = 'rest'
-                        self.phase2_rest_time = 0.0
-                        self.state = 'idle'
-                        self.frame = 0.0
+                        # self.phase2_mode = 'rest'
+                        # self.phase2_rest_time = 0.0
+                        # self.state = 'idle'
+                        # self.frame = 0.0
                     else:
                         self.phase2_mode = 'teleport'
                         self.state = 'teleport'
                         self.frame = 0.0
+
+                super().update()
+                return
+
+            if self.phase2_mode == 'floor':
+                self.floor_time += dt
+                all_spawned = True
+
+                for zone in self.floor_zones:
+                    if not zone['spawned']:
+                        all_spawned = False
+                        if self.floor_time >= zone['delay']:
+                            eff = DeathInEffect(zone['x'], zone['y'], damage=self.atk)
+                            game_world.add_object(eff, 1)
+                            zone['spawned'] = True
+
+                if all_spawned and self.floor_zones:
+                    last_delay = self.floor_zones[-1]['delay']
+                    if self.floor_time >= last_delay + self.floor_duration:
+                        self.phase2_mode = 'rest'
+                        self.phase2_rest_time = 0.0
 
                 super().update()
                 return
@@ -306,9 +328,9 @@ class DeathKnight(Monster):
 
         spacing = 120
         max_step = 6
-
         dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
+        tiles = []
         for dx, dy in dirs:
             for step in range(1, max_step + 1):
                 fx = cx + dx * spacing * step
@@ -316,8 +338,24 @@ class DeathKnight(Monster):
 
                 if (dungeon.play_x1 <= fx <= dungeon.play_x2 and
                         dungeon.play_y1 <= fy <= dungeon.play_y2):
-                    eff = DeathInEffect(fx, fy, damage=self.atk)
-                    game_world.add_object(eff, 1)
+                    tiles.append((step, fx, fy))
+
+        tiles.sort(key=lambda t: t[0])
+
+        self.floor_zones = []
+        delay_gap = 0.3
+        t = 0.0
+        for _, fx, fy in tiles:
+            self.floor_zones.append({
+                'x': fx,
+                'y': fy,
+                'delay': t,
+                'spawned': False,
+            })
+            t += delay_gap
+
+        self.floor_time = 0.0
+        self.phase2_mode = 'floor'
 
     def check_hit_tuar(self, tuar):
         la, ba, ra, ta = self.get_bb()

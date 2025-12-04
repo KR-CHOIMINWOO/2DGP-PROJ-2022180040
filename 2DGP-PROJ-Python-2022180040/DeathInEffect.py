@@ -23,7 +23,7 @@ def load_death_in_images():
     if DEATH_IN_IMAGES is None:
         paths = [
             f'image_file/mob/boss/Death In/Death In_{i}.png'
-            for i in (1, 2, 3)
+            for i in (1, 2, 3, 4, 5)
         ]
         imgs = []
         for p in paths:
