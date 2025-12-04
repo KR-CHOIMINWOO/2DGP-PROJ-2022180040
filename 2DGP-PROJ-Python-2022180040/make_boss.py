@@ -90,7 +90,10 @@ class DeathKnight(Monster):
 
         self.phase2_rest_time = 0.0
         self.phase2_rest_duration = 3.0
-        self.floor_duration = 5
+
+        self.floor_zones = []
+        self.floor_time = 0.0
+        self.floor_duration = 1.0
 
     def safe_load(self, path):
         try:
