@@ -329,7 +329,7 @@ class DeathKnight(Monster):
         self.x = cx
         self.y = cy
 
-        spacing = 120
+        spacing = 80
         max_step = 6
         dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
@@ -346,7 +346,7 @@ class DeathKnight(Monster):
         tiles.sort(key=lambda t: t[0])
 
         self.floor_zones = []
-        delay_gap = 0.3
+        delay_gap = 0.15
         t = 0.0
         for _, fx, fy in tiles:
             self.floor_zones.append({
@@ -389,6 +389,14 @@ class DeathKnight(Monster):
                 last = imgs[-1]
                 last.draw(self.x + ox, self.y + oy, self.w, self.h)
                 return
+
+        if self.phase == 2 and self.phase2_mode == 'floor':
+            idle_imgs = [img for img in self.frames['idle'] if img is not None]
+            if idle_imgs:
+                img = idle_imgs[0]
+                img.draw(self.x + ox, self.y + oy, self.w, self.h)
+                return
+
 
         imgs = self.frames.get(self.state, None)
         imgs = [img for img in imgs if img is not None] if imgs else None
