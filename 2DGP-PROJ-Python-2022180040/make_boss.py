@@ -331,24 +331,45 @@ class DeathKnight(Monster):
 
         spacing = 80
         max_step = 6
-        dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
-        tiles = []
-        for dx, dy in dirs:
+        cross_dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        diag_dirs = [(1, 1), (-1, 1), (1, -1), (-1, -1)]
+
+        cross_tiles = [(0, cx, cy)]
+        for dx, dy in cross_dirs:
             for step in range(1, max_step + 1):
                 fx = cx + dx * spacing * step
                 fy = cy + dy * spacing * step
-
                 if (dungeon.play_x1 <= fx <= dungeon.play_x2 and
                         dungeon.play_y1 <= fy <= dungeon.play_y2):
-                    tiles.append((step, fx, fy))
+                    cross_tiles.append((step, fx, fy))
 
-        tiles.sort(key=lambda t: t[0])
+        cross_tiles.sort(key=lambda t: t[0])
 
         self.floor_zones = []
-        delay_gap = 0.1
+        delay_gap = 0.05
         t = 0.0
-        for _, fx, fy in tiles:
+        for _, fx, fy in cross_tiles:
+            self.floor_zones.append({
+                'x': fx,
+                'y': fy,
+                'delay': t,
+                'spawned': False,
+            })
+            t += delay_gap
+
+        diag_tiles = []
+        for dx, dy in diag_dirs:
+            for step in range(1, max_step + 1):
+                fx = cx + dx * spacing * step
+                fy = cy + dy * spacing * step
+                if (dungeon.play_x1 <= fx <= dungeon.play_x2 and
+                        dungeon.play_y1 <= fy <= dungeon.play_y2):
+                    diag_tiles.append((step, fx, fy))
+
+        diag_tiles.sort(key=lambda t: t[0])
+
+        for _, fx, fy in diag_tiles:
             self.floor_zones.append({
                 'x': fx,
                 'y': fy,
