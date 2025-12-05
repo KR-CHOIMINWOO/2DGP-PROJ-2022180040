@@ -346,7 +346,7 @@ class DeathKnight(Monster):
         tiles.sort(key=lambda t: t[0])
 
         self.floor_zones = []
-        delay_gap = 0.15
+        delay_gap = 0.1
         t = 0.0
         for _, fx, fy in tiles:
             self.floor_zones.append({
