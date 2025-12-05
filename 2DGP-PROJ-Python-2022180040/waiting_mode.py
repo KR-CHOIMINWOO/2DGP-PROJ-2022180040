@@ -6,6 +6,7 @@ from grass import Grass
 import title_mode
 import game_world
 import game_framework
+import store_room
 from make_cave import CaveEntrance
 from make_wait_bg import Bg
 from make_store import Store
@@ -13,6 +14,7 @@ from sdl2 import SDL_KEYDOWN, SDLK_ESCAPE, SDLK_SPACE
 
 cave = None
 tuar = None
+store = None
 
 def handle_events():
     global cave, tuar
@@ -23,6 +25,8 @@ def handle_events():
             game_framework.change_mode(title_mode)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE and cave.overlap:
             game_framework.change_mode(play_mode)
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE and  store.overlap:
+            game_framework.change_mode(store_room)
         else:
             tuar.handle_event(event)
 
@@ -45,6 +49,7 @@ def init():
     game_world.add_object(tuar, 1)
 
     game_world.add_collision_pair('tuar:cave', tuar, cave)
+    game_world.add_collision_pair('tuar:store', tuar, store)
 
 def finish():
     game_world.clear()

@@ -25,10 +25,10 @@ class Store:
         return (self.x - self.w//2, self.y - self.h//2,
                 self.x + self.w//2, self.y + self.h//2)
 
-    # def handle_collision(self, group, other):
-    #     if group == 'tuar:store':
-    #         self.overlap = True
-    #         self._player = other
+    def handle_collision(self, group, other):
+         if group == 'tuar:store':
+             self.overlap = True
+             self._player = other
 
     def try_enter(self):
         if not self.entered:
