@@ -1,11 +1,9 @@
 from pico2d import *
 
 from tuar import Tuar
-from grass import Grass
 import game_world
 import game_framework
 import waiting_mode
-from make_wait_bg import Bg
 from sdl2 import SDL_KEYDOWN, SDLK_ESCAPE, SDLK_SPACE
 
 tuar = None
@@ -21,13 +19,7 @@ def handle_events():
             tuar.handle_event(event)
 
 def init():
-    global tuar, cave, tuar, store
-
-    bg = Bg()
-    game_world.add_object(bg, 0)
-
-    grass = Grass()
-    game_world.add_object(grass, 0)
+    global tuar
 
     tuar = Tuar()
     game_world.add_object(tuar, 1)
