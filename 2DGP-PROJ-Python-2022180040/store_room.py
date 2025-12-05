@@ -1,17 +1,13 @@
 from pico2d import *
 
-import play_mode
 from tuar import Tuar
 from grass import Grass
-import title_mode
 import game_world
 import game_framework
-from make_cave import CaveEntrance
+import waiting_mode
 from make_wait_bg import Bg
-from make_store import Store
 from sdl2 import SDL_KEYDOWN, SDLK_ESCAPE, SDLK_SPACE
 
-cave = None
 tuar = None
 
 def handle_events():
@@ -20,9 +16,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.change_mode(title_mode)
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE and cave.overlap:
-            game_framework.change_mode(play_mode)
+            game_framework.change_mode(waiting_mode)
         else:
             tuar.handle_event(event)
 
@@ -35,16 +29,9 @@ def init():
     grass = Grass()
     game_world.add_object(grass, 0)
 
-    store = Store()
-    game_world.add_object(store, 0)
-
-    cave = CaveEntrance()
-    game_world.add_object(cave, 0)
-
     tuar = Tuar()
     game_world.add_object(tuar, 1)
 
-    game_world.add_collision_pair('tuar:cave', tuar, cave)
 
 def finish():
     game_world.clear()
