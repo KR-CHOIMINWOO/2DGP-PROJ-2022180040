@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time, draw_rectangle
+from pico2d import load_image, get_time, draw_rectangle, get_canvas_height
 from sdl2 import SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_w, SDLK_a, SDLK_s, SDLK_d, SDLK_LSHIFT, SDLK_j, SDLK_k
 
 import game_framework
@@ -34,16 +34,12 @@ def attack_down(e):
 def special_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_k
 
-# 용사의 Run Speed 계산
-
-# 용사 Run Speed
-PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
-RUN_SPEED_KMPH = 20.0  # Km / Hour
+PIXEL_PER_METER = (10.0 / 0.3)
+RUN_SPEED_KMPH = 20.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-# 용사 Action Speed
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
@@ -65,29 +61,23 @@ UP_ATK         = 0
 UP_ATK_SPEED   = 0
 UP_SKILL_SPEED = 0
 
-
 def apply_max_hp_upgrade(amount):
     global UP_MAX_HP
     UP_MAX_HP += amount
-
 
 def apply_atk_upgrade(amount):
     global UP_ATK
     UP_ATK += amount
 
-
 def apply_atk_speed_upgrade(levels):
     global UP_ATK_SPEED
     UP_ATK_SPEED += levels
-
 
 def apply_skill_speed_upgrade(levels):
     global UP_SKILL_SPEED
     UP_SKILL_SPEED += levels
 
-
 class Idle:
-
     def __init__(self, tuar):
         self.tuar = tuar
 
@@ -118,7 +108,6 @@ class Idle:
             100, 100
         )
 
-
 class Run:
     def __init__(self, tuar):
         self.tuar = tuar
@@ -137,10 +126,11 @@ class Run:
         elif down_down(e) or up_up(e):
             self.tuar.dir_y += -1
 
-        if right_down(e): self.tuar.face_dir = 1
-        if left_down(e):  self.tuar.face_dir = -1
+        if right_down(e):
+            self.tuar.face_dir = 1
+        if left_down(e):
+            self.tuar.face_dir = -1
         self.frame_time = get_time()
-
 
     def exit(self, e):
         if space_down(e):
@@ -179,12 +169,12 @@ class Run:
             idx = int(self.tuar.frame) % len(self.tuar.cur_run_images)
             img = self.tuar.cur_run_images[idx]
             flip = 'h' if self.tuar.face_dir == -1 else ''
-            img.composite_draw(0, flip,
-            self.tuar.x + play_mode.cam_ox,
-            self.tuar.y + play_mode.cam_oy,
-            100, 100
-        )
-
+            img.composite_draw(
+                0, flip,
+                self.tuar.x + play_mode.cam_ox,
+                self.tuar.y + play_mode.cam_oy,
+                100, 100
+            )
 
 class Tuar:
     def __init__(self):
@@ -193,10 +183,12 @@ class Tuar:
         self.face_dir = 1
         self.dir_x = 0
         self.dir_y = 0
-        self.hp = 100
-        self.max_hp = 100
+        self.base_max_hp = 100
+        self.max_hp = self.base_max_hp + UP_MAX_HP
+        self.hp = self.max_hp
 
-        self.atk = 10
+        self.base_atk = 5
+        self.atk = self.base_atk + UP_ATK
         self.attack_hit_targets = set()
 
         self.bb = 100
@@ -211,12 +203,12 @@ class Tuar:
         self.base_run = [load_image(f'image_file/char/tuar01/tuar_{i:02d}.png') for i in range(1, 5)]
         self.tf_run = [load_image(f'image_file/char/tuar04/tuar04_{i:02d}.png') for i in range(1, 5)]
 
-        self.base_atk = [load_image(f'image_file/char/tuar01/tuar_{i:02d}.png') for i in range(5, 8)]
+        self.base_atk_imgs = [load_image(f'image_file/char/tuar01/tuar_{i:02d}.png') for i in range(5, 8)]
         self.tf_atk = [load_image(f'image_file/char/tuar04/tuar04_{i:02d}.png') for i in range(5, 8)]
 
         self.cur_idle_img = self.base_idle
         self.cur_run_images = self.base_run
-        self.cur_attack_imgs = self.base_atk
+        self.cur_attack_imgs = self.base_atk_imgs
         self.roll_image = self.base_idle
 
         self.roll_active = False
@@ -255,8 +247,17 @@ class Tuar:
             }
         )
 
+    def get_attack_cooldown(self):
+        factor = 0.9 ** UP_ATK_SPEED
+        return max(0.05, ATTACK_COOLDOWN * factor)
+
+    def get_special_cooldown(self):
+        factor = 0.9 ** UP_SKILL_SPEED
+        return max(5.0, SPECIAL_COOLDOWN * factor)
+
     def update(self):
         dt = game_framework.frame_time
+
         if self.special_cd > 0.0:
             self.special_cd = max(0.0, self.special_cd - dt)
         if self.special_active:
@@ -264,29 +265,28 @@ class Tuar:
             if self.special_t >= SPECIAL_DURATION:
                 self.special_active = False
                 self.apply_skin(False)
-                self.special_cd = SPECIAL_COOLDOWN
+                self.special_cd = self.get_special_cooldown()
 
         if self.attack_cd > 0.0:
-            self.attack_cd = max(0.0, self.attack_cd - game_framework.frame_time)
+            self.attack_cd = max(0.0, self.attack_cd - dt)
 
         if self.attack_active:
-            dt = game_framework.frame_time
             self.attack_t += dt
             if self.attack_t >= ATTACK_TIME:
                 self.attack_active = False
-                self.attack_cd = ATTACK_COOLDOWN
+                self.attack_cd = self.get_attack_cooldown()
 
         if self.roll_cd > 0.0:
-            self.roll_cd = max(0.0, self.roll_cd - game_framework.frame_time)
+            self.roll_cd = max(0.0, self.roll_cd - dt)
 
         if self.roll_active:
-            dt = game_framework.frame_time
             self.roll_t += dt
             self.x += self.roll_vx * ROLL_DISTANCE * ROLL_SPEED_SCALE * dt
             self.y += self.roll_vy * ROLL_DISTANCE * ROLL_SPEED_SCALE * dt
             if self.roll_t >= ROLL_TIME:
                 self.roll_active = False
                 self.roll_cd = ROLL_COOLDOWN
+
         self.state_machine.update()
 
     def handle_event(self, event):
@@ -395,7 +395,7 @@ class Tuar:
         else:
             self.cur_idle_img = self.base_idle
             self.cur_run_images = self.base_run
-            self.cur_attack_imgs = self.base_atk
+            self.cur_attack_imgs = self.base_atk_imgs
             self.roll_image = self.base_idle
 
     def draw_attack(self):
@@ -405,7 +405,7 @@ class Tuar:
             idx = len(self.cur_attack_imgs) - 1
         img = self.cur_attack_imgs[idx]
         flip = 'h' if self.face_dir == -1 else ''
-        img.composite_draw(0, flip, self.x, self.y, 100, 100)
+        img.composite_draw(0, flip, self.x + play_mode.cam_ox, self.y + play_mode.cam_oy, 100, 100)
 
     def draw_roll(self):
         img = self.roll_image
@@ -419,7 +419,7 @@ class Tuar:
         direction = 1.0 if self.face_dir > 0 else -1.0
         angle = -t * 2.0 * PI * direction
 
-        img.clip_composite_draw(0, 0, sw, sh, angle, '', self.x, self.y - 20, W, H)
+        img.clip_composite_draw(0, 0, sw, sh, angle, '', self.x + play_mode.cam_ox, self.y - 20 + play_mode.cam_oy, W, H)
 
     def spawn_slash(self):
         direction = self.last_input_dir
@@ -444,3 +444,4 @@ class Tuar:
         if self.hp < 0:
             self.hp = 0
         print('Tuar hit, hp = ', self.hp)
+
