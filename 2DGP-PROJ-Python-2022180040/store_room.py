@@ -18,6 +18,8 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.change_mode(waiting_mode)
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE and witch.overlap:
+                pass
         else:
             tuar.handle_event(event)
 
