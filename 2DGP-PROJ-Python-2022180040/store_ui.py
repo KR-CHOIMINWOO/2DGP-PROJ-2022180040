@@ -4,7 +4,7 @@ class StoreUI:
     def __init__(self):
         self.open = False
         self.boss_cleared = False
-        self.before_img = load_image('image_file/bag/store_inter01png')
+        self.before_img = load_image('image_file/bag/store_inter01.png')
         self.after_img = load_image('image_file/bag/store_inter02.png')
 
     def sync_boss_state(self):
