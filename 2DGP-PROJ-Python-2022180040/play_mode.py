@@ -26,6 +26,8 @@ room_monsters = []
 door_ready = False
 door_info = None
 
+boss_cleared = False
+
 def handle_events():
     global door_ready, door_info
     event_list = get_events()

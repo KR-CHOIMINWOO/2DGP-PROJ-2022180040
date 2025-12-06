@@ -135,6 +135,7 @@ class DeathKnight(Monster):
         if self.phase == 2 and self.hp <= 0:
             if self.is_in_world():
                 game_world.remove_object(self)
+                play_mode.boss_cleared = True
 
     def init_special_orbs(self):
         self.special_orbs = []
