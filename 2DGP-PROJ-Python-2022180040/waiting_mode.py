@@ -11,6 +11,7 @@ from make_cave import CaveEntrance
 from make_wait_bg import Bg
 from make_store import Store
 from sdl2 import SDL_KEYDOWN, SDLK_ESCAPE, SDLK_SPACE
+from gold import gold
 
 cave = None
 tuar = None
