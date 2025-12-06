@@ -60,6 +60,31 @@ ATTACK_COOLDOWN = 0.20
 SPECIAL_DURATION = 15.0
 SPECIAL_COOLDOWN = 20.0
 
+UP_MAX_HP      = 0
+UP_ATK         = 0
+UP_ATK_SPEED   = 0
+UP_SKILL_SPEED = 0
+
+
+def apply_max_hp_upgrade(amount):
+    global UP_MAX_HP
+    UP_MAX_HP += amount
+
+
+def apply_atk_upgrade(amount):
+    global UP_ATK
+    UP_ATK += amount
+
+
+def apply_atk_speed_upgrade(levels):
+    global UP_ATK_SPEED
+    UP_ATK_SPEED += levels
+
+
+def apply_skill_speed_upgrade(levels):
+    global UP_SKILL_SPEED
+    UP_SKILL_SPEED += levels
+
 
 class Idle:
 
