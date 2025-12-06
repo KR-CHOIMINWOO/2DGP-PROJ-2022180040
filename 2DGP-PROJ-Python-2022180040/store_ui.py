@@ -98,18 +98,33 @@ class StoreUI:
     def handle_click(self, sx, sy):
         if not self.open:
             return
+
+        print('StoreUI.handle_click screen:', sx, sy)
+
+        ch = get_canvas_height()
+        sy = ch - sy - 1
+        print('StoreUI.handle_click flipped y:', sy)
+
         uv = self.screen_to_uv(sx, sy)
         if uv is None:
+            print('StoreUI: click outside ui area')
             return
         u, v = uv
+        print('StoreUI.handle_click uv:', u, v)
+
         for i, (u1, b, u2, t) in enumerate(self.upgrade_rects):
             if u1 <= u <= u2 and b <= v <= t:
+                print('StoreUI: upgrade button', i, 'clicked')
                 self.buy_upgrade(i)
                 return
+
         if not self.boss_cleared:
+            print('StoreUI: boss not cleared, special buttons locked')
             return
+
         for i, (u1, b, u2, t) in enumerate(self.special_rects):
             if u1 <= u <= u2 and b <= v <= t:
+                print('StoreUI: special button', i, 'clicked')
                 self.buy_special(i)
                 return
 

@@ -28,6 +28,7 @@ def handle_events():
             if store_ui:
                 store_ui.toggle()
         elif event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
+            print('store_room: mouse left down', event.x, event.y)
             if store_ui and store_ui.open:
                 store_ui.handle_click(event.x, event.y)
         else:
