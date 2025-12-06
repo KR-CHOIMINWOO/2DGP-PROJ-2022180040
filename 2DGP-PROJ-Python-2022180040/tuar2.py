@@ -379,11 +379,13 @@ class Tuar:
     def try_special(self):
         if self.special_active or self.special_cd > 0.0:
             return
-
+        if not getattr(play_mode, 'awakening_unlocked', False):
+            return
         self.special_active = True
         self.special_t = 0.0
         self.apply_skin(True)
         self.special_t = 0.0
+
 
     def apply_skin(self, special: bool):
         self.special_active = special
