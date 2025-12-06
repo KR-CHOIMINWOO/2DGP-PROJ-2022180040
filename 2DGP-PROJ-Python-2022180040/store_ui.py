@@ -81,8 +81,8 @@ class StoreUI:
             tt = bottom + t * self.draw_h
             draw_rectangle(l, bb, r, tt)
 
-        if self.boss_cleared:
-            for idx, (u1, b, u2, t) in enumerate(self.special_rects):
+        for idx, (u1, b, u2, t) in enumerate(self.special_rects):
+            if idx == 0 or self.boss_cleared:
                 l = left + u1 * self.draw_w
                 r = left + u2 * self.draw_w
                 bb = bottom + b * self.draw_h
@@ -123,12 +123,11 @@ class StoreUI:
                 self.buy_upgrade(i)
                 return
 
-        if not self.boss_cleared:
-            print('StoreUI: boss not cleared, special buttons locked')
-            return
-
         for i, (u1, b, u2, t) in enumerate(self.special_rects):
             if u1 <= u <= u2 and b <= v <= t:
+                if i > 0 and not self.boss_cleared:
+                    print('StoreUI: special button locked, boss not cleared')
+                    return
                 print('StoreUI: special button', i, 'clicked')
                 self.buy_special(i)
                 return
