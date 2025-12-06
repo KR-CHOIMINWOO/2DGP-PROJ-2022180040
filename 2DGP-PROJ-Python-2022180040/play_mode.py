@@ -146,7 +146,6 @@ def draw():
     clear_canvas()
     game_world.render()
     draw_ui.draw()
-    draw_text(f'GOLDl {gold.get()}, 1000, 580')
     update_canvas()
 
 def pause():
