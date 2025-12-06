@@ -1,6 +1,11 @@
 from pico2d import get_canvas_width, get_canvas_height, load_image, draw_rectangle
 from gold import gold
-
+from tuar2 import (
+    apply_max_hp_upgrade,
+    apply_atk_upgrade,
+    apply_atk_speed_upgrade,
+    apply_skill_speed_upgrade,
+)
 
 class StoreUI:
     def __init__(self):
@@ -136,22 +141,14 @@ class StoreUI:
         if not gold.pay(item['cost']):
             return
 
-        try:
-            import play_mode
-            tuar = getattr(play_mode, 'tuar', None)
-            if not tuar:
-                return
-            if idx == 0 and hasattr(tuar, 'max_hp') and hasattr(tuar, 'hp'):
-                tuar.max_hp += item['hp_up']
-                tuar.hp = tuar.max_hp
-            elif idx == 1 and hasattr(tuar, 'atk'):
-                tuar.atk += item['atk_up']
-            elif idx == 2 and hasattr(tuar, 'atk_speed_level'):
-                tuar.atk_speed_level += item['aspd_up']
-            elif idx == 3 and hasattr(tuar, 'skill_speed_level'):
-                tuar.skill_speed_level += item['skillspd_up']
-        except:
-            pass
+        if idx == 0:
+            apply_max_hp_upgrade(item['hp_up'])
+        elif idx == 1:
+            apply_atk_upgrade(item['atk_up'])
+        elif idx == 2:
+            apply_atk_speed_upgrade(item['aspd_up'])
+        elif idx == 3:
+            apply_skill_speed_upgrade(item['skillspd_up'])
 
     def buy_special(self, idx):
         if idx < 0 or idx >= len(self.special_items):
