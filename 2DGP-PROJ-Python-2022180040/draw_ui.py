@@ -84,14 +84,24 @@ def draw_skill_icon():
             img.draw(x, y, w, h)
             img.opacify(1.0)
 
-
     draw_with_cd(img_btn_roll, roll_x, roll_y, size, size, roll_cooltime, roll_cooltime_max)
+
+    awakened = False
+    try:
+        import play_mode
+        awakened = getattr(play_mode, 'awakening_unlocked', False)
+    except:
+        awakened = False
+
+    if not awakened:
+        return
 
     draw_with_cd(img_awaken, special_x, special_y, size, size, special_cooltime, special_cooltime_max)
     if special_active and special_cooltime <= 0.0:
         img_awaken.opacify(0.22)
         img_awaken.draw(special_x, special_y, int(size * 1.06), int(size * 1.06))
         img_awaken.opacify(1.0)
+
 
 def draw():
     draw_hp_bar()
