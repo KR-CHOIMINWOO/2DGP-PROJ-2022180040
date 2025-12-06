@@ -2,11 +2,11 @@ from pico2d import load_font
 
 class Gold:
     def __init__(self):
-        self.amount = 0
+        self.amount = 10000
         self.font = None
 
     def reset(self):
-        self.amount = 0
+        self.amount = 10000
 
     def add(self, value):
         if value > 0:
@@ -24,7 +24,7 @@ class Gold:
     def get(self):
         return self.amount
 
-    def ensure_font(self, size=24, path='ENCR10B.TTF'):
+    def ensure_font(self, size=24, path='gold.TTF'):
         if self.font is None:
             self.font = load_font(path, size)
 

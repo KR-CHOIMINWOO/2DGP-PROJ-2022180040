@@ -146,7 +146,7 @@ def draw():
     clear_canvas()
     game_world.render()
     draw_ui.draw()
-    gold.draw(1000, 680)
+    gold.draw(850, 680)
     update_canvas()
 
 def pause():

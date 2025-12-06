@@ -61,7 +61,7 @@ def update():
 def draw():
     clear_canvas()
     game_world.render()
-    gold.draw(1000, 680)
+    gold.draw(850, 680)
     if store_ui:
         store_ui.draw()
     update_canvas()
