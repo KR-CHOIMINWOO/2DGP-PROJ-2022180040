@@ -4,7 +4,7 @@ from tuar import Tuar
 import game_world
 import game_framework
 import waiting_mode
-from sdl2 import SDL_KEYDOWN, SDLK_ESCAPE, SDLK_SPACE
+from sdl2 import SDL_KEYDOWN, SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT, SDLK_ESCAPE, SDLK_SPACE
 from make_store_bg import Bg
 from make_witch import Witch
 from store_ui import StoreUI
@@ -27,6 +27,9 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE and witch.overlap:
             if store_ui:
                 store_ui.toggle()
+        elif event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
+            if store_ui and store_ui.open:
+                store_ui.handle_click(event.x, event.y)
         else:
             if not store_ui or not store_ui.open:
                 tuar.handle_event(event)

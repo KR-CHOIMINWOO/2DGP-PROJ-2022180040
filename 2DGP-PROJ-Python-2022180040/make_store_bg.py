@@ -6,7 +6,7 @@ class Bg:
         self.image = load_image('image_file/bag/store_room_bg.png')
 
     def draw(self):
-        self.image.draw(1024 / 2 - 20 , 720 / 2 - 60   , 1024, 1024)
+        self.image.draw(1024 / 2  , 720 / 2 - 60   , 1024, 1024)
 
     def update(self):
         pass
