@@ -6,8 +6,10 @@ import game_framework
 import waiting_mode
 from sdl2 import SDL_KEYDOWN, SDLK_ESCAPE, SDLK_SPACE
 from make_store_bg import Bg
+from make_witch import Witch
 tuar = None
 bg = None
+witch = None
 
 def handle_events():
     global cave, tuar
@@ -20,13 +22,18 @@ def handle_events():
             tuar.handle_event(event)
 
 def init():
-    global tuar, bg
+    global tuar, bg, witch
 
     bg = Bg()
     game_world.add_object(bg, 0)
 
+    witch = Witch()
+    game_world.add_object(witch, 0)
+
     tuar = Tuar()
     game_world.add_object(tuar, 1)
+
+    game_world.add_collision_pair('tuar:witch', tuar, witch)
 
 
 def finish():

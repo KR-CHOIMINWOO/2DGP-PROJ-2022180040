@@ -2,7 +2,7 @@ from pico2d import get_canvas_width, get_canvas_height, load_image, draw_rectang
 import game_framework
 import play_mode
 
-class witch:
+class Witch:
     def __init__(self):
         cw, ch = get_canvas_width(), get_canvas_height()
         self.w, self.h = 180, 180
