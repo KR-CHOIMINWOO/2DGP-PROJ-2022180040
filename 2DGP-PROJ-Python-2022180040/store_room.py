@@ -8,6 +8,7 @@ from sdl2 import SDL_KEYDOWN, SDLK_ESCAPE, SDLK_SPACE
 from make_store_bg import Bg
 from make_witch import Witch
 from store_ui import StoreUI
+from gold import gold
 tuar = None
 bg = None
 witch = None
@@ -60,6 +61,7 @@ def update():
 def draw():
     clear_canvas()
     game_world.render()
+    gold.draw(1000, 680)
     if store_ui:
         store_ui.draw()
     update_canvas()

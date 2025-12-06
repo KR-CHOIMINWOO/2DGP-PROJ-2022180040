@@ -64,6 +64,7 @@ def update():
 def draw():
     clear_canvas()
     game_world.render()
+    gold.draw(1000, 680)
     update_canvas()
 
 def pause():
