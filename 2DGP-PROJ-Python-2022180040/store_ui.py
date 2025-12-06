@@ -1,4 +1,4 @@
-from pico2d import get_canvas_width, get_canvas_height, load_image
+from pico2d import get_canvas_width, get_canvas_height, load_image, draw_rectangle
 from gold import gold
 
 
@@ -66,6 +66,23 @@ class StoreUI:
         self.draw_x = cw // 2
         self.draw_y = ch // 2
         img.draw(self.draw_x, self.draw_y, self.draw_w, self.draw_h)
+
+        left = self.draw_x - self.draw_w // 2
+        bottom = self.draw_y - self.draw_h // 2
+        for idx, (u1, b, u2, t) in enumerate(self.upgrade_rects):
+            l = left + u1 * self.draw_w
+            r = left + u2 * self.draw_w
+            bb = bottom + b * self.draw_h
+            tt = bottom + t * self.draw_h
+            draw_rectangle(l, bb, r, tt)
+
+        if self.boss_cleared:
+            for idx, (u1, b, u2, t) in enumerate(self.special_rects):
+                l = left + u1 * self.draw_w
+                r = left + u2 * self.draw_w
+                bb = bottom + b * self.draw_h
+                tt = bottom + t * self.draw_h
+                draw_rectangle(l, bb, r, tt)
 
     def screen_to_uv(self, sx, sy):
         if self.draw_w <= 0 or self.draw_h <= 0:
