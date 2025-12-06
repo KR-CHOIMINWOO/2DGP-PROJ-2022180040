@@ -27,4 +27,7 @@ class StoreUI:
         cw, ch = get_canvas_width(), get_canvas_height()
         img = self.after_img if self.boss_cleared else self.before_img
         if img:
-            img.draw(cw // 2, ch // 2)
+            scale = 0.8
+            w = int(cw * scale)
+            h = int(ch * scale)
+            img.draw(cw // 2, ch // 2, w, h)

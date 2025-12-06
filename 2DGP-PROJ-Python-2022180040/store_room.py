@@ -14,16 +14,22 @@ witch = None
 store_ui = None
 
 def handle_events():
-    global cave, tuar
+    global tuar, witch, store_ui
     for event in get_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.change_mode(waiting_mode)
+            if store_ui and store_ui.open:
+                store_ui.toggle()
+            else:
+                game_framework.change_mode(waiting_mode)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE and witch.overlap:
+            if store_ui:
                 store_ui.toggle()
         else:
-            tuar.handle_event(event)
+            if not store_ui or not store_ui.open:
+                tuar.handle_event(event)
+
 
 def init():
     global tuar, bg, witch, store_ui
@@ -54,6 +60,8 @@ def update():
 def draw():
     clear_canvas()
     game_world.render()
+    if store_ui:
+        store_ui.draw()
     update_canvas()
 
 def pause():
