@@ -5,9 +5,9 @@ import play_mode
 class Witch:
     def __init__(self):
         cw, ch = get_canvas_width(), get_canvas_height()
-        self.w, self.h = 180, 180
-        self.x = 150
-        self.y = 160
+        self.w, self.h = 136, 272
+        self.x = 600
+        self.y = 200
         self.image = load_image('image_file/char/witch/witch01.png')
         self.entered = False
         self.overlap = False
