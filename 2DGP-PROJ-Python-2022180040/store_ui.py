@@ -132,11 +132,10 @@ class StoreUI:
         if idx < 0 or idx >= len(self.upgrade_items):
             return
         item = self.upgrade_items[idx]
-        if item['bought']:
-            return
+
         if not gold.pay(item['cost']):
             return
-        item['bought'] = True
+
         try:
             import play_mode
             tuar = getattr(play_mode, 'tuar', None)
