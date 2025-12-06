@@ -26,7 +26,7 @@ class witch:
                 self.x + self.w//2, self.y + self.h//2)
 
     def handle_collision(self, group, other):
-         if group == 'tuar:store':
+         if group == 'tuar:witch':
              self.overlap = True
              self._player = other
 
