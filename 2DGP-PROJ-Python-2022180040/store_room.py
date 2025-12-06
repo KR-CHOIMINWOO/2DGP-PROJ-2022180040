@@ -7,9 +7,11 @@ import waiting_mode
 from sdl2 import SDL_KEYDOWN, SDLK_ESCAPE, SDLK_SPACE
 from make_store_bg import Bg
 from make_witch import Witch
+from store_ui import StoreUI
 tuar = None
 bg = None
 witch = None
+store_ui = None
 
 def handle_events():
     global cave, tuar
@@ -19,12 +21,12 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.change_mode(waiting_mode)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE and witch.overlap:
-                pass
+                store_ui.toggle()
         else:
             tuar.handle_event(event)
 
 def init():
-    global tuar, bg, witch
+    global tuar, bg, witch, store_ui
 
     bg = Bg()
     game_world.add_object(bg, 0)
@@ -37,6 +39,7 @@ def init():
 
     game_world.add_collision_pair('tuar:witch', tuar, witch)
 
+    store_ui = StoreUI()
 
 def finish():
     game_world.clear()
