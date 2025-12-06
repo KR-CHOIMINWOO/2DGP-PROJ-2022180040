@@ -1,4 +1,5 @@
 from pico2d import get_canvas_width, get_canvas_height, load_image
+from gold import gold
 
 class StoreUI:
     def __init__(self):

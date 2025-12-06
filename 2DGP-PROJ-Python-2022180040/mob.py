@@ -4,6 +4,7 @@ import play_mode
 import game_world
 import math
 from mob_bullet import Bullet, DIR_RIGHT, DIR_LEFT, DIR_UP, DIR_DOWN
+from gold import gold
 
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 10.0
@@ -19,7 +20,7 @@ FRAMES_PER_ACTION = 8
 class Monster:
     def __init__(self, x, y, hp, speed, w, h,
                  img_path=None, sheet_cols=1,
-                 frame_w=0, frame_h=0):
+                 frame_w=0, frame_h=0, gold_reward=0):
         self.x = x
         self.y = y
         self.image = None
@@ -27,6 +28,7 @@ class Monster:
         self.speed = speed
         self.w = w
         self.h = h
+        self.gold_reward = gold_reward
 
         self.sheet_cols = sheet_cols
         self.frame = 0.0
@@ -141,6 +143,7 @@ class Monster:
         print("Monster hit, hp =", self.hp)
 
         if self.hp <= 0:
+            gold.add(self.gold_reward)
             if self.is_in_world():
                 game_world.remove_object(self)
 
@@ -157,7 +160,8 @@ class Ghoul(Monster):
             w=40,
             h=60,
             img_path=None,
-            sheet_cols=1
+            sheet_cols=1,
+            gold_reward= 100
         )
 
         move_paths = [
@@ -280,7 +284,8 @@ class Grave(Monster):
             w=40,
             h=60,
             img_path=None,
-            sheet_cols=1
+            sheet_cols=1,
+            gold_reward= 50
         )
 
         move_paths = [
@@ -385,7 +390,8 @@ class Zombie(Monster):
             w=40,
             h=60,
             img_path=None,
-            sheet_cols=1
+            sheet_cols=1,
+            gold_reward= 70
         )
 
         move_paths = [

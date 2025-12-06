@@ -10,6 +10,7 @@ import game_framework
 from mob import Ghoul, Grave, Zombie
 from make_boss import DeathKnight
 import random
+from gold import gold
 
 cam_ox, cam_oy = 0, 0
 in_ox, in_oy = 0, 0
@@ -145,6 +146,7 @@ def draw():
     clear_canvas()
     game_world.render()
     draw_ui.draw()
+    draw_text(f'GOLDl {gold.get()}, 1000, 580')
     update_canvas()
 
 def pause():

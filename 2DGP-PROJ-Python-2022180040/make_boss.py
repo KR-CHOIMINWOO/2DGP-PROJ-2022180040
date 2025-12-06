@@ -17,7 +17,8 @@ class DeathKnight(Monster):
             w=110,
             h=120,
             img_path=None,
-            sheet_cols=1
+            sheet_cols=1,
+            gold_reward= 1000
         )
 
         self.frames = {
