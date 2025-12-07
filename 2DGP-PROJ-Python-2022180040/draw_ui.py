@@ -11,11 +11,11 @@ IMG_HP_TEXT   = 'image_file/effect/UI/effect_font_0003_HP.png'
 IMG_ICON_TUAR = 'image_file/effect/UI/icon_tuar.png'
 IMG_BTN_ROLL  = 'image_file/effect/UI/button_roll.png'
 IMG_AWAKEN    = 'image_file/effect/UI/awakening.png'
-IMG_DEATHin = 'image_file/effect/UI/deathin.png'
+IMG_DEATHIN = 'image_file/effect/UI/deathin.png'
 
 def init():
     global img_hp_fill, img_hp_frame, img_hp_text
-    global img_icon_tuar, img_btn_roll, img_awaken
+    global img_icon_tuar, img_btn_roll, img_awaken, img_deathin
 
     img_hp_fill   = load_image(IMG_HP_FILL)
     img_hp_frame  = load_image(IMG_HP_FRAME)
@@ -23,6 +23,7 @@ def init():
     img_icon_tuar = load_image(IMG_ICON_TUAR)
     img_btn_roll  = load_image(IMG_BTN_ROLL)
     img_awaken    = load_image(IMG_AWAKEN)
+    img_deathin = load_image(IMG_DEATHIN)
 
 def update(_hp:int, _hp_max:int, _roll_cooltime:float, _roll_cooltime_max:float,
            _special_cooltime:float, _special_cooltime_max:float, _special_active:bool):
@@ -98,11 +99,19 @@ def draw_skill_icon():
     if not awakened:
         return
 
-    draw_with_cd(img_awaken, special_x, special_y, size, size, special_cooltime, special_cooltime_max)
+    draw_with_cd(img_btn_roll, roll_x, roll_y, size, size, roll_cooltime, roll_cooltime_max)
+
+    if CURRENT_SPECIAL_TYPE == SPECIAL_TYPE_DEATHIN:
+        special_img = img_deathin
+    else:
+        special_img = img_awaken
+
+    draw_with_cd(special_img, special_x, special_y, size, size,
+                 special_cooltime, special_cooltime_max)
     if special_active and special_cooltime <= 0.0:
-        img_awaken.opacify(0.22)
-        img_awaken.draw(special_x, special_y, int(size * 1.06), int(size * 1.06))
-        img_awaken.opacify(1.0)
+        special_img.opacify(0.22)
+        special_img.draw(special_x, special_y, int(size * 1.06), int(size * 1.06))
+        special_img.opacify(1.0)
 
 
 def draw():
