@@ -6,6 +6,7 @@ import game_world
 import play_mode
 from state_machine import StateMachine
 from slash import Slash, DIR_RIGHT, DIR_LEFT, DIR_UP, DIR_DOWN
+from DeathInEffect import DeathInEffect
 
 def space_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
@@ -391,15 +392,32 @@ class Tuar:
             self.spawn_slash()
 
     def try_special(self):
-        if self.special_active or self.special_cd > 0.0:
+        if self.special_cd > 0.0:
             return
-        if not getattr(play_mode, 'awakening_unlocked', False):
-            return
-        self.special_active = True
-        self.special_t = 0.0
-        self.apply_skin(True)
-        self.special_t = 0.0
 
+        from tuar2 import CURRENT_SPECIAL_TYPE, SPECIAL_TYPE_AWAKEN, SPECIAL_TYPE_DEATHIN
+        import play_mode
+
+        if CURRENT_SPECIAL_TYPE == SPECIAL_TYPE_AWAKEN:
+            if not getattr(play_mode, 'awakening_unlocked', False):
+                return
+            if self.special_active:
+                return
+            self.special_active = True
+            self.special_t = 0.0
+            self.apply_skin(True)
+            self.special_cd = SPECIAL_COOLDOWN
+
+        elif CURRENT_SPECIAL_TYPE == SPECIAL_TYPE_DEATHIN:
+            if not getattr(play_mode, 'death_hand_unlocked', False):
+                return
+            if self.roll_active:
+                return
+            self.cast_death_in()
+            self.special_cd = 8.0
+
+        else:
+            return
 
     def apply_skin(self, special: bool):
         self.special_active = special
@@ -462,6 +480,27 @@ class Tuar:
         print('Tuar hit, hp = ', self.hp)
 
     def cast_death_in(self):
-        pass
+
+        step_dist = 80.0
+        count = 5
+
+        dx, dy = 0.0, 0.0
+        if self.last_input_dir == DIR_RIGHT:
+            dx = 1.0
+        elif self.last_input_dir == DIR_LEFT:
+            dx = -1.0
+        elif self.last_input_dir == DIR_UP:
+            dy = 1.0
+        elif self.last_input_dir == DIR_DOWN:
+            dy = -1.0
+
+        if dx == 0.0 and dy == 0.0:
+            dx = 1.0
+
+        for i in range(1, count + 1):
+            sx = self.x + dx * step_dist * i
+            sy = self.y + dy * step_dist * i
+            eff = DeathInEffect(sx, sy, damage=self.atk * 2, target='monster')
+            game_world.add_object(eff, 1)
 
 
