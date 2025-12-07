@@ -4,6 +4,7 @@ import game_world
 import play_mode
 import random
 import math
+from mob import Monster
 
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 20.0
@@ -35,11 +36,11 @@ def load_death_in_images():
     return DEATH_IN_IMAGES
 
 class DeathInEffect:
-    def __init__(self, x, y, damage=20):
+    def __init__(self, x, y, damage=20, target='player'):
         self.x = x
         self.y = y
         self.damage = damage
-
+        self.target = target
         self.images = load_death_in_images()
         self.frame = 0.0
 
@@ -62,11 +63,25 @@ class DeathInEffect:
                 self.phase = 'active'
                 self.timer = 0.0
         elif self.phase == 'active':
-            tuar = getattr(play_mode, 'tuar', None)
-            if tuar and not self.hit_done and not getattr(tuar, 'roll_active', False):
-                if self.check_hit_tuar(tuar):
-                    tuar.take_damage(self.damage)
-                    self.hit_done = True
+            if self.target == 'player':
+                tuar = getattr(play_mode, 'tuar', None)
+                if tuar and not self.hit_done and not getattr(tuar, 'roll_active', False):
+                    if self.check_hit_tuar(tuar):
+                        tuar.take_damage(self.damage)
+                        self.hit_done = True
+            elif self.target == 'monster':
+                if not self.hit_done:
+                    for layer in game_world.world:
+                        for obj in layer:
+                            if isinstance(obj, Monster):
+                                if self.check_hit_tuar(obj):
+                                    if hasattr(obj, 'take_damage'):
+                                        obj.take_damage(self.damage)
+                                    self.hit_done = True
+                                    break
+                        if self.hit_done:
+                            break
+
             if self.timer >= self.active_time:
                 if self in sum(game_world.world, []):
                     game_world.remove_object(self)
