@@ -65,6 +65,8 @@ UP_SKILL_SPEED = 0
 SPECIAL_TYPE_NONE      = 0
 SPECIAL_TYPE_AWAKEN    = 1
 SPECIAL_TYPE_DEATHIN = 2
+DEATHIN_COOLDOWN = 3.0
+DEATHIN_DAMAGE_SCALE = 1.5
 
 CURRENT_SPECIAL_TYPE = SPECIAL_TYPE_NONE
 
@@ -395,9 +397,6 @@ class Tuar:
         if self.special_cd > 0.0:
             return
 
-        from tuar2 import CURRENT_SPECIAL_TYPE, SPECIAL_TYPE_AWAKEN, SPECIAL_TYPE_DEATHIN
-        import play_mode
-
         if CURRENT_SPECIAL_TYPE == SPECIAL_TYPE_AWAKEN:
             if not getattr(play_mode, 'awakening_unlocked', False):
                 return
@@ -414,7 +413,7 @@ class Tuar:
             if self.roll_active:
                 return
             self.cast_death_in()
-            self.special_cd = 8.0
+            self.special_cd = DEATHIN_COOLDOWN
 
         else:
             return
@@ -500,7 +499,7 @@ class Tuar:
         for i in range(1, count + 1):
             sx = self.x + dx * step_dist * i
             sy = self.y + dy * step_dist * i
-            eff = DeathInEffect(sx, sy, damage=self.atk * 2, target='monster')
+            eff = DeathInEffect(sx, sy, damage=self.atk * DEATHIN_DAMAGE_SCALE, target='monster')
             game_world.add_object(eff, 1)
 
 
