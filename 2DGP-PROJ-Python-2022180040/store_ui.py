@@ -34,8 +34,8 @@ class StoreUI:
         ]
 
         self.upgrade_items = [
-            {'cost': 50, 'hp_up': 20, 'bought': False},
-            {'cost': 80, 'atk_up': 1, 'bought': False},
+            {'cost': 50, 'hp_up': 50, 'bought': False},
+            {'cost': 80, 'atk_up': 10, 'bought': False},
             {'cost': 80, 'aspd_up': 1, 'bought': False},
             {'cost': 80, 'skillspd_up': 1, 'bought': False},
         ]

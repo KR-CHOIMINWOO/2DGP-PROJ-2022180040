@@ -202,7 +202,7 @@ class Tuar:
         self.max_hp = self.base_max_hp + UP_MAX_HP
         self.hp = self.max_hp
 
-        self.base_atk = 5
+        self.base_atk = 10
         self.atk = self.base_atk + UP_ATK
         self.attack_hit_targets = set()
 
