@@ -337,7 +337,7 @@ class DeathKnight(Monster):
         cross_dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
         diag_dirs = [(1, 1), (-1, 1), (1, -1), (-1, -1)]
 
-        cross_tiles = [(0, cx, cy)]
+        cross_tiles = []
         for dx, dy in cross_dirs:
             for step in range(1, max_step + 1):
                 fx = cx + dx * spacing * step
