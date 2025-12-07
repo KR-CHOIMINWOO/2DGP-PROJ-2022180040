@@ -61,6 +61,20 @@ UP_ATK         = 0
 UP_ATK_SPEED   = 0
 UP_SKILL_SPEED = 0
 
+SPECIAL_TYPE_NONE      = 0
+SPECIAL_TYPE_AWAKEN    = 1
+SPECIAL_TYPE_DEATHIN = 2
+
+CURRENT_SPECIAL_TYPE = SPECIAL_TYPE_NONE
+
+def select_awakening():
+    global CURRENT_SPECIAL_TYPE
+    CURRENT_SPECIAL_TYPE = SPECIAL_TYPE_AWAKEN
+
+def select_deathin():
+    global CURRENT_SPECIAL_TYPE
+    CURRENT_SPECIAL_TYPE = SPECIAL_TYPE_DEATHIN
+
 def apply_max_hp_upgrade(amount):
     global UP_MAX_HP
     UP_MAX_HP += amount
@@ -446,4 +460,8 @@ class Tuar:
         if self.hp < 0:
             self.hp = 0
         print('Tuar hit, hp = ', self.hp)
+
+    def cast_death_in(self):
+        pass
+
 
