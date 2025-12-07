@@ -1,6 +1,7 @@
 from pico2d import load_image, load_font, draw_rectangle, get_canvas_width, get_canvas_height
 import game_framework
 import math
+from tuar2 import CURRENT_SPECIAL_TYPE, SPECIAL_TYPE_AWAKEN, SPECIAL_TYPE_DEATHIN
 
 _CW, _CH = 1280, 720
 
@@ -10,6 +11,7 @@ IMG_HP_TEXT   = 'image_file/effect/UI/effect_font_0003_HP.png'
 IMG_ICON_TUAR = 'image_file/effect/UI/icon_tuar.png'
 IMG_BTN_ROLL  = 'image_file/effect/UI/button_roll.png'
 IMG_AWAKEN    = 'image_file/effect/UI/awakening.png'
+IMG_DEATHin = 'image_file/effect/UI/deathin.png'
 
 def init():
     global img_hp_fill, img_hp_frame, img_hp_text
