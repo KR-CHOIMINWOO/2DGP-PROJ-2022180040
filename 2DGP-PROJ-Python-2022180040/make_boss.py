@@ -12,7 +12,7 @@ class DeathKnight(Monster):
     def __init__(self, x, y):
         super().__init__(
             x, y,
-            hp=5,
+            hp=100,
             speed=RUN_SPEED_PPS * 0.6,
             w=110,
             h=120,

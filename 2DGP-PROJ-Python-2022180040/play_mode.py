@@ -72,11 +72,11 @@ def init():
     current_room = 0
     room_monsters = []
 
-    monsters = []
-
-    dk = DeathKnight(400, 400)
-    monsters.append(dk)
-    game_world.add_object(dk, 1)
+    # monsters = []
+    #
+    # dk = DeathKnight(400, 400)
+    # monsters.append(dk)
+    # game_world.add_object(dk, 1)
     #
     # ghoul = Ghoul(200, 200)
     # monsters.append(ghoul)
@@ -90,9 +90,9 @@ def init():
     # monsters.append(zombie)
     # game_world.add_object(zombie, 1)
 
-    for m in monsters:
-        game_world.add_collision_pair('tuar:monster', tuar, m)
-        game_world.add_collision_pair('slash:monster', None, m)
+    # for m in monsters:
+    #     game_world.add_collision_pair('tuar:monster', tuar, m)
+    #     game_world.add_collision_pair('slash:monster', None, m)
 
 
 
