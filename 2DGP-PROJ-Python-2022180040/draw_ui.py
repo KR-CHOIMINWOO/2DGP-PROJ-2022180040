@@ -1,7 +1,7 @@
 from pico2d import load_image, load_font, draw_rectangle, get_canvas_width, get_canvas_height
 import game_framework
 import math
-from tuar2 import CURRENT_SPECIAL_TYPE, SPECIAL_TYPE_AWAKEN, SPECIAL_TYPE_DEATHIN
+import tuar2
 
 _CW, _CH = 1280, 720
 
@@ -99,9 +99,7 @@ def draw_skill_icon():
     if not awakened:
         return
 
-    draw_with_cd(img_btn_roll, roll_x, roll_y, size, size, roll_cooltime, roll_cooltime_max)
-
-    if CURRENT_SPECIAL_TYPE == SPECIAL_TYPE_DEATHIN:
+    if tuar2.CURRENT_SPECIAL_TYPE == tuar2.SPECIAL_TYPE_DEATHIN:
         special_img = img_deathin
     else:
         special_img = img_awaken
