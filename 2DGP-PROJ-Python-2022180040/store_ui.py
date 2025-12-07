@@ -155,17 +155,22 @@ class StoreUI:
         if idx < 0 or idx >= len(self.special_items):
             return
         item = self.special_items[idx]
-        if item['bought']:
-            return
-        if not gold.pay(item['cost']):
-            return
-        item['bought'] = True
+
+        first_purchase = not item['bought']
+        if first_purchase:
+            if not gold.pay(item['cost']):
+                return
+            item['bought'] = True
+
         try:
             import play_mode
             if idx == 0:
                 setattr(play_mode, 'awakening_unlocked', True)
+                select_awakening()
             elif idx == 1:
                 setattr(play_mode, 'death_hand_unlocked', True)
+                select_deathin()
         except:
             pass
+
 
