@@ -5,6 +5,8 @@ from tuar2 import (
     apply_atk_upgrade,
     apply_atk_speed_upgrade,
     apply_skill_speed_upgrade,
+    select_awakening,
+    select_deathin,
 )
 
 class StoreUI:
