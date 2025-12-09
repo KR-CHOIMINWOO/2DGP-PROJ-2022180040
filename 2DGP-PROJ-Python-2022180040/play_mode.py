@@ -40,11 +40,10 @@ def handle_events():
                 game_framework.change_mode(title_mode)
             elif event.key == SDLK_SPACE:
                 if door_ready and (not slide_active) and door_info is not None:
-                    if len(room_monsters) < 0:
-                        door_ready = False
-                        door_name, sx, sy = door_info
-                        door_info = None
-                        begin_room_slide(door_name, sx, sy)
+                    door_ready = False
+                    door_name, sx, sy = door_info
+                    door_info = None
+                    begin_room_slide(door_name, sx, sy)
                 else:
                     tuar.handle_event(event)
             else:
@@ -165,6 +164,9 @@ def begin_room_slide(door_name: str, spawn_x: int, spawn_y: int):
     global slide_active, slide_t, dir_x, dir_y, _pending_spawn
     global cam_ox, cam_oy, in_ox, in_oy
 
+    if has_monster_alive():
+        return
+
     dirmap = {
         'top':    (0,  1),
         'bottom': (0, -1),
@@ -229,3 +231,18 @@ def spawn_mob():
         game_world.add_collision_pair('tuar:monster', tuar, m)
 
         game_world.add_collision_pair('slash:monster', None, m)
+
+def has_monster_alive():
+    pair = game_world.collision_pairs.get('tuar:monster')
+    if not pair:
+        return False
+
+    _, monsters = pair
+
+    for m in monsters:
+        if m is None:
+            continue
+        if getattr(m, 'hp', 1) > 0:
+            return True
+
+    return False
