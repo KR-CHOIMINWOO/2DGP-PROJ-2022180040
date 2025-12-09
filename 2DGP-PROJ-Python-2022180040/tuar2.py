@@ -501,5 +501,3 @@ class Tuar:
             sy = self.y + dy * step_dist * i
             eff = DeathInEffect(sx, sy, damage=self.atk * DEATHIN_DAMAGE_SCALE, target='monster')
             game_world.add_object(eff, 1)
-
-

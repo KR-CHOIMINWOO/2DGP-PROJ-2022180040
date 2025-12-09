@@ -1,6 +1,6 @@
 from pico2d import *
 import game_framework
-import store_room as start_mode
+import title_mode as start_mode
 
 open_canvas(1024, 720)
 game_framework.run(start_mode)
