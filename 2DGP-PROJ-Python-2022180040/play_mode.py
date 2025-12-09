@@ -40,10 +40,11 @@ def handle_events():
                 game_framework.change_mode(title_mode)
             elif event.key == SDLK_SPACE:
                 if door_ready and (not slide_active) and door_info is not None:
-                    door_ready = False
-                    door_name, sx, sy = door_info
-                    door_info = None
-                    begin_room_slide(door_name, sx, sy)
+                    if len(room_monsters) < 0:
+                        door_ready = False
+                        door_name, sx, sy = door_info
+                        door_info = None
+                        begin_room_slide(door_name, sx, sy)
                 else:
                     tuar.handle_event(event)
             else:
